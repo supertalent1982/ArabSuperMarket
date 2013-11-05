@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4510" systemVersion="12F37" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="gT9-eo-SYK">
     <dependencies>
-        <deployment defaultVersion="1552" identifier="iOS"/>
+        <deployment defaultVersion="1536" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
     </dependencies>
     <scenes>
@@ -43,7 +43,6 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="n0e-IU-hbc"/>
-                    <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
@@ -55,7 +54,6 @@
             <objects>
                 <navigationController definesPresentationContext="YES" navigationBarHidden="YES" id="Tzt-fL-ltF" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Offers" image="offer_tab.png" id="56G-4g-tYx"/>
-                    <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="fUZ-fy-FQw">
                         <autoresizingMask key="autoresizingMask"/>
@@ -137,7 +135,7 @@
                                 </connections>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="0aI-sX-aCu">
-                                <rect key="frame" x="98" y="377" width="125" height="42"/>
+                                <rect key="frame" x="98" y="371" width="125" height="42"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <state key="normal" backgroundImage="btn_search.png">
@@ -152,7 +150,6 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Search" id="s6U-Jc-Xai"/>
                     <navigationItem key="navigationItem" id="dIK-Tw-iBy"/>
-                    <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
@@ -169,7 +166,6 @@
         <scene sceneID="Jen-Be-9EH">
             <objects>
                 <tabBarController storyboardIdentifier="TabBarView" definesPresentationContext="YES" id="kgc-ao-BYv" sceneMemberID="viewController">
-                    <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="g5W-gJ-ZyO">
@@ -202,8 +198,8 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="oBp-2o-rNK">
-                                <rect key="frame" x="0.0" y="162" width="320" height="253"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                <rect key="frame" x="0.0" y="154" width="320" height="253"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </scrollView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -242,14 +238,14 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="City Centre" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="EDU-9N-KVX">
-                                <rect key="frame" x="0.0" y="15" width="320" height="21"/>
+                                <rect key="frame" x="0.0" y="14" width="320" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="scq-cx-dQq" userLabel="Button-back">
-                                <rect key="frame" x="10" y="10" width="41" height="32"/>
+                                <rect key="frame" x="8" y="9" width="41" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <state key="normal" backgroundImage="btn_nav_back.png">
@@ -260,7 +256,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="dQk-iA-z6W" userLabel="Button-back">
-                                <rect key="frame" x="276" y="10" width="38" height="32"/>
+                                <rect key="frame" x="274" y="9" width="38" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <state key="normal" backgroundImage="btn_share_header.png">
@@ -271,17 +267,17 @@
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="market_header1.png" id="Umy-xA-4v2">
-                                <rect key="frame" x="0.0" y="50" width="320" height="63"/>
+                                <rect key="frame" x="0.0" y="49" width="320" height="63"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="About Us" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="wwS-Pz-Y6P">
-                                <rect key="frame" x="27" y="71" width="83" height="21"/>
+                                <rect key="frame" x="27" y="70" width="83" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="7wg-BO-DvS">
-                                <rect key="frame" x="10" y="116" width="304" height="41"/>
+                                <rect key="frame" x="10" y="120" width="304" height="41"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <string key="text">Supermarket chain is the fastest growing in Kuwait. It is a division based on the famous retail conglomerate United Arab Emirates, the Interational BMA Group.
 </string>
@@ -289,22 +285,22 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="R7D-2Z-Ug0">
-                                <rect key="frame" x="10" y="151" width="304" height="38"/>
+                                <rect key="frame" x="10" y="155" width="304" height="38"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <string key="text">City centre, with tremendous success in the areas of its work, imagine that become retail brand maintain its unirivaled position in the retail</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="9"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cell-big-bg.png" id="U94-6e-LaY">
-                                <rect key="frame" x="10" y="192" width="304" height="158"/>
+                                <rect key="frame" x="10" y="201" width="304" height="158"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cell-big-bg.png" id="ggw-3M-SAM">
-                                <rect key="frame" x="8" y="358" width="304" height="43"/>
+                                <rect key="frame" x="8" y="367" width="304" height="43"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="axK-dT-hbA">
-                                <rect key="frame" x="27" y="289" width="153" height="53"/>
+                                <rect key="frame" x="27" y="298" width="153" height="53"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <string key="text">Head Office, 360 Mall
 South Surra, Al Zahra Area
@@ -313,64 +309,63 @@ Kuwait</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="info@gulfmart.com" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="ANs-eE-Rnt">
-                                <rect key="frame" x="83" y="251" width="193" height="21"/>
+                                <rect key="frame" x="83" y="260" width="193" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" red="0.21371434619999999" green="0.53947373830000001" blue="0.85178172829999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1805223" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="rGm-TC-HZ0">
-                                <rect key="frame" x="67" y="229" width="204" height="21"/>
+                                <rect key="frame" x="67" y="238" width="204" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" red="0.21371434619999999" green="0.53947373830000001" blue="0.85178172829999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1805222" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="k2P-9b-Jnw">
-                                <rect key="frame" x="67" y="207" width="204" height="21"/>
+                                <rect key="frame" x="67" y="216" width="204" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" red="0.21371434619999999" green="0.53947373830000001" blue="0.85178172829999999" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tel :" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="oh9-Rl-Ioy">
-                                <rect key="frame" x="27" y="207" width="42" height="21"/>
+                                <rect key="frame" x="27" y="216" width="42" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Email :" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="1ng-fJ-Qv5">
-                                <rect key="frame" x="27" y="251" width="42" height="21"/>
+                                <rect key="frame" x="27" y="260" width="42" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Address" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="kNV-SN-Q1Z">
-                                <rect key="frame" x="27" y="272" width="59" height="21"/>
+                                <rect key="frame" x="27" y="281" width="59" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fax :" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="4HA-2u-8Ay">
-                                <rect key="frame" x="27" y="229" width="42" height="21"/>
+                                <rect key="frame" x="27" y="238" width="42" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Branches" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Vg6-q6-1l6">
-                                <rect key="frame" x="20" y="369" width="82" height="21"/>
+                                <rect key="frame" x="20" y="378" width="82" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="branch_img.png" id="gAI-M2-fmM">
-                                <rect key="frame" x="231" y="360" width="75" height="40"/>
+                                <rect key="frame" x="231" y="369" width="75" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
@@ -386,7 +381,7 @@ Kuwait</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bWY-Sw-35K" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1297" y="1414"/>
+            <point key="canvasLocation" x="-1300" y="1420"/>
         </scene>
         <!--Company View Controller-->
         <scene sceneID="5Ad-Qr-gSq">
@@ -405,9 +400,9 @@ Kuwait</string>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="City Centre" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="p7N-N3-AYQ">
-                                <rect key="frame" x="0.0" y="15" width="320" height="21"/>
+                                <rect key="frame" x="106" y="15" width="155" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -434,11 +429,11 @@ Kuwait</string>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="market_header1.png" id="be7-bG-aam">
-                                <rect key="frame" x="0.0" y="48" width="320" height="57"/>
+                                <rect key="frame" x="0.0" y="49" width="320" height="57"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="1zl-zC-6To" userLabel="Button-about">
-                                <rect key="frame" x="20" y="61" width="106" height="31"/>
+                                <rect key="frame" x="20" y="62" width="106" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <state key="normal" backgroundImage="btn_about_market.png">
@@ -471,16 +466,16 @@ Kuwait</string>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="table_sec_currentoffer.png" id="Nkm-Wd-XIW">
-                                <rect key="frame" x="0.0" y="105" width="320" height="37"/>
+                                <rect key="frame" x="0.0" y="106" width="320" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="table_expiredoffer.png" id="WqQ-OG-eQ9">
-                                <rect key="frame" x="0.0" y="280" width="320" height="37"/>
+                                <rect key="frame" x="0.0" y="284" width="320" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="9oC-bg-nEd">
-                                <rect key="frame" x="0.0" y="146" width="320" height="123"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <rect key="frame" x="0.0" y="147" width="320" height="132"/>
+                                <autoresizingMask key="autoresizingMask"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CurrentOfferCell" id="f8R-0g-UKu">
@@ -515,8 +510,8 @@ Kuwait</string>
                                 </prototypes>
                             </tableView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="mSx-dt-rvv">
-                                <rect key="frame" x="0.0" y="325" width="320" height="96"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <rect key="frame" x="0.0" y="324" width="320" height="88"/>
+                                <autoresizingMask key="autoresizingMask"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="ExpireOfferCell" id="9Qr-yh-bpW">
@@ -561,7 +556,6 @@ Kuwait</string>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
@@ -599,7 +593,6 @@ Kuwait</string>
             <objects>
                 <navigationController definesPresentationContext="YES" navigationBarHidden="YES" id="LQm-MQ-HSj" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Search" image="search_tab.png" id="q3W-4R-CXi"/>
-                    <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="wYM-jY-VwA">
                         <autoresizingMask key="autoresizingMask"/>
@@ -647,11 +640,11 @@ Kuwait</string>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="favorite_tab_bg.png" id="DZ1-Ka-Z2c">
-                                <rect key="frame" x="15" y="72" width="290" height="369"/>
+                                <rect key="frame" x="15" y="66" width="290" height="348"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="S9x-Mh-FOP">
-                                <rect key="frame" x="20" y="80" width="128" height="29"/>
+                                <rect key="frame" x="20" y="71" width="128" height="29"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <state key="normal" title="Inbox">
@@ -663,7 +656,7 @@ Kuwait</string>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="ZvS-82-6j3">
-                                <rect key="frame" x="172" y="80" width="128" height="30"/>
+                                <rect key="frame" x="172" y="71" width="128" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <state key="normal" title="Sent">
@@ -686,7 +679,7 @@ Kuwait</string>
                                 </connections>
                             </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="79" sectionHeaderHeight="22" sectionFooterHeight="22" id="v5a-27-cTP">
-                                <rect key="frame" x="20" y="120" width="280" height="321"/>
+                                <rect key="frame" x="20" y="114" width="280" height="295"/>
                                 <autoresizingMask key="autoresizingMask" heightSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
@@ -752,7 +745,6 @@ Kuwait</string>
                     </view>
                     <tabBarItem key="tabBarItem" title="Item 1" id="qu2-MP-0os"/>
                     <navigationItem key="navigationItem" id="L5f-bk-wvi"/>
-                    <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
@@ -832,7 +824,7 @@ Kuwait</string>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mylist_header_bg.png" id="u5c-cM-zLA">
-                                <rect key="frame" x="7" y="57" width="308" height="423"/>
+                                <rect key="frame" x="7" y="57" width="308" height="403"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder=" Add list name..." minimumFontSize="17" id="JC4-Qq-XgD">
@@ -844,15 +836,15 @@ Kuwait</string>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="snt-i5-5Lq">
-                                <rect key="frame" x="13" y="100" width="296" height="380"/>
+                                <rect key="frame" x="13" y="100" width="293" height="323"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MainItem" id="ZbR-Uc-rDQ">
-                                        <rect key="frame" x="0.0" y="22" width="296" height="44"/>
+                                        <rect key="frame" x="0.0" y="22" width="293" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZbR-Uc-rDQ" id="dov-Tw-j9r">
-                                            <rect key="frame" x="0.0" y="0.0" width="296" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="293" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Drinks" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Rmo-Aa-4PK">
@@ -869,10 +861,10 @@ Kuwait</string>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SubItem" id="5kV-0S-6ku">
-                                        <rect key="frame" x="0.0" y="66" width="296" height="44"/>
+                                        <rect key="frame" x="0.0" y="66" width="293" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5kV-0S-6ku" id="pKb-6x-PO2">
-                                            <rect key="frame" x="0.0" y="0.0" width="296" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="293" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.69999999999999973" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Drinks" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="1Y1-An-VVf">
@@ -902,23 +894,23 @@ Kuwait</string>
                                 </connections>
                             </tableView>
                             <view contentMode="scaleToFill" id="38q-ay-OrX">
-                                <rect key="frame" x="15" y="40" width="290" height="410"/>
+                                <rect key="frame" x="14" y="57" width="292" height="366"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="send_to_friend.png" id="yVc-2z-E7Y">
-                                        <rect key="frame" x="0.0" y="0.0" width="290" height="410"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="292" height="366"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     </imageView>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="wmS-Bg-yUH">
-                                        <rect key="frame" x="11" y="48" width="267" height="298"/>
+                                        <rect key="frame" x="11" y="48" width="269" height="267"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <prototypes>
                                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FriendCell" id="lHy-En-B3U">
-                                                <rect key="frame" x="0.0" y="22" width="267" height="44"/>
+                                                <rect key="frame" x="0.0" y="22" width="269" height="44"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="lHy-En-B3U" id="jqs-zE-Mx9">
-                                                    <rect key="frame" x="0.0" y="0.0" width="267" height="43"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="269" height="43"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mostafa Ahmad" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="epi-2W-AFw">
@@ -944,7 +936,7 @@ Kuwait</string>
                                         </connections>
                                     </tableView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="8PJ-fV-163">
-                                        <rect key="frame" x="22" y="359" width="118" height="31"/>
+                                        <rect key="frame" x="20" y="323" width="118" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" backgroundImage="btn_send_friend.png">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -954,7 +946,7 @@ Kuwait</string>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="XZM-3q-VCO">
-                                        <rect key="frame" x="148" y="359" width="118" height="31"/>
+                                        <rect key="frame" x="146" y="323" width="118" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" backgroundImage="btn_cancel_friend.png">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -969,7 +961,6 @@ Kuwait</string>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
@@ -995,8 +986,8 @@ Kuwait</string>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="s2G-QB-l5u">
-                                <rect key="frame" x="169" y="15" width="142" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <rect key="frame" x="169" y="14" width="142" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <state key="normal" backgroundImage="btn_add_new_friend.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -1006,8 +997,8 @@ Kuwait</string>
                                 </connections>
                             </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="30" sectionHeaderHeight="22" sectionFooterHeight="22" id="zuc-bq-ieG">
-                                <rect key="frame" x="158" y="88" width="162" height="120"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <rect key="frame" x="158" y="87" width="162" height="120"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="beFriendCell" rowHeight="30" id="mjJ-b0-N2j">
@@ -1025,12 +1016,12 @@ Kuwait</string>
                                 </connections>
                             </tableView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="title_friend_request.png" id="pjJ-3i-AEM">
-                                <rect key="frame" x="158" y="58" width="162" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <rect key="frame" x="158" y="57" width="162" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="30" sectionHeaderHeight="22" sectionFooterHeight="22" id="oh7-YB-obv">
-                                <rect key="frame" x="158" y="238" width="162" height="120"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <rect key="frame" x="158" y="237" width="162" height="120"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="myFriendCell" rowHeight="30" id="gut-ty-P46">
@@ -1048,13 +1039,12 @@ Kuwait</string>
                                 </connections>
                             </tableView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="title_my_friends.png" id="u0W-nS-AbX">
-                                <rect key="frame" x="159" y="208" width="162" height="30"/>
+                                <rect key="frame" x="159" y="207" width="162" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
@@ -1071,7 +1061,6 @@ Kuwait</string>
             <objects>
                 <navigationController definesPresentationContext="YES" navigationBarHidden="YES" id="PrA-H7-90c" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="My List" image="mylist_tab.png" id="l3B-Pk-YRy"/>
-                    <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="f4g-Ex-ZGn">
                         <autoresizingMask key="autoresizingMask"/>
@@ -1097,7 +1086,7 @@ Kuwait</string>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="favorite_tab_bg.png" id="sDb-Hf-yoT">
-                                <rect key="frame" x="15" y="72" width="290" height="369"/>
+                                <rect key="frame" x="15" y="57" width="290" height="358"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="offer_header.png" id="BEe-Or-FGR">
@@ -1123,11 +1112,11 @@ Kuwait</string>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="favorite_header.png" id="29R-wP-UWf">
-                                <rect key="frame" x="20" y="118" width="280" height="41"/>
+                                <rect key="frame" x="20" y="103" width="280" height="41"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="68V-F2-g1t">
-                                <rect key="frame" x="20" y="81" width="128" height="27"/>
+                                <rect key="frame" x="20" y="63" width="128" height="27"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <state key="normal" title="Current Offers">
@@ -1139,7 +1128,7 @@ Kuwait</string>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="fbr-LC-uSM">
-                                <rect key="frame" x="172" y="81" width="128" height="27"/>
+                                <rect key="frame" x="172" y="63" width="128" height="27"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <state key="normal" title="Expired Offers">
@@ -1151,14 +1140,14 @@ Kuwait</string>
                                 </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="City Centre" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="5g3-G0-eEh">
-                                <rect key="frame" x="54" y="128" width="167" height="21"/>
+                                <rect key="frame" x="54" y="113" width="167" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.69803923368453979" green="0.30588236451148987" blue="0.086274512112140656" alpha="1" colorSpace="deviceRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="79" sectionHeaderHeight="22" sectionFooterHeight="22" id="RGX-fH-Pf4">
-                                <rect key="frame" x="20" y="157" width="280" height="285"/>
+                                <rect key="frame" x="20" y="142" width="280" height="268"/>
                                 <autoresizingMask key="autoresizingMask" heightSizable="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
@@ -1264,7 +1253,6 @@ Kuwait</string>
                     </view>
                     <tabBarItem key="tabBarItem" title="Item 1" id="Xw2-9l-Tg9"/>
                     <navigationItem key="navigationItem" id="D1Q-Di-5ZJ"/>
-                    <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
@@ -1282,7 +1270,6 @@ Kuwait</string>
             <objects>
                 <navigationController definesPresentationContext="YES" navigationBarHidden="YES" id="Ifk-x8-1hS" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Favorite" image="favorite_tab.png" id="0qL-iZ-9Fw"/>
-                    <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="FYi-D9-cbJ">
                         <autoresizingMask key="autoresizingMask"/>
@@ -1319,7 +1306,7 @@ Kuwait</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_loginpage.png" id="KGi-ts-eJg">
-                                <rect key="frame" x="10" y="63" width="300" height="417"/>
+                                <rect key="frame" x="10" y="63" width="300" height="397"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="ArS-7E-LOC">
@@ -1386,7 +1373,6 @@ Kuwait</string>
                     </view>
                     <tabBarItem key="tabBarItem" title="Item 1" id="zec-Mu-rTe"/>
                     <navigationItem key="navigationItem" id="C6j-8H-hFa"/>
-                    <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
@@ -1402,7 +1388,6 @@ Kuwait</string>
             <objects>
                 <navigationController definesPresentationContext="YES" navigationBarHidden="YES" id="BHA-4A-Bha" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="More" image="more_tab.png" id="P3i-Rv-e3U"/>
-                    <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="vdP-5L-v4Z">
                         <autoresizingMask key="autoresizingMask"/>
@@ -1439,7 +1424,7 @@ Kuwait</string>
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_loginpage.png" id="eT3-up-F44">
-                                <rect key="frame" x="10" y="63" width="300" height="417"/>
+                                <rect key="frame" x="10" y="63" width="300" height="397"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="cXw-jk-cLp" userLabel="Button-list">
@@ -1465,7 +1450,7 @@ Kuwait</string>
                                 </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="User Name" minimumFontSize="17" id="wNL-zt-4BW">
-                                <rect key="frame" x="67" y="93" width="187" height="30"/>
+                                <rect key="frame" x="67" y="76" width="187" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -1474,7 +1459,7 @@ Kuwait</string>
                                 </connections>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" minimumFontSize="17" id="Ldm-4f-evP">
-                                <rect key="frame" x="67" y="131" width="187" height="30"/>
+                                <rect key="frame" x="67" y="114" width="187" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
@@ -1483,7 +1468,7 @@ Kuwait</string>
                                 </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="F0S-UF-Q9C" userLabel="Button-login">
-                                <rect key="frame" x="67" y="169" width="187" height="38"/>
+                                <rect key="frame" x="67" y="152" width="187" height="38"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <state key="normal" backgroundImage="btn_login.png">
@@ -1494,7 +1479,7 @@ Kuwait</string>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Plm-0q-LZf" userLabel="Button-register">
-                                <rect key="frame" x="67" y="215" width="187" height="38"/>
+                                <rect key="frame" x="67" y="198" width="187" height="38"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <state key="normal" backgroundImage="btn_register.png">
@@ -1505,7 +1490,7 @@ Kuwait</string>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="sZC-J5-AtJ" userLabel="Button-twitter">
-                                <rect key="frame" x="67" y="290" width="187" height="38"/>
+                                <rect key="frame" x="67" y="273" width="187" height="38"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <state key="normal" backgroundImage="btn_twitter_login.png">
@@ -1516,7 +1501,7 @@ Kuwait</string>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="NKj-Yz-CYU" userLabel="Button-facebook">
-                                <rect key="frame" x="67" y="336" width="187" height="38"/>
+                                <rect key="frame" x="67" y="319" width="187" height="38"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <state key="normal" backgroundImage="btn_fb_login.png">
@@ -1527,7 +1512,7 @@ Kuwait</string>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="PCS-fp-9oq" userLabel="Button-gmail">
-                                <rect key="frame" x="67" y="382" width="187" height="38"/>
+                                <rect key="frame" x="67" y="365" width="187" height="38"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <state key="normal" backgroundImage="btn_gmail_login.png">
@@ -1538,7 +1523,7 @@ Kuwait</string>
                                 </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Forgot your password?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="tbV-G0-fCW">
-                                <rect key="frame" x="67" y="261" width="187" height="21"/>
+                                <rect key="frame" x="67" y="244" width="187" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <nil key="highlightedColor"/>
@@ -1548,7 +1533,6 @@ Kuwait</string>
                     </view>
                     <tabBarItem key="tabBarItem" title="Item 1" id="64Y-Rz-KFf"/>
                     <navigationItem key="navigationItem" id="dEW-Mg-8io"/>
-                    <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
@@ -1606,11 +1590,11 @@ Kuwait</string>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_loginpage.png" id="lY0-N0-zIW">
-                                <rect key="frame" x="10" y="63" width="300" height="417"/>
+                                <rect key="frame" x="10" y="63" width="300" height="397"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="  Name" minimumFontSize="17" id="4w8-A1-jwz">
-                                <rect key="frame" x="68" y="102" width="185" height="30"/>
+                                <rect key="frame" x="68" y="86" width="185" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -1619,7 +1603,7 @@ Kuwait</string>
                                 </connections>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="  Mobile No." minimumFontSize="17" id="7yF-iA-lpo">
-                                <rect key="frame" x="68" y="140" width="185" height="30"/>
+                                <rect key="frame" x="68" y="124" width="185" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -1628,13 +1612,13 @@ Kuwait</string>
                                 </connections>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="  Select City" minimumFontSize="17" id="cUh-rr-9al">
-                                <rect key="frame" x="68" y="178" width="185" height="30"/>
+                                <rect key="frame" x="68" y="162" width="185" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="  E-Mail" minimumFontSize="17" id="ELc-BC-FGS">
-                                <rect key="frame" x="68" y="216" width="185" height="30"/>
+                                <rect key="frame" x="68" y="200" width="185" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -1643,7 +1627,7 @@ Kuwait</string>
                                 </connections>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="  User Name" minimumFontSize="17" id="g2x-7H-gKS">
-                                <rect key="frame" x="68" y="254" width="185" height="30"/>
+                                <rect key="frame" x="68" y="238" width="185" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -1652,7 +1636,7 @@ Kuwait</string>
                                 </connections>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="  Password" minimumFontSize="17" id="oCT-wH-lcz">
-                                <rect key="frame" x="68" y="292" width="185" height="30"/>
+                                <rect key="frame" x="68" y="276" width="185" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -1661,7 +1645,7 @@ Kuwait</string>
                                 </connections>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="  Confirm Password" minimumFontSize="17" id="Pij-2v-PtR">
-                                <rect key="frame" x="68" y="330" width="185" height="30"/>
+                                <rect key="frame" x="68" y="314" width="185" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -1670,7 +1654,7 @@ Kuwait</string>
                                 </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="jou-bT-ZiV">
-                                <rect key="frame" x="68" y="368" width="185" height="40"/>
+                                <rect key="frame" x="68" y="352" width="185" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" backgroundImage="btn_register.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -1680,11 +1664,11 @@ Kuwait</string>
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mylist_arrow_down.png" id="tL3-Rp-1Xu">
-                                <rect key="frame" x="223" y="187" width="23" height="12"/>
+                                <rect key="frame" x="223" y="171" width="23" height="12"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="n2q-3P-tKI">
-                                <rect key="frame" x="68" y="178" width="185" height="30"/>
+                                <rect key="frame" x="68" y="162" width="185" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <state key="normal">
@@ -1697,7 +1681,6 @@ Kuwait</string>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
@@ -1717,6 +1700,8 @@ Kuwait</string>
     </scenes>
     <resources>
         <image name="bg_loginpage.png" width="604" height="746"/>
+        <image name="bg_loginpage.png" width="604" height="746"/>
+        <image name="bg_loginpage.png" width="604" height="746"/>
         <image name="branch_img.png" width="123" height="72"/>
         <image name="btn_about_market.png" width="197" height="57"/>
         <image name="btn_add_new_friend.png" width="281" height="58"/>
@@ -1731,11 +1716,23 @@ Kuwait</string>
         <image name="btn_login.png" width="411" height="85"/>
         <image name="btn_logout.png" width="411" height="85"/>
         <image name="btn_nav_add.png" width="83" height="60"/>
+        <image name="btn_nav_add.png" width="83" height="60"/>
+        <image name="btn_nav_back.png" width="77" height="61"/>
+        <image name="btn_nav_back.png" width="77" height="61"/>
+        <image name="btn_nav_back.png" width="77" height="61"/>
+        <image name="btn_nav_back.png" width="77" height="61"/>
         <image name="btn_nav_back.png" width="77" height="61"/>
         <image name="btn_nav_cancel.png" width="106" height="62"/>
         <image name="btn_nav_list.png" width="83" height="60"/>
+        <image name="btn_nav_list.png" width="83" height="60"/>
+        <image name="btn_nav_list.png" width="83" height="60"/>
+        <image name="btn_nav_list.png" width="83" height="60"/>
+        <image name="btn_nav_list.png" width="83" height="60"/>
+        <image name="btn_nav_list.png" width="83" height="60"/>
+        <image name="btn_nav_list.png" width="83" height="60"/>
         <image name="btn_nav_search.png" width="71" height="60"/>
         <image name="btn_plus.png" width="47" height="48"/>
+        <image name="btn_register.png" width="411" height="85"/>
         <image name="btn_register.png" width="411" height="85"/>
         <image name="btn_remove_favorite.png" width="120" height="50"/>
         <image name="btn_search.png" width="247" height="85"/>
@@ -1744,20 +1741,41 @@ Kuwait</string>
         <image name="btn_twitter_login.png" width="411" height="85"/>
         <image name="btn_unsel_purchase.png" width="135" height="46"/>
         <image name="cell-big-bg.png" width="603" height="309"/>
+        <image name="cell-big-bg.png" width="603" height="309"/>
         <image name="check_sendlist.png" width="35" height="30"/>
         <image name="favorite_badge.png" width="89" height="75"/>
         <image name="favorite_header.png" width="592" height="69"/>
         <image name="favorite_tab.png" width="32" height="32"/>
         <image name="favorite_tab_bg.png" width="613" height="754"/>
+        <image name="favorite_tab_bg.png" width="613" height="754"/>
         <image name="firstbg.png" width="640" height="960"/>
         <image name="friend_list_bg.png" width="318" height="960"/>
         <image name="market_header1.png" width="640" height="132"/>
+        <image name="market_header1.png" width="640" height="132"/>
         <image name="more_tab.png" width="32" height="32"/>
+        <image name="mylist_arrow.png" width="36" height="61"/>
+        <image name="mylist_arrow.png" width="36" height="61"/>
         <image name="mylist_arrow.png" width="36" height="61"/>
         <image name="mylist_arrow_down.png" width="61" height="32"/>
         <image name="mylist_header_bg.png" width="598" height="67"/>
         <image name="mylist_tab.png" width="32" height="32"/>
         <image name="offer_company_bg.png" width="640" height="860"/>
+        <image name="offer_company_bg.png" width="640" height="860"/>
+        <image name="offer_company_bg.png" width="640" height="860"/>
+        <image name="offer_company_bg.png" width="640" height="860"/>
+        <image name="offer_company_bg.png" width="640" height="860"/>
+        <image name="offer_company_bg.png" width="640" height="860"/>
+        <image name="offer_company_bg.png" width="640" height="860"/>
+        <image name="offer_company_bg.png" width="640" height="860"/>
+        <image name="offer_company_bg.png" width="640" height="860"/>
+        <image name="offer_header.png" width="640" height="91"/>
+        <image name="offer_header.png" width="640" height="91"/>
+        <image name="offer_header.png" width="640" height="91"/>
+        <image name="offer_header.png" width="640" height="91"/>
+        <image name="offer_header.png" width="640" height="91"/>
+        <image name="offer_header.png" width="640" height="91"/>
+        <image name="offer_header.png" width="640" height="91"/>
+        <image name="offer_header.png" width="640" height="91"/>
         <image name="offer_header.png" width="640" height="91"/>
         <image name="offer_tab.png" width="32" height="32"/>
         <image name="offers_bg.png" width="640" height="855"/>
