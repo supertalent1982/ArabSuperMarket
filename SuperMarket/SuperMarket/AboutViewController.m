@@ -13,7 +13,8 @@
 @end
 
 @implementation AboutViewController
-
+@synthesize selCompany;
+@synthesize img_companyLogo;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -27,7 +28,11 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.lb_title.text = self.companyName;
+    if([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+        self.lb_title.text = selCompany.companyNameEn;
+    if([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
+        self.lb_title.text = selCompany.companyNameAr;
+/*
     NSString *docsDir;
     NSArray *dirPaths;
     
@@ -79,6 +84,21 @@
         }
         
     }
+ */
+    if([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
+        self.lb_company_summary.text = selCompany.companyDescEn;
+        self.lb_address.text = selCompany.companyAddressEn;
+        
+    }
+    if([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"]){
+        self.lb_company_summary.text = selCompany.companyDescAr;
+        self.lb_address.text = selCompany.companyAddressAr;
+        
+    }
+    self.lb_email.text = selCompany.companyEmail;
+    self.lb_telephone.text = selCompany.companyPhone;
+    self.lb_fax.text = selCompany.companyFax;
+    [img_companyLogo setImageURL:[NSURL URLWithString:selCompany.companyAboutUsLogo]];
 }
 
 - (void)didReceiveMemoryWarning

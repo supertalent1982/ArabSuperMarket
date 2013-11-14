@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <sqlite3.h>
+#import "CompanyObject.h"
 @interface OffersViewController : UIViewController<UIGestureRecognizerDelegate, UIScrollViewDelegate>{
     sqlite3 *projectDB;
     NSString *databasePath;
@@ -15,4 +16,11 @@
 - (IBAction)select_offers:(id)sender;
 @property (nonatomic, strong) NSMutableArray *logoArray;
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollCompanies;
+
+@property(nonatomic, retain) NSXMLParser *xmlParser;
+@property(nonatomic, retain) NSMutableString *soapResults;
+@property(nonatomic, retain) NSMutableData *webData;
+@property(nonatomic, assign) 	BOOL recordResults;
+@property(nonatomic, strong) CompanyObject *companyObj;
+@property(nonatomic, assign) bool errEncounter;
 @end

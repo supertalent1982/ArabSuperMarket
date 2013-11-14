@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import <sqlite3.h>
+#import "CompanyObject.h"
+#import "Setting.h"
+#import "AsyncImageView.h"
 @interface AboutViewController : UIViewController{
     sqlite3 *projectDB;
     NSString *databasePath;
@@ -25,6 +28,6 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *lb_title;
 @property (weak, nonatomic) IBOutlet UIImageView *img_branches;
-@property (weak, nonatomic) IBOutlet UIImageView *img_companyLogo;
-@property (nonatomic, strong) NSString *companyName;
+@property (weak, nonatomic) IBOutlet AsyncImageView *img_companyLogo;
+@property (nonatomic, strong) CompanyObject *selCompany;
 @end

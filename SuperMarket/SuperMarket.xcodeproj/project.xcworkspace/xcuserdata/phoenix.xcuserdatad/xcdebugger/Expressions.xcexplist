@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "-[OffersViewController parser:didEndElement:namespaceURI:qualifiedName:]:OffersViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[Setting shareInstance].arrayCompany">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

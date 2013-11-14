@@ -47,13 +47,13 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="326" y="-555"/>
+            <point key="canvasLocation" x="886" y="-563"/>
         </scene>
         <!--Navigation Controller - Offers-->
         <scene sceneID="jU0-qY-8eO">
             <objects>
                 <navigationController definesPresentationContext="YES" navigationBarHidden="YES" id="Tzt-fL-ltF" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Offers" image="offer_tab.png" id="56G-4g-tYx"/>
+                    <tabBarItem key="tabBarItem" title="Offers" image="tab_offer.png" id="56G-4g-tYx"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="fUZ-fy-FQw">
                         <autoresizingMask key="autoresizingMask"/>
@@ -64,7 +64,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ePk-Eu-Gx2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-597" y="714"/>
+            <point key="canvasLocation" x="-97" y="566"/>
         </scene>
         <!--Search View Controller - Search-->
         <scene sceneID="MmC-bY-H4y">
@@ -160,7 +160,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Uv5-hY-MMR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-150" y="1406"/>
+            <point key="canvasLocation" x="410" y="1398"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="Jen-Be-9EH">
@@ -183,7 +183,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8Re-yD-6By" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="800" y="-329"/>
+            <point key="canvasLocation" x="1360" y="-337"/>
         </scene>
         <!--Offers View Controller - Offers-->
         <scene sceneID="Vah-Jb-aBY">
@@ -219,7 +219,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-574" y="1414"/>
+            <point key="canvasLocation" x="-14" y="1406"/>
         </scene>
         <!--About View Controller-->
         <scene sceneID="aNQ-UP-4Et">
@@ -266,12 +266,12 @@
                                     <action selector="onBtnShare:" destination="pnZ-ef-WPu" eventType="touchUpInside" id="okw-EO-HoY"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="market_header1.png" id="Umy-xA-4v2">
-                                <rect key="frame" x="0.0" y="49" width="320" height="63"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="Umy-xA-4v2" customClass="AsyncImageView">
+                                <rect key="frame" x="0.0" y="49" width="320" height="310"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="About Us" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="wwS-Pz-Y6P">
-                                <rect key="frame" x="27" y="70" width="83" height="21"/>
+                                <rect key="frame" x="217" y="70" width="83" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
@@ -381,7 +381,7 @@ Kuwait</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bWY-Sw-35K" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1300" y="1420"/>
+            <point key="canvasLocation" x="-740" y="1412"/>
         </scene>
         <!--Company View Controller-->
         <scene sceneID="5Ad-Qr-gSq">
@@ -428,12 +428,12 @@ Kuwait</string>
                                     <action selector="onBtnCancel:" destination="n6g-ek-jYq" eventType="touchUpInside" id="Rmr-hH-N83"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="market_header1.png" id="be7-bG-aam">
-                                <rect key="frame" x="0.0" y="49" width="320" height="57"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="be7-bG-aam" customClass="AsyncImageView">
+                                <rect key="frame" x="0.0" y="49" width="320" height="58"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="1zl-zC-6To" userLabel="Button-about">
-                                <rect key="frame" x="20" y="62" width="106" height="31"/>
+                                <rect key="frame" x="194" y="62" width="106" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <state key="normal" backgroundImage="btn_about_market.png">
@@ -559,6 +559,7 @@ Kuwait</string>
                     <nil key="simulatedTopBarMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics"/>
                     <connections>
+                        <outlet property="BigLogo" destination="be7-bG-aam" id="AsL-PX-iWg"/>
                         <outlet property="btnCancel" destination="Enb-ZV-OeZ" id="Zmh-l4-Ib0"/>
                         <outlet property="btnSearch" destination="Vz8-d0-qPr" id="D2s-sI-mq9"/>
                         <outlet property="btnShare" destination="VDi-A3-GFs" id="x1t-Xd-m0M"/>
@@ -569,7 +570,7 @@ Kuwait</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tF9-25-oEr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-936" y="1414"/>
+            <point key="canvasLocation" x="-376" y="1406"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Qq2-bZ-yQ2">
@@ -586,13 +587,13 @@ Kuwait</string>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eDW-u8-Nux" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-85" y="-555"/>
+            <point key="canvasLocation" x="475" y="-563"/>
         </scene>
         <!--Navigation Controller - Search-->
         <scene sceneID="auM-Yh-ogp">
             <objects>
                 <navigationController definesPresentationContext="YES" navigationBarHidden="YES" id="LQm-MQ-HSj" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Search" image="search_tab.png" id="q3W-4R-CXi"/>
+                    <tabBarItem key="tabBarItem" title="Search" image="tab_search.png" id="q3W-4R-CXi"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="wYM-jY-VwA">
                         <autoresizingMask key="autoresizingMask"/>
@@ -603,18 +604,18 @@ Kuwait</string>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cxt-bX-Emw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-130" y="682"/>
+            <point key="canvasLocation" x="430" y="674"/>
         </scene>
         <!--My List View Controller - Item 1-->
         <scene sceneID="LUt-jB-8lz">
             <objects>
                 <viewController storyboardIdentifier="MyListView" id="xfL-4B-vCM" customClass="MyListViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="MDx-qs-yjc">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="479.99999999999994"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="offer_company_bg.png" id="Dwb-fY-Qe7">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="479.99999999999994"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="offer_header.png" id="Wqs-qr-Ysa">
@@ -754,7 +755,7 @@ Kuwait</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bee-eY-0ai" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="331" y="1406"/>
+            <point key="canvasLocation" x="891" y="1398"/>
         </scene>
         <!--New List View Controller-->
         <scene sceneID="Odv-jA-XcP">
@@ -971,7 +972,7 @@ Kuwait</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oWq-K3-OpO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="331" y="1969"/>
+            <point key="canvasLocation" x="891" y="1961"/>
         </scene>
         <!--Friend View Controller-->
         <scene sceneID="x02-ra-Nqa">
@@ -1054,13 +1055,13 @@ Kuwait</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UjQ-Y4-2Sn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="776" y="1978"/>
+            <point key="canvasLocation" x="1336" y="1970"/>
         </scene>
         <!--Navigation Controller - My List-->
         <scene sceneID="3yN-dz-i45">
             <objects>
                 <navigationController definesPresentationContext="YES" navigationBarHidden="YES" id="PrA-H7-90c" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="My List" image="mylist_tab.png" id="l3B-Pk-YRy"/>
+                    <tabBarItem key="tabBarItem" title="My List" image="tab_mylist.png" id="l3B-Pk-YRy"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="f4g-Ex-ZGn">
                         <autoresizingMask key="autoresizingMask"/>
@@ -1071,18 +1072,18 @@ Kuwait</string>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Nq7-D2-Wch" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="326" y="690"/>
+            <point key="canvasLocation" x="886" y="682"/>
         </scene>
         <!--Favorite View Controller - Item 1-->
         <scene sceneID="o1A-FA-3kj">
             <objects>
                 <viewController storyboardIdentifier="FavoriteView" id="IWD-EM-naw" customClass="FavoriteViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="wF0-fA-860">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480.00000000000006"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="offer_company_bg.png" id="1DW-0n-YzJ">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="480.00000000000006"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="favorite_tab_bg.png" id="sDb-Hf-yoT">
@@ -1263,13 +1264,13 @@ Kuwait</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cjH-QX-GDU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="786" y="1414"/>
+            <point key="canvasLocation" x="1346" y="1406"/>
         </scene>
         <!--Navigation Controller - Favorite-->
         <scene sceneID="3HQ-e7-Olv">
             <objects>
                 <navigationController definesPresentationContext="YES" navigationBarHidden="YES" id="Ifk-x8-1hS" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Favorite" image="favorite_tab.png" id="0qL-iZ-9Fw"/>
+                    <tabBarItem key="tabBarItem" title="Favorite" image="tab_favorite.png" id="0qL-iZ-9Fw"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="FYi-D9-cbJ">
                         <autoresizingMask key="autoresizingMask"/>
@@ -1280,7 +1281,7 @@ Kuwait</string>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="I4q-af-ZlH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="770" y="690"/>
+            <point key="canvasLocation" x="1330" y="682"/>
         </scene>
         <!--More View Controller - Item 1-->
         <scene sceneID="IcW-o0-nKk">
@@ -1381,13 +1382,13 @@ Kuwait</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pit-R7-d16" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1208" y="1380"/>
+            <point key="canvasLocation" x="1768" y="1372"/>
         </scene>
         <!--Navigation Controller - More-->
         <scene sceneID="Wlq-ej-nFL">
             <objects>
                 <navigationController definesPresentationContext="YES" navigationBarHidden="YES" id="BHA-4A-Bha" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="More" image="more_tab.png" id="P3i-Rv-e3U"/>
+                    <tabBarItem key="tabBarItem" title="More" image="tab_more.png" id="P3i-Rv-e3U"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="vdP-5L-v4Z">
                         <autoresizingMask key="autoresizingMask"/>
@@ -1398,7 +1399,7 @@ Kuwait</string>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NCj-4z-d6e" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1226" y="690"/>
+            <point key="canvasLocation" x="1786" y="682"/>
         </scene>
         <!--My Account View Controller - Item 1-->
         <scene sceneID="BPQ-r6-QdM">
@@ -1542,7 +1543,7 @@ Kuwait</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BLp-YH-90p" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1575" y="1380"/>
+            <point key="canvasLocation" x="2135" y="1372"/>
         </scene>
         <!--Register View Controller-->
         <scene sceneID="CIf-ju-Vb9">
@@ -1695,12 +1696,10 @@ Kuwait</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fZh-50-wBv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1924" y="1380"/>
+            <point key="canvasLocation" x="2484" y="1372"/>
         </scene>
     </scenes>
     <resources>
-        <image name="bg_loginpage.png" width="604" height="746"/>
-        <image name="bg_loginpage.png" width="604" height="746"/>
         <image name="bg_loginpage.png" width="604" height="746"/>
         <image name="branch_img.png" width="123" height="72"/>
         <image name="btn_about_market.png" width="197" height="57"/>
@@ -1716,23 +1715,11 @@ Kuwait</string>
         <image name="btn_login.png" width="411" height="85"/>
         <image name="btn_logout.png" width="411" height="85"/>
         <image name="btn_nav_add.png" width="83" height="60"/>
-        <image name="btn_nav_add.png" width="83" height="60"/>
-        <image name="btn_nav_back.png" width="77" height="61"/>
-        <image name="btn_nav_back.png" width="77" height="61"/>
-        <image name="btn_nav_back.png" width="77" height="61"/>
-        <image name="btn_nav_back.png" width="77" height="61"/>
         <image name="btn_nav_back.png" width="77" height="61"/>
         <image name="btn_nav_cancel.png" width="106" height="62"/>
         <image name="btn_nav_list.png" width="83" height="60"/>
-        <image name="btn_nav_list.png" width="83" height="60"/>
-        <image name="btn_nav_list.png" width="83" height="60"/>
-        <image name="btn_nav_list.png" width="83" height="60"/>
-        <image name="btn_nav_list.png" width="83" height="60"/>
-        <image name="btn_nav_list.png" width="83" height="60"/>
-        <image name="btn_nav_list.png" width="83" height="60"/>
         <image name="btn_nav_search.png" width="71" height="60"/>
         <image name="btn_plus.png" width="47" height="48"/>
-        <image name="btn_register.png" width="411" height="85"/>
         <image name="btn_register.png" width="411" height="85"/>
         <image name="btn_remove_favorite.png" width="120" height="50"/>
         <image name="btn_search.png" width="247" height="85"/>
@@ -1741,46 +1728,24 @@ Kuwait</string>
         <image name="btn_twitter_login.png" width="411" height="85"/>
         <image name="btn_unsel_purchase.png" width="135" height="46"/>
         <image name="cell-big-bg.png" width="603" height="309"/>
-        <image name="cell-big-bg.png" width="603" height="309"/>
         <image name="check_sendlist.png" width="35" height="30"/>
         <image name="favorite_badge.png" width="89" height="75"/>
         <image name="favorite_header.png" width="592" height="69"/>
-        <image name="favorite_tab.png" width="32" height="32"/>
-        <image name="favorite_tab_bg.png" width="613" height="754"/>
         <image name="favorite_tab_bg.png" width="613" height="754"/>
         <image name="firstbg.png" width="640" height="960"/>
         <image name="friend_list_bg.png" width="318" height="960"/>
-        <image name="market_header1.png" width="640" height="132"/>
-        <image name="market_header1.png" width="640" height="132"/>
-        <image name="more_tab.png" width="32" height="32"/>
-        <image name="mylist_arrow.png" width="36" height="61"/>
-        <image name="mylist_arrow.png" width="36" height="61"/>
         <image name="mylist_arrow.png" width="36" height="61"/>
         <image name="mylist_arrow_down.png" width="61" height="32"/>
         <image name="mylist_header_bg.png" width="598" height="67"/>
-        <image name="mylist_tab.png" width="32" height="32"/>
-        <image name="offer_company_bg.png" width="640" height="860"/>
-        <image name="offer_company_bg.png" width="640" height="860"/>
-        <image name="offer_company_bg.png" width="640" height="860"/>
-        <image name="offer_company_bg.png" width="640" height="860"/>
-        <image name="offer_company_bg.png" width="640" height="860"/>
-        <image name="offer_company_bg.png" width="640" height="860"/>
-        <image name="offer_company_bg.png" width="640" height="860"/>
-        <image name="offer_company_bg.png" width="640" height="860"/>
         <image name="offer_company_bg.png" width="640" height="860"/>
         <image name="offer_header.png" width="640" height="91"/>
-        <image name="offer_header.png" width="640" height="91"/>
-        <image name="offer_header.png" width="640" height="91"/>
-        <image name="offer_header.png" width="640" height="91"/>
-        <image name="offer_header.png" width="640" height="91"/>
-        <image name="offer_header.png" width="640" height="91"/>
-        <image name="offer_header.png" width="640" height="91"/>
-        <image name="offer_header.png" width="640" height="91"/>
-        <image name="offer_header.png" width="640" height="91"/>
-        <image name="offer_tab.png" width="32" height="32"/>
         <image name="offers_bg.png" width="640" height="855"/>
-        <image name="search_tab.png" width="32" height="32"/>
         <image name="send_to_friend.png" width="601" height="825"/>
+        <image name="tab_favorite.png" width="32" height="32"/>
+        <image name="tab_more.png" width="32" height="32"/>
+        <image name="tab_mylist.png" width="32" height="32"/>
+        <image name="tab_offer.png" width="32" height="32"/>
+        <image name="tab_search.png" width="32" height="32"/>
         <image name="table_expiredoffer.png" width="640" height="74"/>
         <image name="table_sec_currentoffer.png" width="640" height="74"/>
         <image name="title_friend_request.png" width="317" height="45"/>
