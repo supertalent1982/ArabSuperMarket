@@ -104,6 +104,7 @@
 		D0029264182402AE00457166 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D0029263182402AE00457166 /* libsqlite3.0.dylib */; };
 		D0029266182402BA00457166 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D0029265182402BA00457166 /* libsqlite3.dylib */; };
 		D00292691824273500457166 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00292681824273500457166 /* AboutViewController.m */; };
+		D0731A1018355CFD007C755D /* OfferObject.m in Sources */ = {isa = PBXBuildFile; fileRef = D0731A0F18355CFD007C755D /* OfferObject.m */; };
 		D08AA22D18339DDD007711F8 /* CompanyObject.m in Sources */ = {isa = PBXBuildFile; fileRef = D08AA22C18339DDD007711F8 /* CompanyObject.m */; };
 		D08AA2311833A3CE007711F8 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = D08AA2301833A3CE007711F8 /* MBProgressHUD.m */; };
 		D08AA2351833E857007711F8 /* AsyncImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = D08AA2341833E857007711F8 /* AsyncImageView.m */; };
@@ -251,6 +252,8 @@
 		D0029265182402BA00457166 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		D00292671824273500457166 /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
 		D00292681824273500457166 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
+		D0731A0E18355CFD007C755D /* OfferObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OfferObject.h; sourceTree = "<group>"; };
+		D0731A0F18355CFD007C755D /* OfferObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OfferObject.m; sourceTree = "<group>"; };
 		D08AA22B18339DDD007711F8 /* CompanyObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CompanyObject.h; sourceTree = "<group>"; };
 		D08AA22C18339DDD007711F8 /* CompanyObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CompanyObject.m; sourceTree = "<group>"; };
 		D08AA22F1833A3CE007711F8 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
@@ -515,6 +518,8 @@
 				D00291B91823A88400457166 /* Setting.m */,
 				D08AA22B18339DDD007711F8 /* CompanyObject.h */,
 				D08AA22C18339DDD007711F8 /* CompanyObject.m */,
+				D0731A0E18355CFD007C755D /* OfferObject.h */,
+				D0731A0F18355CFD007C755D /* OfferObject.m */,
 				D08AA2331833E857007711F8 /* AsyncImageView.h */,
 				D08AA2341833E857007711F8 /* AsyncImageView.m */,
 				D08AA22E1833A3CE007711F8 /* MBProgressHUD */,
@@ -774,6 +779,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D00292601823BD2100457166 /* CompanyViewController.m in Sources */,
+				D0731A1018355CFD007C755D /* OfferObject.m in Sources */,
 				D00290E81820E74C00457166 /* ViewController.m in Sources */,
 				D0FBD5A81827458B00CE728B /* MyAccountViewController.m in Sources */,
 				D00290E21820E74C00457166 /* AppDelegate.m in Sources */,
@@ -929,7 +935,7 @@
 				INFOPLIST_FILE = "SuperMarket/SuperMarket-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "F5393A7E-2E9E-4B8B-A784-58442B761846";
+				PROVISIONING_PROFILE = "6BD350C5-9818-4F24-8317-28024522FD74";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -946,7 +952,7 @@
 				INFOPLIST_FILE = "SuperMarket/SuperMarket-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "F5393A7E-2E9E-4B8B-A784-58442B761846";
+				PROVISIONING_PROFILE = "6BD350C5-9818-4F24-8317-28024522FD74";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

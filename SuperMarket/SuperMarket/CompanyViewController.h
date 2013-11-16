@@ -9,12 +9,17 @@
 #import <UIKit/UIKit.h>
 #import "CompanyObject.h"
 #import "AsyncImageView.h"
-@interface CompanyViewController : UIViewController<UISearchBarDelegate>
+#import "OfferObject.h"
+@interface CompanyViewController : UIViewController<UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate>
 - (IBAction)onBtnBack:(id)sender;
 - (IBAction)onBtnSearch:(id)sender;
 - (IBAction)onBtnShare:(id)sender;
 - (IBAction)onBtnAbout:(id)sender;
 - (IBAction)onBtnCancel:(id)sender;
+
+@property (weak, nonatomic) IBOutlet UITableView *expireTable;
+
+@property (weak, nonatomic) IBOutlet UITableView *currentTable;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (weak, nonatomic) IBOutlet UIButton *btnCancel;
 @property (weak, nonatomic) IBOutlet UIButton *btnback;
@@ -28,4 +33,8 @@
 @property(nonatomic, retain) NSMutableData *webData;
 @property(nonatomic, assign) 	BOOL recordResults;
 @property(nonatomic, assign) bool errEncounter;
+@property(nonatomic, strong) NSMutableArray *currentofferArray;
+@property(nonatomic, strong) NSMutableArray *expiredofferArray;
+@property(nonatomic, strong) OfferObject *offerObj;
+
 @end

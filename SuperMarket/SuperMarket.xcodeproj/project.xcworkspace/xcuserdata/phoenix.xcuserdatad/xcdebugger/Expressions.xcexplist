@@ -10,5 +10,21 @@
             </PersistentString>
          </PersistentStrings>
       </ContextState>
+      <ContextState
+         contextName = "-[CompanyViewController parser:didEndElement:namespaceURI:qualifiedName:]:CompanyViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "currentofferArray">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[CompanyViewController tableView:numberOfRowsInSection:]:CompanyViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "currentofferArray.count">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
    </ContextStates>
 </VariablesViewState>
