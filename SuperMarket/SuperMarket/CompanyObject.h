@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "BranchObject.h"
 @interface CompanyObject : NSObject
 @property (strong, nonatomic) NSString *companyID;
 @property (strong, nonatomic) NSString *companyNameAr;
@@ -31,6 +31,4 @@
 @property (strong, nonatomic) NSString *companySloganEn;
 @property (strong, nonatomic) NSString *companyBranches;
 @property (strong, nonatomic) NSString *companyOffers;
-@property (strong, nonatomic) NSString *companyAnalyticDatas;
-
 @end

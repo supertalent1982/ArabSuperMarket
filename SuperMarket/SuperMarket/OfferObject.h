@@ -22,6 +22,5 @@
 @property (nonatomic, strong) NSString *offerBranchList;
 @property (nonatomic, strong) NSString *offerlastUpdateTime;
 @property (nonatomic, strong) NSString *offerProducts;
-@property (nonatomic, strong) NSString *offerAnalyticDatas;
 
 @end

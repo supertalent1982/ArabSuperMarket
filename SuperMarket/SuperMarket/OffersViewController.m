@@ -146,6 +146,7 @@
     [scrollCompanies setContentSize:CGSizeMake(320 + 276 * (logoArray.count - 1), 245)];
     scrollCompanies.delegate = self;
      */
+
     NSString *soapMessage = [NSString stringWithFormat:
                              @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                              "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
@@ -198,13 +199,23 @@
 }
 -(void)showCompanyLogo{
     for (int i = 0; i< [Setting sharedInstance].arrayCompany.count; i++){
-        UIView *companyLogoView = [[UIView alloc]initWithFrame:CGRectMake(23 + i * 277, 0, 262, 245)];
-        AsyncImageView *imgBasicLogo = [[AsyncImageView alloc]initWithFrame:CGRectMake(12, 5, 250, 230)];
+        CGRect scrollFrame = scrollCompanies.frame;
+        if (IS_IPHONE_5) {
+            scrollFrame.origin.y = 190;
+        }
+        else if (IS_IPHONE_4)
+        {
+            scrollFrame.origin.y = 130;
+        }
+        [scrollCompanies setFrame:scrollFrame];
+        
+        UIView *companyLogoView = [[UIView alloc]initWithFrame:CGRectMake(10 + i * 300, 0, 300, 278)];
+        AsyncImageView *imgBasicLogo = [[AsyncImageView alloc]initWithFrame:CGRectMake(12, 5, 285, 253)];
         CompanyObject *compObj = [[Setting sharedInstance].arrayCompany objectAtIndex:i];
         [imgBasicLogo setImageURL:[NSURL URLWithString:compObj.companyLogo]];
         [companyLogoView addSubview:imgBasicLogo];
         
-        UIImageView *imgLogo = [[UIImageView alloc]initWithFrame:CGRectMake(7, 0, 260, 245)];
+        UIImageView *imgLogo = [[UIImageView alloc]initWithFrame:CGRectMake(7, 0, 295, 278)];
         imgLogo.image = [UIImage imageNamed:@"logoCase.png"];
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(select_offers:)];
         tapGesture.delegate = self;
@@ -217,7 +228,7 @@
         imgPin.image = [UIImage imageNamed:@"company_pin.png"];
         [companyLogoView addSubview:imgPin];
         
-        UILabel *lb_pin = [[UILabel alloc]initWithFrame:CGRectMake(17, 20, 91, 21)];
+        UILabel *lb_pin = [[UILabel alloc]initWithFrame:CGRectMake(17, 22, 91, 21)];
         if([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
             lb_pin.text = [NSString stringWithFormat:@"%@ offers", compObj.companyNameEn];
         if([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
@@ -229,11 +240,11 @@
         
         NSString *bottomStr;
         if([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
-            bottomStr = [NSString stringWithFormat:@"Lastest Offers in %@", compObj.companyNameEn];
+            bottomStr = compObj.companySloganEn;
         if([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
-            bottomStr = [NSString stringWithFormat:@"Lastest Offers in %@", compObj.companyNameAr];
+            bottomStr = compObj.companySloganAr;
         
-        UILabel *lb_bottom1 = [[UILabel alloc]initWithFrame:CGRectMake(31, 191, 211, 21)];
+        UILabel *lb_bottom1 = [[UILabel alloc]initWithFrame:CGRectMake(21, 219, 260, 21)];
         lb_bottom1.text = bottomStr;
         [lb_bottom1 setFont:[UIFont fontWithName:@"Helvetica Neue" size:14.0]];
         [lb_bottom1 setTextColor:[UIColor whiteColor]];
@@ -241,7 +252,7 @@
         [companyLogoView addSubview:lb_bottom1];
         
         
-        UILabel *lb_bottom2 = [[UILabel alloc] initWithFrame:CGRectMake(31, 207, 211, 21)];
+        UILabel *lb_bottom2 = [[UILabel alloc] initWithFrame:CGRectMake(21, 235, 260, 21)];
         lb_bottom2.text = @"Browse latest offers in supermarket";
         [lb_bottom2 setFont:[UIFont fontWithName:@"Helvetica Neue" size:10.0]];
         [lb_bottom2 setTextColor:[UIColor orangeColor]];
@@ -250,7 +261,7 @@
         
         [scrollCompanies addSubview:companyLogoView];
     }
-    [scrollCompanies setContentSize:CGSizeMake(320 + 276 * (logoArray.count - 1), 245)];
+    [scrollCompanies setContentSize:CGSizeMake(320 + 300 * (logoArray.count - 1), 278)];
     scrollCompanies.delegate = self;
 }
 -(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response

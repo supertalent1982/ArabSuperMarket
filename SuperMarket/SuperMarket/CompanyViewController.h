@@ -17,7 +17,10 @@
 - (IBAction)onBtnAbout:(id)sender;
 - (IBAction)onBtnCancel:(id)sender;
 
+@property (weak, nonatomic) IBOutlet UIView *tablesView;
+@property (weak, nonatomic) IBOutlet UIImageView *expOfferSection;
 @property (weak, nonatomic) IBOutlet UITableView *expireTable;
+@property (weak, nonatomic) IBOutlet UIImageView *curOfferSection;
 
 @property (weak, nonatomic) IBOutlet UITableView *currentTable;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
@@ -34,7 +37,9 @@
 @property(nonatomic, assign) 	BOOL recordResults;
 @property(nonatomic, assign) bool errEncounter;
 @property(nonatomic, strong) NSMutableArray *currentofferArray;
+@property(nonatomic, strong) NSMutableArray *currentArray;
 @property(nonatomic, strong) NSMutableArray *expiredofferArray;
+@property(nonatomic, strong) NSMutableArray *expiredArray;
 @property(nonatomic, strong) OfferObject *offerObj;
-
+@property (nonatomic, strong) BranchObject *branchObj;
 @end

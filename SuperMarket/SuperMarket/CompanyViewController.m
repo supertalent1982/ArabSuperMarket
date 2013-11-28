@@ -11,6 +11,8 @@
 #import "PPRevealSideViewController.h"
 #import "FriendViewController.h"
 #import "Setting.h"
+#import "ProductObject.h"
+#import "ProductViewController.h"
 @interface CompanyViewController ()
 
 @end
@@ -24,10 +26,15 @@
 @synthesize soapResults;
 @synthesize errEncounter;
 @synthesize currentofferArray;
+@synthesize currentArray;
 @synthesize expiredofferArray;
+@synthesize expiredArray;
 @synthesize offerObj;
 @synthesize currentTable;
 @synthesize expireTable;
+@synthesize tablesView;
+@synthesize curOfferSection;
+@synthesize expOfferSection;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -57,8 +64,26 @@
             break;
         }
     }
+    CGRect tmpFrame = tablesView.frame;
+    if (IS_IPHONE_4) {
+        tmpFrame.size.height = 308;
+    }
+    else if (IS_IPHONE_5) {
+        tmpFrame.size.height = 392;
+    }
+    [tablesView setFrame:tmpFrame];
+    [curOfferSection setFrame:CGRectMake(curOfferSection.frame.origin.x, 0, curOfferSection.frame.size.width, curOfferSection.frame.size.height)];
+    [currentTable setFrame:CGRectMake(currentTable.frame.origin.x, curOfferSection.frame.size.height + 5, currentTable.frame.size.width, tmpFrame.size.height / 2 - curOfferSection.frame.size.height - 10)];
+    
+    [expOfferSection setFrame:CGRectMake(expOfferSection.frame.origin.x, tmpFrame.size.height / 2, expOfferSection.frame.size.width, expOfferSection.frame.size.height)];
+    [expireTable setFrame:CGRectMake(expireTable.frame.origin.x, expOfferSection.frame.origin.y + expOfferSection.frame.size.height + 5, expireTable.frame.size.width, tmpFrame.size.height - expOfferSection.frame.origin.y - expOfferSection.frame.size.height - 10)];
+    
+    
+    
     currentofferArray = [[NSMutableArray alloc]init];
+    currentArray = [[NSMutableArray alloc]init];
     expiredofferArray = [[NSMutableArray alloc]init];
+    expiredArray = [[NSMutableArray alloc]init];
 
     currentTable.backgroundColor = [UIColor clearColor];
     currentTable.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -78,14 +103,18 @@
             [BigLogo setImageURL:[NSURL URLWithString:selCompany.companyBigLogo]];
         }
     }
-    NSDate *date = [[NSDate alloc]init];
-    NSDateFormatter *df = [[NSDateFormatter alloc]init];
-    [df setDateFormat:@"yyyy-MM-dd"];
+    
     
   /*  NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
     [df setLocale:locale];
     NSTimeZone *timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
     [df setTimeZone:timeZone];*/
+    
+}
+-(void)viewWillAppear:(BOOL)animated{
+    NSDate *date = [[NSDate alloc]init];
+    NSDateFormatter *df = [[NSDateFormatter alloc]init];
+    [df setDateFormat:@"yyyy-MM-dd"];
     NSString *dateStr = [df stringFromDate:date];
     NSLog(@"date = %@", dateStr);
     [df setDateFormat:@"hh:mm:ss"];
@@ -103,6 +132,7 @@
                              "</soap:Body>\n"
                              "</soap:Envelope>\n", selCompany.companyID, @"2013-07-15T00:00:00"];
 	NSLog(@"soapMessage = %@\n", soapMessage);
+    
     
 	NSURL *url = [NSURL URLWithString:@"http://q8supermarket.com/Services/MobileService.asmx?op=GetCompanyOffers"];
 	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
@@ -124,6 +154,7 @@
 		NSLog(@"theConnection is NULL");
 	}
 }
+
 -(UITableViewCell *)tableView:(UITableView *)_tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     UITableViewCell *cell;
@@ -133,7 +164,7 @@
             cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"CurrentCell"];
         
         UILabel *lb_title = (UILabel*)[cell viewWithTag:101];
-        OfferObject *obj = [currentofferArray objectAtIndex:indexPath.row];
+        OfferObject *obj = [currentArray objectAtIndex:indexPath.row];
         if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
             lb_title.text = obj.offerTitleEn;
         else if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
@@ -152,7 +183,7 @@
             cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ExpireCell"];
         
         UILabel *lb_title = (UILabel*)[cell viewWithTag:103];
-        OfferObject *obj = [expiredofferArray objectAtIndex:indexPath.row];
+        OfferObject *obj = [expiredArray objectAtIndex:indexPath.row];
         if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
             lb_title.text = obj.offerTitleEn;
         else if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
@@ -165,7 +196,7 @@
             lb_products.text = obj.offerProducts;
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.backgroundView =  [[UIImageView alloc] initWithImage:[ [UIImage imageNamed:@"cell-big-bg.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:5.0] ];
+    cell.backgroundView =  [[UIImageView alloc] initWithImage:[ [UIImage imageNamed:@"offertable_cellbg.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:5.0] ];
     return cell;
 }
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
@@ -174,13 +205,30 @@
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
     if (tableView.tag == 1001){
-        NSLog(@"-------------%d", currentofferArray.count);
-        return currentofferArray.count;
+        return currentArray.count;
     }
     else if (tableView.tag == 1002)
-        return expiredofferArray.count;
+        return expiredArray.count;
     return 0;
     
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (tableView.tag == 1001){
+        UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        ProductViewController *VC = [mainstoryboard instantiateViewControllerWithIdentifier:@"ProductsView"];
+        OfferObject *offObj = [currentArray objectAtIndex:indexPath.row];
+        VC.selOffer = offObj;
+        VC.companyName = self.lb_title.text;
+        [self.navigationController pushViewController:VC animated:YES];
+    }
+    else if (tableView.tag == 1002){
+        UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        ProductViewController *VC = [mainstoryboard instantiateViewControllerWithIdentifier:@"ProductsView"];
+        OfferObject *offObj = [expiredArray objectAtIndex:indexPath.row];
+        VC.selOffer = offObj;
+        VC.companyName = self.lb_title.text;
+        [self.navigationController pushViewController:VC animated:YES];
+    }
 }
 - (void)didReceiveMemoryWarning
 {
@@ -227,6 +275,47 @@
     self.btnback.hidden = NO;
     self.btnShare.hidden = NO;
     self.btnSearch.hidden = NO;
+    [currentArray removeAllObjects];
+    [expiredArray removeAllObjects];
+    for (int i = 0; i < currentofferArray.count; i++)
+        [currentArray addObject:[currentofferArray objectAtIndex:i]];
+    for (int j = 0; j < expiredofferArray.count; j++)
+        [expiredArray addObject:[expiredofferArray objectAtIndex:j]];
+    [currentTable reloadData];
+    [expireTable reloadData];
+}
+-(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar{
+    [self.searchBar resignFirstResponder];
+    NSString *searchText = [searchBar.text lowercaseString];
+    [currentArray removeAllObjects];
+    [expiredArray removeAllObjects];
+    for (int i = 0; i < currentofferArray.count; i++)
+    {
+        OfferObject *obj = [currentofferArray objectAtIndex:i];
+        NSString *titleStr;
+        if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+            titleStr = [obj.offerTitleEn lowercaseString];
+        else if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
+            titleStr = obj.offerTitleAr;
+        
+        if ([titleStr rangeOfString:searchText].location != NSNotFound) {
+            [currentArray addObject:obj];
+        }
+    }
+    for (int j = 0; j < expiredofferArray.count; j++)
+    {
+        OfferObject *obj = [expiredofferArray objectAtIndex:j];
+        NSString *titleStr;
+        if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+            titleStr = [obj.offerTitleEn lowercaseString];
+        else if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
+            titleStr = obj.offerTitleAr;
+        if ([titleStr rangeOfString:searchText].location != NSNotFound) {
+            [expiredArray addObject:obj];
+        }
+    }
+    [currentTable reloadData];
+    [expireTable reloadData];
 }
 
 -(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
@@ -285,7 +374,9 @@
         currentofferArray = Nil;
         expiredofferArray = Nil;
         currentofferArray = [[NSMutableArray alloc]init];
+        currentArray = [[NSMutableArray alloc]init];
         expiredofferArray = [[NSMutableArray alloc]init];
+        expiredArray = [[NSMutableArray alloc]init];
     }
     
     if ([elementName isEqualToString:@"ID"])
@@ -373,20 +464,14 @@
 		}
         recordResults = TRUE;
     }
-    if ([elementName isEqualToString:@"Products"]){
+    if ([elementName isEqualToString:@"TotalProducts"]){
         if(!soapResults)
 		{
 			soapResults = [[NSMutableString alloc] init];
 		}
         recordResults = TRUE;
     }
-    if ([elementName isEqualToString:@"AnalyticDatas"]){
-        if(!soapResults)
-		{
-			soapResults = [[NSMutableString alloc] init];
-		}
-        recordResults = TRUE;
-    }
+
 }
 -(void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string
 {
@@ -425,9 +510,27 @@ bool errEncounter = FALSE;
 	{
 		recordResults = FALSE;
         if ([offerObj.offerIsActive isEqualToString:@"true"])
-            [currentofferArray addObject:offerObj];
-        else
-            [expiredofferArray addObject:offerObj];
+        {
+            
+            NSString *endTimeStr = [offerObj.offerEndDate stringByReplacingOccurrencesOfString:@"T" withString:@" "];
+            NSDateFormatter *df = [[NSDateFormatter alloc]init];
+            [df setDateFormat:@"yyyy-MM-dd hh:mm:ss"];
+            NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+            [df setLocale:locale];
+            NSTimeZone *tz = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+            [df setTimeZone:tz];
+            NSDate *endDate = [df dateFromString:endTimeStr];
+            NSDate *today = [[NSDate alloc]init];
+            
+            if ([today compare:endDate] == NSOrderedAscending){
+                [currentofferArray addObject:offerObj];
+                [currentArray addObject:offerObj];
+            }
+            else{
+                [expiredofferArray addObject:offerObj];
+                [expiredArray addObject:offerObj];
+            }
+        }
         soapResults = nil;
         offerObj = nil;
 	}
@@ -491,15 +594,11 @@ bool errEncounter = FALSE;
         offerObj.offerlastUpdateTime = soapResults;
         soapResults = nil;
     }
-    if ([elementName isEqualToString:@"Products"]){
+    if ([elementName isEqualToString:@"TotalProducts"]){
         recordResults = FALSE;
         offerObj.offerProducts = soapResults;
         soapResults = nil;
     }
-    if ([elementName isEqualToString:@"AnalyticDatas"]){
-        recordResults = FALSE;
-        offerObj.offerAnalyticDatas = soapResults;
-        soapResults = nil;
-   }
+
 }
 @end

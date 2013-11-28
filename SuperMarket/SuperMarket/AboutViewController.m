@@ -8,6 +8,7 @@
 
 #import "AboutViewController.h"
 #import "Setting.h"
+#import "BranchViewController.h"
 @interface AboutViewController ()
 
 @end
@@ -15,6 +16,8 @@
 @implementation AboutViewController
 @synthesize selCompany;
 @synthesize img_companyLogo;
+@synthesize lb_aboutus;
+@synthesize view_info;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -85,6 +88,11 @@
         
     }
  */
+    CGRect tmpFrame = self.lb_company_summary.frame;
+    tmpFrame.origin.y = lb_aboutus.frame.origin.y + 40;
+    tmpFrame.size.height = view_info.frame.origin.y - tmpFrame.origin.y - 65;
+    NSLog(@"%f, %f, %f", view_info.frame.origin.y, tmpFrame.origin.y, tmpFrame.size.height);
+    [self.lb_company_summary setFrame:tmpFrame];
     if([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
         self.lb_company_summary.text = selCompany.companyDescEn;
         self.lb_address.text = selCompany.companyAddressEn;
@@ -105,6 +113,13 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (IBAction)onBranch:(id)sender {
+    UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    BranchViewController *VC = [mainstoryboard instantiateViewControllerWithIdentifier:@"BranchView"];
+    VC.selCompany = selCompany;
+    [self.navigationController pushViewController:VC animated:YES];
 }
 
 - (IBAction)onBtnBack:(id)sender {

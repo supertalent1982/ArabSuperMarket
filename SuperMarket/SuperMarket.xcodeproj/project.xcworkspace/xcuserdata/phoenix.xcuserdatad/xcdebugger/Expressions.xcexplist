@@ -3,14 +3,6 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "-[OffersViewController parser:didEndElement:namespaceURI:qualifiedName:]:OffersViewController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "[Setting shareInstance].arrayCompany">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
          contextName = "-[CompanyViewController parser:didEndElement:namespaceURI:qualifiedName:]:CompanyViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -19,10 +11,61 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[ProductViewController tableView:cellForRowAtIndexPath:]:ProductViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[Setting sharedInstance].myPurchaseList">
+            </PersistentString>
+            <PersistentString
+               value = "[Setting sharedInstance].myFavoriteList">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[SearchViewController parser:didEndElement:namespaceURI:qualifiedName:]:SearchViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "productArray">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[SearchViewController connectionDidFinishLoading:]:SearchViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[Setting sharedInstance].SubCategories">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ProductViewController onBtnFavorite:]:ProductViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[Setting sharedInstance].myFavoriteList">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[CompanyViewController tableView:numberOfRowsInSection:]:CompanyViewController.m">
          <PersistentStrings>
             <PersistentString
                value = "currentofferArray.count">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[OffersViewController parser:didEndElement:namespaceURI:qualifiedName:]:OffersViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[Setting shareInstance].arrayCompany">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ProductViewController onBtnPurchase:]:ProductViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "indexPath">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

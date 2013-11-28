@@ -15,11 +15,15 @@
     sqlite3 *projectDB;
     NSString *databasePath;
 }
+- (IBAction)onBranch:(id)sender;
 
 - (IBAction)onBtnBack:(id)sender;
 
 - (IBAction)onBtnShare:(id)sender;
-@property (weak, nonatomic) IBOutlet UILabel *lb_company_summary;
+@property (weak, nonatomic) IBOutlet UITextView *lb_company_summary;
+@property (weak, nonatomic) IBOutlet UIView *view_info;
+
+@property (weak, nonatomic) IBOutlet UILabel *lb_aboutus;
 
 @property (weak, nonatomic) IBOutlet UILabel *lb_telephone;
 @property (weak, nonatomic) IBOutlet UILabel *lb_fax;
