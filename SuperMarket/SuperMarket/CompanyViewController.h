@@ -10,7 +10,11 @@
 #import "CompanyObject.h"
 #import "AsyncImageView.h"
 #import "OfferObject.h"
-@interface CompanyViewController : UIViewController<UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate>
+#import <sqlite3.h>
+@interface CompanyViewController : UIViewController<UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate>{
+    sqlite3 *projectDB;
+    NSString *databasePath;
+}
 - (IBAction)onBtnBack:(id)sender;
 - (IBAction)onBtnSearch:(id)sender;
 - (IBAction)onBtnShare:(id)sender;

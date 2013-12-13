@@ -12,7 +12,29 @@
 - (id)init
 {
     self = [super init];
-    
+    self.companyAboutUsLogo = @"";
+    self.companyAddressAr = @"";
+    self.companyAddressEn = @"";
+    self.companyAreaID = @"";
+    self.companyBigLogo = @"";
+    self.companyBranches = @"";
+    self.companyDescAr = @"";
+    self.companyDescEn = @"";
+    self.companyEmail = @"";
+    self.companyFax = @"";
+    self.companyID = @"";
+    self.companyLogo = @"";
+    self.companyNameAr = @"";
+    self.companyNameEn = @"";
+    self.companyOffers = @"";
+    self.companyOrderSort = @"";
+    self.companyOverallSort = @"";
+    self.companyPhone = @"";
+    self.companyProductSort = @"";
+    self.companySloganAr = @"";
+    self.companySloganEn = @"";
+    self.companyStateID = @"";
+
     return self;
 }
 

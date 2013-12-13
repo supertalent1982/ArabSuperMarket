@@ -60,6 +60,10 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+
+    
+}
+- (void)viewWillAppear:(BOOL)animated{
     search_list = [[NSMutableArray alloc]init];
     [search_list addObject:@"Select All"];
     [search_list addObject:@"Select Supermarket"];
@@ -78,8 +82,6 @@
     selectType = -1;
 
     
-}
-- (void)viewWillAppear:(BOOL)animated{
     supermarketID = @"0";
     mainCatID = @"0";
     subCatID = @"0";
@@ -95,6 +97,7 @@
     soapResults = Nil;
     recordResults = FALSE;
     selIndex = -1;
+   
 }
 - (void)didReceiveMemoryWarning
 {
@@ -138,6 +141,8 @@
 }
 - (IBAction)onDone:(id)sender {
 
+    if (selIndex == -1)
+        selIndex = 0;
     if (selIndex != -1)
     {
         if (selectType == 0){
@@ -161,6 +166,7 @@
             cityID = obj.stateID;
         }
     }
+
     [UIView beginAnimations:@"AdResize" context:nil];
     [UIView setAnimationDuration:0.7];
     
@@ -187,11 +193,11 @@
                              "<PriceFrom>%@</PriceFrom>\n"
                              "<PriceTo>%@</PriceTo>\n"
                              "<CityList>%@</CityList>\n"
-                             "<CustomerID>0</CustomerID>\n"
+                             "<CustomerID>%@</CustomerID>\n"
                              "<Language>%d</Language>\n"
                              "</SearchProducts>\n"
                              "</soap:Body>\n"
-                             "</soap:Envelope>\n", supermarketID, offerID, mainCatID, subCatID, searchText, priceFrom, priceTo, cityID, myLang];
+                             "</soap:Envelope>\n", supermarketID, offerID, mainCatID, subCatID, searchText, priceFrom, priceTo, cityID, [Setting sharedInstance].customer.customerID, myLang];
 	NSLog(@"soapMessage = %@\n", soapMessage);
     
 	NSURL *url = [NSURL URLWithString:@"http://q8supermarket.com/Services/MobileService.asmx?op=SearchProducts"];
@@ -512,7 +518,23 @@
 		}
         recordResults = TRUE;
     }
+    if ([elementName isEqualToString:@"CompanyID"])
+    {
+        if(!soapResults)
+		{
+			soapResults = [[NSMutableString alloc] init];
+		}
+        recordResults = TRUE;
+    }
     if ([elementName isEqualToString:@"CategoryName"])
+    {
+        if(!soapResults)
+		{
+			soapResults = [[NSMutableString alloc] init];
+		}
+        recordResults = TRUE;
+    }
+    if ([elementName isEqualToString:@"OfferID"])
     {
         if(!soapResults)
 		{
@@ -640,6 +662,7 @@
         UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         SearchResultViewController *vc = [mainstoryboard instantiateViewControllerWithIdentifier:@"SearchResultView"];
         vc.arrayProductsWithCategory = productArray;
+        [self saveProductsInfo];
         [self.navigationController pushViewController:vc animated:YES];
 	}
     if( [elementName isEqualToString:@"SearchResult"])
@@ -654,6 +677,24 @@
     {
         recordResults = FALSE;
         productObj.prodMainCatID = soapResults;
+        soapResults = nil;
+    }
+    if ([elementName isEqualToString:@"CategoryName"])
+    {
+        recordResults = FALSE;
+        soapResults = nil;
+    }
+    
+    if ([elementName isEqualToString:@"CompanyID"])
+    {
+        recordResults = FALSE;
+        productObj.prodCompanyID = soapResults;
+        soapResults = nil;
+    }
+    if ([elementName isEqualToString:@"OfferID"])
+    {
+        recordResults = FALSE;
+        productObj.OfferID = soapResults;
         soapResults = nil;
     }
     if ([elementName isEqualToString:@"ProductID"])
@@ -742,6 +783,60 @@
         soapResults = nil;
     }
 }
+-(void)saveProductsInfo{
+    NSString *docsDir;
+    NSArray *dirPaths;
+    
+    // Get the documents directory
+    dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    
+    docsDir = [dirPaths objectAtIndex:0];
+    
+    // Build the path to the database file
+    databasePath = [[NSString alloc] initWithString: [docsDir stringByAppendingPathComponent: @"Q8SuperMarketDB.db"]];
+
+    const char *dbpath = [databasePath UTF8String];
+    sqlite3_stmt    *statement;
+    
+    if (sqlite3_open(dbpath, &projectDB) == SQLITE_OK)
+    {
+        for (int i = 0; i < searchResultArray.count; i++) {
+            ProductObject *obj = [searchResultArray objectAtIndex:i];
+            BOOL flag = TRUE;
+            
+            NSString *querySQL = [NSString stringWithFormat: @"SELECT * FROM Products WHERE ID = \"%@\"", obj.prodID];
+            
+            const char *query_stmt1 = [querySQL UTF8String];
+            
+            if (sqlite3_prepare_v2(projectDB, query_stmt1, -1, &statement, NULL) == SQLITE_OK)
+            {
+                if (sqlite3_step(statement) != SQLITE_ROW)
+                {
+                    flag = FALSE;
+                    
+                }
+                sqlite3_finalize(statement);
+            }
+            if (flag == FALSE) {
+                querySQL = [NSString stringWithFormat: @"INSERT INTO Products (ID, OfferID, Quantity, MainCatID, MeasureID, SubCatID, OrgPrice, Price, Photo, DescAr, DescEn, StartDate, EndDate, BranchList, VisitsCount, TitleAr, TitleEn, IsActive, lastUpdateTime) VALUES (\"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\")", obj.prodID, obj.OfferID, obj.prodQuantity, obj.prodMainCatID, obj.prodMeasureID, obj.prodSubCatID, obj.prodOrgPrice, obj.prodCurPrice, obj.prodPhotoURL, obj.prodDescAr, obj.prodDescEn, obj.prodStartDate, obj.prodEndDate, obj.prodBranchList, obj.prodVisitsCount, obj.prodTitleAr, obj.prodTitleEn, obj.prodIsActive, obj.prodlastUpdateTime];
+            
+                query_stmt1 = [querySQL UTF8String];
+            
+                if (sqlite3_prepare_v2(projectDB, query_stmt1, -1, &statement, NULL) == SQLITE_OK)
+                {
+                    if (sqlite3_step(statement) == SQLITE_DONE)
+                    {
+                        NSLog(@"Products success");
+                    
+                    }
+                    sqlite3_finalize(statement);
+                }
+            }
+            flag = TRUE;
+        }
+        sqlite3_close(projectDB);
+    }
+}
 -(void)sortArrayProduct:(NSMutableArray*)_arrayProduct{
     if (searchResultArray.count > 1){
         for (int i = 0; i < searchResultArray.count - 1; i++){
@@ -769,14 +864,21 @@
     for (int i = 0; i < searchResultArray.count; i++){
         ProductObject *obj = [searchResultArray objectAtIndex:i];
         ProductsWithCategory *catObj = [[ProductsWithCategory alloc]init];
-        if (![obj.prodFavoriteProducts isEqualToString:@""]){
-            if ([[Setting sharedInstance] isFavoriteExist:obj.prodID] == FALSE)
-                [[Setting sharedInstance].myFavoriteList addObject:obj];
+        if ([[Setting sharedInstance] isFavoriteExist:obj.prodID] == FALSE)
+        {
+            obj.prodFavoriteProducts = @"";
         }
-        if (![obj.prodPurchasedProducts isEqualToString:@""]){
-            if ([[Setting sharedInstance] isPurchaseExist:obj.prodID] == FALSE)
-                [[Setting sharedInstance].myPurchaseList addObject:obj];
+        else{
+            obj.prodFavoriteProducts = @"true";
         }
+        if ([[Setting sharedInstance] isPurchaseExist:obj.prodID] == FALSE)
+        {
+            obj.prodPurchasedProducts = @"";
+        }
+        else{
+            obj.prodPurchasedProducts = @"true";
+        }
+        
         if (mainCategory != [obj.prodMainCatID intValue])
         {
             catObj.isCategory = TRUE;

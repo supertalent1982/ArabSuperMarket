@@ -38,7 +38,8 @@
 @synthesize categories;
 @synthesize arrayProductsWithCategory;
 @synthesize progressBar;
-@synthesize progressBarBg;- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+@synthesize progressBarBg;
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
@@ -52,6 +53,10 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
+ 
+    
+ }
+-(void)viewWillAppear:(BOOL)animated{
     if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
         lb_OfferTitle.text = selOffer.offerTitleEn;
         lb_OfferDesc.text = selOffer.offerDescEn;
@@ -62,7 +67,7 @@
     }
     lb_title.text = self.companyName;
     NSString *startTimeStr = [selOffer.offerStartDate stringByReplacingOccurrencesOfString:@"T" withString:@" "];
-
+    
     NSString *endTimeStr = [selOffer.offerEndDate stringByReplacingOccurrencesOfString:@"T" withString:@" "];
     NSDateFormatter *df = [[NSDateFormatter alloc]init];
     [df setDateFormat:@"yyyy-MM-dd hh:mm:ss"];
@@ -87,33 +92,33 @@
     endTimeStr = [df1 stringFromDate:offerStopDate];
     lb_endDate.text = endTimeStr;
     NSDate *today = [[NSDate alloc]init];
-
-        if ([today compare:offerStopDate] == NSOrderedAscending){
-            NSCalendar *sysCalendar = [NSCalendar currentCalendar];
-            // Get conversion to months, days, hours, minutes
-            unsigned int unitFlags = NSDayCalendarUnit;
-            
-            NSDateComponents *conversionInfo = [sysCalendar components:unitFlags fromDate:today  toDate:offerStopDate  options:0];
-            int after_days = [conversionInfo day];
-            lb_remainDays.text = [NSString stringWithFormat:@"%d", after_days];
-            
-            NSDateComponents *conversionInfo1 = [sysCalendar components:unitFlags fromDate:offerStartDate  toDate:offerStopDate  options:0];
-            int duration_days = [conversionInfo1 day];
-            if (duration_days <= after_days)
-                progressBar.progress = 0;
-            else
-            {
-                float days = (float)(duration_days - after_days) / duration_days;
-                progressBar.progress = days;
-            }
-            
-        }
-        else{
-            lb_remainDays.text = @"0";
-            progressBar.progress = 1;
+    
+    if ([today compare:offerStopDate] == NSOrderedAscending){
+        NSCalendar *sysCalendar = [NSCalendar currentCalendar];
+        // Get conversion to months, days, hours, minutes
+        unsigned int unitFlags = NSDayCalendarUnit;
+        
+        NSDateComponents *conversionInfo = [sysCalendar components:unitFlags fromDate:today  toDate:offerStopDate  options:0];
+        int after_days = [conversionInfo day];
+        lb_remainDays.text = [NSString stringWithFormat:@"%d", after_days];
+        
+        NSDateComponents *conversionInfo1 = [sysCalendar components:unitFlags fromDate:offerStartDate  toDate:offerStopDate  options:0];
+        int duration_days = [conversionInfo1 day];
+        if (duration_days <= after_days)
+            progressBar.progress = 0;
+        else
+        {
+            float days = (float)(duration_days - after_days) / duration_days;
+            progressBar.progress = days;
         }
         
-
+    }
+    else{
+        lb_remainDays.text = @"0";
+        progressBar.progress = 1;
+    }
+    
+    
     
     self.btnCancel.hidden = YES;
     self.searchBar.hidden = YES;
@@ -131,55 +136,145 @@
         }
     }
     [progressBar setProgressTintColor:[UIColor greenColor]];
- //   [progressBar setTrackImage:[UIImage imageNamed:@"progressbar.png"]];
-
+    //   [progressBar setTrackImage:[UIImage imageNamed:@"progressbar.png"]];
+    
     CGRect tmpRect = progressBar.frame;
     tmpRect.origin.y = progressBarBg.frame.origin.y + (progressBarBg.frame.size.height - tmpRect.size.height) / 2;
     [progressBar setFrame:tmpRect];
-        table_Products.separatorStyle = UITableViewCellSeparatorStyleNone;
+    table_Products.separatorStyle = UITableViewCellSeparatorStyleNone;
     table_Products.backgroundColor = [UIColor clearColor];
-  /*  [table_Products setBackgroundColor:[UIColor clearColor]];
-    UIImageView *tempImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"product_back.png"]];
-    [tempImageView setFrame:table_Products.frame];
-    table_Products.backgroundView = tempImageView;*/
+    /*  [table_Products setBackgroundColor:[UIColor clearColor]];
+     UIImageView *tempImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"product_back.png"]];
+     [tempImageView setFrame:table_Products.frame];
+     table_Products.backgroundView = tempImageView;*/
     [[Setting sharedInstance].myFavoriteList removeAllObjects];
     [[Setting sharedInstance].myPurchaseList removeAllObjects];
+    [[Setting sharedInstance] loadFavoriteListFromLocalDB:[Setting sharedInstance].customer.customerID];
+    [[Setting sharedInstance] loadPurchaseListFromLocalDB:[Setting sharedInstance].customer.customerID];
+    NSString *docsDir;
+    NSArray *dirPaths;
     
-    NSString *soapMessage = [NSString stringWithFormat:
-                             @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
-                             "<soap:Body>\n"
-                             "<GetOfferProducts xmlns=\"http://tempuri.org/\">\n"
-                             "<OfferID>%@</OfferID>\n"
-                             "<LastUpdateTime>%@</LastUpdateTime>\n"
-                             "<CustomerID>0</CustomerID>\n"
-                             "</GetOfferProducts>\n"
-                             "</soap:Body>\n"
-                             "</soap:Envelope>\n", selOffer.offerID, @"2013-07-15T00:00:00"];
-	NSLog(@"soapMessage = %@\n", soapMessage);
+    // Get the documents directory
+    dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     
+    docsDir = [dirPaths objectAtIndex:0];
     
-	NSURL *url = [NSURL URLWithString:@"http://q8supermarket.com/Services/MobileService.asmx?op=GetOfferProducts"];
-	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
-	NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
-	
-	[theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	[theRequest addValue: @"http://tempuri.org/GetOfferProducts" forHTTPHeaderField:@"SOAPAction"];
-	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
-	[theRequest setHTTPMethod:@"POST"];
-	[theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
- 	NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
-    if( theConnection )
-	{
-		webData = [[NSMutableData alloc]init];
-	}
-	else
-	{
-		NSLog(@"theConnection is NULL");
-	}
+    // Build the path to the database file
+    databasePath = [[NSString alloc] initWithString: [docsDir stringByAppendingPathComponent: @"Q8SuperMarketDB.db"]];
     arrayProductsWithCategory = [[NSMutableArray alloc]init];
- }
--(void)viewWillAppear:(BOOL)animated{
+    BOOL flag = TRUE;
+    sqlite3_stmt    *statement;
+    const char *dbpath = [databasePath UTF8String];
+    if (sqlite3_open(dbpath, &projectDB) == SQLITE_OK)
+    {
+        
+        NSString *querySQL = [NSString stringWithFormat: @"SELECT * FROM Products where OfferID = \"%@\"", selOffer.offerID];
+        const char *query_stmt = [querySQL UTF8String];
+        if (sqlite3_prepare_v2(projectDB, query_stmt, -1, &statement, NULL) == SQLITE_OK)
+        {
+            if (sqlite3_step(statement) != SQLITE_ROW) {
+                flag = FALSE;
+            }
+            else{
+                
+                arrayProduct = Nil;
+                arrayProduct = [[NSMutableArray alloc]init];
+                ProductObject *obj = [[ProductObject alloc]init];
+                obj.prodID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+                obj.OfferID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)];
+                obj.prodQuantity = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
+                obj.prodMainCatID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
+                obj.prodMeasureID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 4)];
+                obj.prodSubCatID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 5)];
+                obj.prodOrgPrice = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 6)];
+                obj.prodCurPrice = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 7)];
+                obj.prodPhotoURL = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 8)];
+                obj.prodDescAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 9)];
+                obj.prodDescEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 10)];
+                obj.prodStartDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 11)];
+                obj.prodEndDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 12)];
+                obj.prodBranchList = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 13)];
+                obj.prodVisitsCount = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 14)];
+                obj.prodTitleAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 15)];
+                obj.prodTitleEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 16)];
+                obj.prodIsActive = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 17)];
+                obj.prodlastUpdateTime = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 18)];
+                
+                [arrayProduct addObject:obj];
+                
+                while (sqlite3_step(statement) == SQLITE_ROW)
+                {
+                    ProductObject *obj1 = [[ProductObject alloc]init];
+                    obj1.prodID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+                    obj1.OfferID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)];
+                    obj1.prodQuantity = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
+                    obj1.prodMainCatID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
+                    obj1.prodMeasureID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 4)];
+                    obj1.prodSubCatID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 5)];
+                    obj1.prodOrgPrice = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 6)];
+                    obj1.prodCurPrice = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 7)];
+                    obj1.prodPhotoURL = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 8)];
+                    obj1.prodDescAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 9)];
+                    obj1.prodDescEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 10)];
+                    obj1.prodStartDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 11)];
+                    obj1.prodEndDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 12)];
+                    obj1.prodBranchList = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 13)];
+                    obj1.prodVisitsCount = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 14)];
+                    obj1.prodTitleAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 15)];
+                    obj1.prodTitleEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 16)];
+                    obj1.prodIsActive = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 17)];
+                    obj1.prodlastUpdateTime = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 18)];
+                    
+                   
+                    [arrayProduct addObject:obj1];
+                    
+                    
+                    
+                }
+            }
+            sqlite3_finalize(statement);
+        }
+        sqlite3_close(projectDB);
+        if (flag == TRUE) {
+            [self sortArrayProduct:arrayProduct];
+            [table_Products reloadData];
+        }
+    }
+    if (flag == FALSE){
+        NSString *soapMessage = [NSString stringWithFormat:
+                                 @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                                 "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                                 "<soap:Body>\n"
+                                 "<GetOfferProducts xmlns=\"http://tempuri.org/\">\n"
+                                 "<OfferID>%@</OfferID>\n"
+                                 "<LastUpdateTime>%@</LastUpdateTime>\n"
+                                 "<CustomerID>%@</CustomerID>\n"
+                                 "</GetOfferProducts>\n"
+                                 "</soap:Body>\n"
+                                 "</soap:Envelope>\n", selOffer.offerID, @"2013-07-15T00:00:00", [Setting sharedInstance].customer.customerID];
+        NSLog(@"soapMessage = %@\n", soapMessage);
+        
+        
+        NSURL *url = [NSURL URLWithString:@"http://q8supermarket.com/Services/MobileService.asmx?op=GetOfferProducts"];
+        NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
+        NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
+        
+        [theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+        [theRequest addValue: @"http://tempuri.org/GetOfferProducts" forHTTPHeaderField:@"SOAPAction"];
+        [theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
+        [theRequest setHTTPMethod:@"POST"];
+        [theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
+        NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+        if( theConnection )
+        {
+            webData = [[NSMutableData alloc]init];
+        }
+        else
+        {
+            NSLog(@"theConnection is NULL");
+        }
+    }
+
     [table_Products reloadData];
 }
 - (void)didReceiveMemoryWarning
@@ -246,51 +341,92 @@
 }
 
 - (IBAction)onBtnFavorite:(id)sender {
-    NSIndexPath *indexPath = [table_Products indexPathForCell:(UITableViewCell *)[[sender superview]superview]];
-    ProductsWithCategory *catObj = [arrayProductsWithCategory objectAtIndex:indexPath.row];
-    if (catObj.isCategory == FALSE){
-        if ([catObj.obj.prodFavoriteProducts isEqualToString:@""]){
-            catObj.obj.prodFavoriteProducts = @"true";
-            [[Setting sharedInstance].myFavoriteList addObject:catObj.obj];
-        }
-        else{
-            catObj.obj.prodFavoriteProducts = @"";
-            for (int i = 0; i < [Setting sharedInstance].myFavoriteList.count; i++){
-                ProductObject *obj = [[Setting sharedInstance].myFavoriteList objectAtIndex:i];
-                if ([obj.prodID isEqualToString:catObj.obj.prodID])
-                {
-                    [[Setting sharedInstance].myFavoriteList removeObjectAtIndex:i];
-                    break;
+    if (![[Setting sharedInstance].customer.customerID isEqualToString:@"0"]){
+        NSIndexPath *indexPath = [table_Products indexPathForCell:(UITableViewCell *)[[sender superview]superview]];
+        ProductsWithCategory *catObj = [arrayProductsWithCategory objectAtIndex:indexPath.row];
+        if (catObj.isCategory == FALSE){
+            if ([catObj.obj.prodFavoriteProducts isEqualToString:@""]){
+                catObj.obj.prodFavoriteProducts = @"true";
+                NSDate *addDate = [[NSDate alloc]init];
+                NSDateFormatter *df1 = [[NSDateFormatter alloc]init];
+                [df1 setDateFormat:@"dd/MM/yyyy"];
+                NSLocale *locale1 = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+                [df1 setLocale:locale1];
+                NSTimeZone *tz1 = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+                [df1 setTimeZone:tz1];
+                catObj.obj.prodAddDate = [df1 stringFromDate:addDate];
+                [[Setting sharedInstance].myFavoriteList addObject:catObj.obj];
+                [[Setting sharedInstance] addFavoriteProduct:[Setting sharedInstance].customer.customerID withProdID:catObj.obj.prodID withDate:catObj.obj.prodAddDate withCompany:catObj.obj.prodCompanyID];
+                [[Setting sharedInstance] sendFavoriteRequest:catObj.obj];
+            }
+            else{
+                catObj.obj.prodFavoriteProducts = @"";
+                catObj.obj.prodAddDate = @"";
+                for (int i = 0; i < [Setting sharedInstance].myFavoriteList.count; i++){
+                    ProductObject *obj = [[Setting sharedInstance].myFavoriteList objectAtIndex:i];
+                    if ([obj.prodID isEqualToString:catObj.obj.prodID])
+                    {
+                        [[Setting sharedInstance].myFavoriteList removeObjectAtIndex:i];
+                        [[Setting sharedInstance] removeFavoriteProduct:[Setting sharedInstance].customer.customerID withProdID:catObj.obj.prodID];
+                        break;
+                    }
                 }
             }
         }
-    }
 
-    [table_Products reloadData];
+        [table_Products reloadData];
+    }
+    else{
+        UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
+                                                    message:@"You must login to add/remove favorite product." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        
+        [mes show];
+    }
 }
 
 - (IBAction)onBtnPurchase:(id)sender {
-    NSIndexPath *indexPath = [table_Products indexPathForCell:(UITableViewCell *)[[sender superview]superview]];
-    ProductsWithCategory *catObj = [arrayProductsWithCategory objectAtIndex:indexPath.row];
-    if (catObj.isCategory == FALSE){
-        if ([catObj.obj.prodPurchasedProducts isEqualToString:@""]){
-            catObj.obj.prodPurchasedProducts = @"true";
-            [[Setting sharedInstance].myPurchaseList addObject:catObj.obj];
-        }
-        else{
-            catObj.obj.prodPurchasedProducts = @"";
-            for (int i = 0; i < [Setting sharedInstance].myPurchaseList.count; i++){
-                ProductObject *obj = [[Setting sharedInstance].myPurchaseList objectAtIndex:i];
-                if ([obj.prodID isEqualToString:catObj.obj.prodID])
-                {
-                    [[Setting sharedInstance].myPurchaseList removeObjectAtIndex:i];
-                    break;
+    if (![[Setting sharedInstance].customer.customerID isEqualToString:@"0"]){
+        NSIndexPath *indexPath = [table_Products indexPathForCell:(UITableViewCell *)[[sender superview]superview]];
+        ProductsWithCategory *catObj = [arrayProductsWithCategory objectAtIndex:indexPath.row];
+        
+        if (catObj.isCategory == FALSE){
+            if ([catObj.obj.prodPurchasedProducts isEqualToString:@""]){
+                catObj.obj.prodPurchasedProducts = @"true";
+                NSDate *addDate = [[NSDate alloc]init];
+                NSDateFormatter *df1 = [[NSDateFormatter alloc]init];
+                [df1 setDateFormat:@"dd/MM/yyyy"];
+                NSLocale *locale1 = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+                [df1 setLocale:locale1];
+                NSTimeZone *tz1 = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+                [df1 setTimeZone:tz1];
+                catObj.obj.prodAddPurchaseDate = [df1 stringFromDate:addDate];
+                [[Setting sharedInstance].myPurchaseList addObject:catObj.obj];
+                [[Setting sharedInstance] addPurchaseProduct:[Setting sharedInstance].customer.customerID withProdID:catObj.obj.prodID withDate:catObj.obj.prodAddPurchaseDate withCompany:catObj.obj.prodCompanyID];
+                [[Setting sharedInstance] sendPurchaseRequest:catObj.obj];
+            }
+            else{
+                catObj.obj.prodPurchasedProducts = @"";
+                catObj.obj.prodAddPurchaseDate = @"";
+                for (int i = 0; i < [Setting sharedInstance].myPurchaseList.count; i++){
+                    ProductObject *obj = [[Setting sharedInstance].myPurchaseList objectAtIndex:i];
+                    if ([obj.prodID isEqualToString:catObj.obj.prodID])
+                    {
+                        [[Setting sharedInstance].myPurchaseList removeObjectAtIndex:i];
+                        [[Setting sharedInstance] removePurchaseProduct:[Setting sharedInstance].customer.customerID withProdID:catObj.obj.prodID];
+                        break;
+                    }
                 }
             }
         }
+
+        [table_Products reloadData];
     }
-    
-    [table_Products reloadData];
+    else{
+        UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
+                                                    message:@"You must login to add/remove purchase product." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        
+        [mes show];
+    }
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     ProductsWithCategory *catObj = [arrayProductsWithCategory objectAtIndex:indexPath.row];
@@ -468,14 +604,21 @@
     for (int i = 0; i < _arrayProduct.count; i++){
         ProductObject *obj = [_arrayProduct objectAtIndex:i];
         ProductsWithCategory *catObj = [[ProductsWithCategory alloc]init];
-        if (![obj.prodFavoriteProducts isEqualToString:@""]){
-            if ([[Setting sharedInstance] isFavoriteExist:obj.prodID] == FALSE)
-                [[Setting sharedInstance].myFavoriteList addObject:obj];
+        if ([[Setting sharedInstance] isFavoriteExist:obj.prodID] == FALSE)
+        {
+            obj.prodFavoriteProducts = @"";
         }
-        if (![obj.prodPurchasedProducts isEqualToString:@""]){
-            if ([[Setting sharedInstance] isPurchaseExist:obj.prodID] == FALSE)
-                [[Setting sharedInstance].myPurchaseList addObject:obj];
+        else{
+            obj.prodFavoriteProducts = @"true";
         }
+        if ([[Setting sharedInstance] isPurchaseExist:obj.prodID] == FALSE)
+        {
+            obj.prodPurchasedProducts = @"";
+        }
+        else{
+            obj.prodPurchasedProducts = @"true";
+        }
+        
         if (mainCategory != [obj.prodMainCatID intValue])
         {
             catObj.isCategory = TRUE;
@@ -761,12 +904,14 @@
             [self.navigationController popViewControllerAnimated:YES];
             return;
         }
+        [self saveProductsInfo];
         [self sortArrayProduct:arrayProduct];
         [table_Products reloadData];
 	}
     if( [elementName isEqualToString:@"ProductResult"])
 	{
 		recordResults = FALSE;
+        productObj.prodCompanyID = self.selOffer.offerCompanyID;
         [arrayProduct addObject:productObj];
         soapResults = nil;
         productObj = nil;
@@ -901,6 +1046,31 @@
         recordResults = FALSE;
         productObj.prodPurchasedProducts = soapResults;
         soapResults = nil;
+    }
+}
+-(void)saveProductsInfo{
+    const char *dbpath = [databasePath UTF8String];
+    sqlite3_stmt    *statement;
+    
+    if (sqlite3_open(dbpath, &projectDB) == SQLITE_OK)
+    {
+        for (int i = 0; i < arrayProduct.count; i++) {
+            ProductObject *obj = [arrayProduct objectAtIndex:i];
+            NSString *querySQL = [NSString stringWithFormat: @"INSERT INTO Products (ID, OfferID, Quantity, MainCatID, MeasureID, SubCatID, OrgPrice, Price, Photo, DescAr, DescEn, StartDate, EndDate, BranchList, VisitsCount, TitleAr, TitleEn, IsActive, lastUpdateTime) VALUES (\"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\")", obj.prodID, obj.OfferID, obj.prodQuantity, obj.prodMainCatID, obj.prodMeasureID, obj.prodSubCatID, obj.prodOrgPrice, obj.prodCurPrice, obj.prodPhotoURL, obj.prodDescAr, obj.prodDescEn, obj.prodStartDate, obj.prodEndDate, obj.prodBranchList, obj.prodVisitsCount, obj.prodTitleAr, obj.prodTitleEn, obj.prodIsActive, obj.prodlastUpdateTime];
+            
+            const char *query_stmt1 = [querySQL UTF8String];
+            
+            if (sqlite3_prepare_v2(projectDB, query_stmt1, -1, &statement, NULL) == SQLITE_OK)
+            {
+                if (sqlite3_step(statement) == SQLITE_DONE)
+                {
+                    NSLog(@"Products success");
+                    
+                }
+                sqlite3_finalize(statement);
+            }
+        }
+        sqlite3_close(projectDB);
     }
 }
 @end

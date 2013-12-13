@@ -31,4 +31,7 @@
 @property (nonatomic, strong) NSString *prodFavoriteProducts;
 @property (nonatomic, strong) NSString *prodHomeOrderProducts;
 @property (nonatomic, strong) NSString *prodPurchasedProducts;
+@property (nonatomic, strong) NSString *prodCompanyID;
+@property (nonatomic, strong) NSString *prodAddDate;
+@property (nonatomic, strong) NSString *prodAddPurchaseDate;
 @end

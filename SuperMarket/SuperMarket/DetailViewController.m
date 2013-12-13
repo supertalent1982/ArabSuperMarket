@@ -38,6 +38,9 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    
+}
+- (void)viewWillAppear:(BOOL)animated{
     ProductsWithCategory *catObj = [ProductList objectAtIndex:indexRow];
     if (catObj.isCategory == FALSE) {
         ProductObject *obj = catObj.obj;
@@ -114,7 +117,7 @@
             [btn_favorite setBackgroundImage:[UIImage imageNamed:@"btn_sel_favorite.png"] forState:UIControlStateSelected];
         }
         
-
+        
         if ([obj.prodPurchasedProducts isEqualToString:@""]){
             [btn_purchase setBackgroundImage:[UIImage imageNamed:@"btn_unsel_purchase.png"] forState:UIControlStateNormal];
             [btn_purchase setBackgroundImage:[UIImage imageNamed:@"btn_unsel_purchase.png"] forState:UIControlStateHighlighted];
@@ -127,7 +130,6 @@
         }
     }
 }
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -135,29 +137,51 @@
 }
 
 - (IBAction)onPurchase:(id)sender {
+    if (![[Setting sharedInstance].customer.customerID isEqualToString:@"0"]){
     ProductsWithCategory *catObj = [ProductList objectAtIndex:indexRow];
     if (catObj.isCategory == FALSE){
         if ([catObj.obj.prodPurchasedProducts isEqualToString:@""]){
             catObj.obj.prodPurchasedProducts = @"true";
+            NSDate *addDate = [[NSDate alloc]init];
+            NSDateFormatter *df1 = [[NSDateFormatter alloc]init];
+            [df1 setDateFormat:@"dd/MM/yyyy"];
+            NSLocale *locale1 = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+            [df1 setLocale:locale1];
+            NSTimeZone *tz1 = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+            [df1 setTimeZone:tz1];
+            catObj.obj.prodAddPurchaseDate = [df1 stringFromDate:addDate];
+            [[Setting sharedInstance].myPurchaseList addObject:catObj.obj];
+            [[Setting sharedInstance] addPurchaseProduct:[Setting sharedInstance].customer.customerID withProdID:catObj.obj.prodID withDate:catObj.obj.prodAddPurchaseDate withCompany:catObj.obj.prodCompanyID];
+            [[Setting sharedInstance] sendPurchaseRequest:catObj.obj];
             [btn_purchase setBackgroundImage:[UIImage imageNamed:@"btn_sel_purchase.png"] forState:UIControlStateNormal];
             [btn_purchase setBackgroundImage:[UIImage imageNamed:@"btn_sel_purchase.png"] forState:UIControlStateHighlighted];
             [btn_purchase setBackgroundImage:[UIImage imageNamed:@"btn_sel_purchase.png"] forState:UIControlStateSelected];
-            [[Setting sharedInstance].myPurchaseList addObject:catObj.obj];
+            
         }
         else{
             catObj.obj.prodPurchasedProducts = @"";
-            [btn_purchase setBackgroundImage:[UIImage imageNamed:@"btn_unsel_purchase.png"] forState:UIControlStateNormal];
-            [btn_purchase setBackgroundImage:[UIImage imageNamed:@"btn_unsel_purchase.png"] forState:UIControlStateHighlighted];
-            [btn_purchase setBackgroundImage:[UIImage imageNamed:@"btn_unsel_purchase.png"] forState:UIControlStateSelected];
+            catObj.obj.prodAddPurchaseDate = @"";
             for (int i = 0; i < [Setting sharedInstance].myPurchaseList.count; i++){
                 ProductObject *obj = [[Setting sharedInstance].myPurchaseList objectAtIndex:i];
                 if ([obj.prodID isEqualToString:catObj.obj.prodID])
                 {
                     [[Setting sharedInstance].myPurchaseList removeObjectAtIndex:i];
+                    [[Setting sharedInstance] removePurchaseProduct:[Setting sharedInstance].customer.customerID withProdID:catObj.obj.prodID];
                     break;
                 }
             }
+            [btn_purchase setBackgroundImage:[UIImage imageNamed:@"btn_unsel_purchase.png"] forState:UIControlStateNormal];
+            [btn_purchase setBackgroundImage:[UIImage imageNamed:@"btn_unsel_purchase.png"] forState:UIControlStateHighlighted];
+            [btn_purchase setBackgroundImage:[UIImage imageNamed:@"btn_unsel_purchase.png"] forState:UIControlStateSelected];
+            
         }
+    }
+    }
+    else{
+        UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
+                                                    message:@"You must login to add/remove purchase product." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        
+        [mes show];
     }
 }
 
@@ -166,29 +190,51 @@
 }
 
 - (IBAction)onFavorite:(id)sender {
+    if (![[Setting sharedInstance].customer.customerID isEqualToString:@"0"]){
     ProductsWithCategory *catObj = [ProductList objectAtIndex:indexRow];
+
     if (catObj.isCategory == FALSE){
         if ([catObj.obj.prodFavoriteProducts isEqualToString:@""]){
             catObj.obj.prodFavoriteProducts = @"true";
+            NSDate *addDate = [[NSDate alloc]init];
+            NSDateFormatter *df1 = [[NSDateFormatter alloc]init];
+            [df1 setDateFormat:@"dd/MM/yyyy"];
+            NSLocale *locale1 = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+            [df1 setLocale:locale1];
+            NSTimeZone *tz1 = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+            [df1 setTimeZone:tz1];
+            catObj.obj.prodAddDate = [df1 stringFromDate:addDate];
             [[Setting sharedInstance].myFavoriteList addObject:catObj.obj];
+            [[Setting sharedInstance] addFavoriteProduct:[Setting sharedInstance].customer.customerID withProdID:catObj.obj.prodID withDate:catObj.obj.prodAddDate withCompany:catObj.obj.prodCompanyID];
+            [[Setting sharedInstance] sendFavoriteRequest:catObj.obj];
             [btn_favorite setBackgroundImage:[UIImage imageNamed:@"btn_sel_favorite.png"] forState:UIControlStateNormal];
             [btn_favorite setBackgroundImage:[UIImage imageNamed:@"btn_sel_favorite.png"] forState:UIControlStateHighlighted];
             [btn_favorite setBackgroundImage:[UIImage imageNamed:@"btn_sel_favorite.png"] forState:UIControlStateSelected];
         }
         else{
             catObj.obj.prodFavoriteProducts = @"";
-            [btn_favorite setBackgroundImage:[UIImage imageNamed:@"btn_unsel_favorite.png"] forState:UIControlStateNormal];
-            [btn_favorite setBackgroundImage:[UIImage imageNamed:@"btn_unsel_favorite.png"] forState:UIControlStateHighlighted];
-            [btn_favorite setBackgroundImage:[UIImage imageNamed:@"btn_unsel_favorite.png"] forState:UIControlStateSelected];
+            catObj.obj.prodAddDate = @"";
             for (int i = 0; i < [Setting sharedInstance].myFavoriteList.count; i++){
                 ProductObject *obj = [[Setting sharedInstance].myFavoriteList objectAtIndex:i];
                 if ([obj.prodID isEqualToString:catObj.obj.prodID])
                 {
                     [[Setting sharedInstance].myFavoriteList removeObjectAtIndex:i];
+                    [[Setting sharedInstance] removeFavoriteProduct:[Setting sharedInstance].customer.customerID withProdID:catObj.obj.prodID];
                     break;
                 }
             }
+
+            [btn_favorite setBackgroundImage:[UIImage imageNamed:@"btn_unsel_favorite.png"] forState:UIControlStateNormal];
+            [btn_favorite setBackgroundImage:[UIImage imageNamed:@"btn_unsel_favorite.png"] forState:UIControlStateHighlighted];
+            [btn_favorite setBackgroundImage:[UIImage imageNamed:@"btn_unsel_favorite.png"] forState:UIControlStateSelected];
         }
+    }
+    }
+    else{
+        UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
+                                                    message:@"You must login to add/remove purchase product." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        
+        [mes show];
     }
 }
 @end

@@ -13,5 +13,6 @@
 @property (nonatomic, strong) NSMutableArray *itemList;
 - (IBAction)onBtnLogout:(id)sender;
 - (IBAction)onBtnList:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *btnLogout;
 
 @end

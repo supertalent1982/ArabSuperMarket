@@ -36,11 +36,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+ 
+}
+- (void)viewWillAppear:(BOOL)animated{
     errEncounter = FALSE;
 	// Do any additional setup after loading the view.
     [Setting sharedInstance].arrayCompany = [[NSMutableArray alloc]init];
     logoArray = [[NSMutableArray alloc] init];
-    /*
+    
     NSString *docsDir;
     NSArray *dirPaths;
     
@@ -53,7 +56,7 @@
     databasePath = [[NSString alloc] initWithString: [docsDir stringByAppendingPathComponent: @"Q8SuperMarketDB.db"]];
     
     NSFileManager *filemgr = [NSFileManager defaultManager];
-    
+    BOOL flag = TRUE;
     if ([filemgr fileExistsAtPath: databasePath ] == YES)
     {
         sqlite3_stmt    *statement;
@@ -63,122 +66,109 @@
         if (sqlite3_open(dbpath, &projectDB) == SQLITE_OK)
         {
             
-            NSString *querySQL;
-            if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
-                querySQL= [NSString stringWithFormat: @"SELECT NameEn FROM Companies"];
-            else
-                querySQL= [NSString stringWithFormat: @"SELECT NameAr FROM Companies"];
+            NSString *querySQL = [NSString stringWithFormat: @"SELECT * FROM Companies"];
             const char *query_stmt = [querySQL UTF8String];
             
             if (sqlite3_prepare_v2(projectDB, query_stmt, -1, &statement, NULL) == SQLITE_OK)
             {
                 if (sqlite3_step(statement) != SQLITE_ROW) {
-                    NSLog(@"not matched");
-                    UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
-                                                                message:@"Please create new project." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-                    
-                    [mes show];
+                    flag = FALSE;
                 }
                 else{
-                    NSString *companyName = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+                    [Setting sharedInstance].arrayCompany = [[NSMutableArray alloc]init];
+                    CompanyObject *obj = [[CompanyObject alloc]init];
+                    obj.companyID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+                    obj.companyNameAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)];
+                    obj.companyNameEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
+                    obj.companyEmail = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
+                    obj.companyPhone = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 4)];
+                    obj.companyFax = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 5)];
+                    obj.companyLogo = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 6)];
+                    obj.companyStateID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 7)];
+                    obj.companyAreaID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 8)];
+                    obj.companyAddressAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 9)];
+                    obj.companyAddressEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 10)];
+                    obj.companyDescAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 11)];
+                    obj.companyDescEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 12)];
+                    obj.companyOverallSort = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 13)];
+                    obj.companyProductSort = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 14)];
+                    obj.companyOrderSort = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 15)];
+                    obj.companyBigLogo = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 16)];
+                    obj.companyAboutUsLogo = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 17)];
+                    obj.companySloganEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 18)];
+                    obj.companySloganAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 19)];
                     
-                    [[Setting sharedInstance].arrayCompany addObject:companyName];
+                    
+                    [[Setting sharedInstance].arrayCompany addObject:obj];
                     
                     while (sqlite3_step(statement) == SQLITE_ROW)
                     {
+                        CompanyObject *obj1 = [[CompanyObject alloc]init];
+                        obj1.companyID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+                        obj1.companyNameAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)];
+                        obj1.companyNameEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
+                        obj1.companyEmail = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
+                        obj1.companyPhone = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 4)];
+                        obj1.companyFax = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 5)];
+                        obj1.companyLogo = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 6)];
+                        obj1.companyStateID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 7)];
+                        obj1.companyAreaID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 8)];
+                        obj1.companyAddressAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 9)];
+                        obj1.companyAddressEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 10)];
+                        obj1.companyDescAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 11)];
+                        obj1.companyDescEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 12)];
+                        obj1.companyOverallSort = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 13)];
+                        obj1.companyProductSort = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 14)];
+                        obj1.companyOrderSort = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 15)];
+                        obj1.companyBigLogo = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 16)];
+                        obj1.companyAboutUsLogo = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 17)];
+                        obj1.companySloganEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 18)];
+                        obj1.companySloganAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 19)];
                         
-                        NSString *companyName = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
                         
-                        [[Setting sharedInstance].arrayCompany addObject:companyName];
+                        [[Setting sharedInstance].arrayCompany addObject:obj1];
+                        
                     }
                 }
                 sqlite3_finalize(statement);
             }
             sqlite3_close(projectDB);
         }
-
+        [self showCompanyLogo];
     }
     
-    for (int i = 0; i< [Setting sharedInstance].arrayCompany.count; i++){
-    UIView *companyLogoView = [[UIView alloc]initWithFrame:CGRectMake(23 + i * 277, 8, 262, 245)];
-    UIImageView *imgLogo = [[UIImageView alloc]initWithFrame:CGRectMake(7, 0, 260, 245)];
-        if (i == 0)
-            imgLogo.image = [UIImage imageNamed:@"city_sample.png"];
-        else
-            imgLogo.image = [UIImage imageNamed:@"gulfmart_sample.png"];
+    if (flag == FALSE){
+        NSString *soapMessage = [NSString stringWithFormat:
+                                 @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                                 "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                                 "<soap:Body>\n"
+                                 "<CompanyGetAll xmlns=\"http://tempuri.org/\" />\n"
+                                 "</soap:Body>\n"
+                                 "</soap:Envelope>\n"
+                                 ];
+        NSLog(@"soapMessage = %@\n", soapMessage);
         
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(select_offers:)];
-    tapGesture.delegate = self;
-    imgLogo.userInteractionEnabled = YES;
-        imgLogo.tag = i + 1;
-    [imgLogo addGestureRecognizer:tapGesture];
-    [companyLogoView addSubview:imgLogo];
-    [logoArray addObject:imgLogo];
-    UIImageView *imgPin = [[UIImageView alloc]initWithFrame:CGRectMake(0, 20, 121, 39)];
-    imgPin.image = [UIImage imageNamed:@"company_pin.png"];
-    [companyLogoView addSubview:imgPin];
-    
-    UILabel *lb_pin = [[UILabel alloc]initWithFrame:CGRectMake(17, 20, 91, 21)];
-    lb_pin.text = [NSString stringWithFormat:@"%@ offers", [[Setting sharedInstance].arrayCompany objectAtIndex:i]];
-    [lb_pin setFont:[UIFont fontWithName:@"Helvetica Neue" size:10.0]];
-    [lb_pin setTextColor:[UIColor whiteColor]];
-    [lb_pin setBackgroundColor:[UIColor clearColor]];
-    [companyLogoView addSubview:lb_pin];
-    
-    NSString *bottomStr = [NSString stringWithFormat:@"Lastest Offers in %@", [[Setting sharedInstance].arrayCompany objectAtIndex:i]];
-    UILabel *lb_bottom1 = [[UILabel alloc]initWithFrame:CGRectMake(31, 191, 211, 21)];
-    lb_bottom1.text = bottomStr;
-    [lb_bottom1 setFont:[UIFont fontWithName:@"Helvetica Neue" size:14.0]];
-    [lb_bottom1 setTextColor:[UIColor whiteColor]];
-    [lb_bottom1 setBackgroundColor:[UIColor clearColor]];
-    [companyLogoView addSubview:lb_bottom1];
-    
-    
-    UILabel *lb_bottom2 = [[UILabel alloc] initWithFrame:CGRectMake(31, 207, 211, 21)];
-    lb_bottom2.text = @"Browse latest offers in supermarket";
-    [lb_bottom2 setFont:[UIFont fontWithName:@"Helvetica Neue" size:10.0]];
-    [lb_bottom2 setTextColor:[UIColor orangeColor]];
-    [lb_bottom2 setBackgroundColor:[UIColor clearColor]];
-    [companyLogoView addSubview:lb_bottom2];
-    
-    [scrollCompanies addSubview:companyLogoView];
+        NSURL *url = [NSURL URLWithString:@"http://q8supermarket.com/Services/MobileService.asmx?op=CompanyGetAll"];
+        NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
+        NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
+        
+        [theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+        [theRequest addValue: @"http://tempuri.org/CompanyGetAll" forHTTPHeaderField:@"SOAPAction"];
+        [theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
+        [theRequest setHTTPMethod:@"POST"];
+        [theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+        if( theConnection )
+        {
+            webData = [[NSMutableData alloc]init];
+        }
+        else
+        {
+            NSLog(@"theConnection is NULL");
+        }
     }
-    [scrollCompanies setContentSize:CGSizeMake(320 + 276 * (logoArray.count - 1), 245)];
-    scrollCompanies.delegate = self;
-     */
-
-    NSString *soapMessage = [NSString stringWithFormat:
-                             @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
-                             "<soap:Body>\n"
-                             "<CompanyGetAll xmlns=\"http://tempuri.org/\" />\n"
-                             "</soap:Body>\n"
-                             "</soap:Envelope>\n"
-                             ];
-	NSLog(@"soapMessage = %@\n", soapMessage);
-    
-	NSURL *url = [NSURL URLWithString:@"http://q8supermarket.com/Services/MobileService.asmx?op=CompanyGetAll"];
-	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
-	NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
-	
-	[theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	[theRequest addValue: @"http://tempuri.org/CompanyGetAll" forHTTPHeaderField:@"SOAPAction"];
-	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
-	[theRequest setHTTPMethod:@"POST"];
-	[theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
-	
-	NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
-    if( theConnection )
-	{
-		webData = [[NSMutableData alloc]init];
-	}
-	else
-	{
-		NSLog(@"theConnection is NULL");
-	}
-
 }
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -290,7 +280,31 @@
 	[xmlParser parse];
 	
 }
+-(void)saveCompanyInfo{
+    const char *dbpath = [databasePath UTF8String];
+    sqlite3_stmt    *statement;
 
+    if (sqlite3_open(dbpath, &projectDB) == SQLITE_OK)
+    {
+        for (int i = 0; i < [Setting sharedInstance].arrayCompany.count; i++) {
+            CompanyObject *obj = [[Setting sharedInstance].arrayCompany objectAtIndex:i];
+            NSString *querySQL = [NSString stringWithFormat: @"INSERT INTO Companies (ID, NameAr, NameEn, Email, Phone, Fax, Logo, StateID, AreaID, AddressAr, AddressEn, DescAr, DescEn, OverallSort, ProductSort, OrderSort, BigLogo, AboutUsLogo, SloganEn, SloganAr) VALUES (\"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\")", obj.companyID, obj.companyNameAr, obj.companyNameEn, obj.companyEmail, obj.companyPhone, obj.companyFax, obj.companyLogo, obj.companyStateID, obj.companyAreaID, obj.companyAddressAr, obj.companyAddressEn, obj.companyDescAr, obj.companyDescEn, obj.companyOverallSort, obj.companyProductSort, obj.companyOrderSort, obj.companyBigLogo, obj.companyAboutUsLogo, obj.companySloganEn, obj.companySloganAr];
+            
+            const char *query_stmt1 = [querySQL UTF8String];
+            
+            if (sqlite3_prepare_v2(projectDB, query_stmt1, -1, &statement, NULL) == SQLITE_OK)
+            {
+                if (sqlite3_step(statement) == SQLITE_DONE)
+                {
+                    NSLog(@"Company success");
+                    
+                }
+                sqlite3_finalize(statement);
+            }
+        }
+        sqlite3_close(projectDB);
+    }
+}
 -(void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *) namespaceURI qualifiedName:(NSString *)qName
    attributes: (NSDictionary *)attributeDict
 {
@@ -490,6 +504,7 @@
             [self.navigationController popViewControllerAnimated:YES];
             return;
         }
+        [self saveCompanyInfo];
         [self showCompanyLogo];
 	}
 	if( [elementName isEqualToString:@"CompanyResult"])

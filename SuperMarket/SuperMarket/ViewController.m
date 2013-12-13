@@ -41,16 +41,33 @@
     if(!success) {
         
         
-        NSString *defaultDBPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Q8SupermarketDB.db"];
+        NSString *defaultDBPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Q8SuperMarketDB.db"];
+        
         success = [fileManager copyItemAtPath:defaultDBPath toPath:dbPath error:&error];
-        
-        
+
         if (!success)
             NSAssert1(0, @"Failed to create writable database file with message '%@'.", [error localizedDescription]);
+    }
+    NSString *docsDir;
+    NSArray *dirPaths;
+    
+    // Get the documents directory
+    dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    
+    docsDir = [dirPaths objectAtIndex:0];
+    
+    // Build the path to the database file
+    databasePath = [[NSString alloc] initWithString: [docsDir stringByAppendingPathComponent: @"Q8SuperMarketDB.db"]];
+    
+    if ([self checklocalDB] == TRUE)
+    {
+        [self loadfromlocalDB];
+        return;
     }
     responseNum = 0;
     self.btnArab.hidden = YES;
     self.btnEnglish.hidden = YES;
+    
     NSMutableArray *reqestArray = [[NSMutableArray alloc]init];
     arrayRequest = [[NSMutableArray alloc]init];
     arrayResponse = [[NSMutableArray alloc]init];
@@ -190,15 +207,266 @@
     //Expand any tildes and identify home directories.
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory , NSUserDomainMask, YES);
     NSString *documentsDir = [paths objectAtIndex:0];
-    return [documentsDir stringByAppendingPathComponent:@"Q8SupermarketDB.db"];
+    return [documentsDir stringByAppendingPathComponent:@"Q8SuperMarketDB.db"];
 }
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+- (BOOL)checklocalDB{
+    const char *dbpath = [databasePath UTF8String];
+    sqlite3_stmt    *statement;
+    BOOL flag = TRUE;
+    if (sqlite3_open(dbpath, &projectDB) == SQLITE_OK)
+    {
+        //Areas table checking...
+        NSString *querySQL = [NSString stringWithFormat: @"SELECT * FROM Areas"];
+        
+        const char *query_stmt = [querySQL UTF8String];
+        
+        if (sqlite3_prepare_v2(projectDB, query_stmt, -1, &statement, NULL) == SQLITE_OK)
+        {
+            if (sqlite3_step(statement) != SQLITE_ROW) {
+                flag = FALSE;
+            }
+            sqlite3_finalize(statement);
+        }
+        sqlite3_close(projectDB);
+    }
+    return flag;
+}
+- (void)loadfromlocalDB{
+    const char *dbpath = [databasePath UTF8String];
+    sqlite3_stmt    *statement;
+    [Setting sharedInstance].Areas = [[NSMutableArray alloc]init];
+    [Setting sharedInstance].Cities = [[NSMutableArray alloc]init];
+    [Setting sharedInstance].MainCategories = [[NSMutableArray alloc]init];
+    [Setting sharedInstance].SubCategories = [[NSMutableArray alloc]init];
+    [Setting sharedInstance].arrayMeasures = [[NSMutableArray alloc]init];
+    if (sqlite3_open(dbpath, &projectDB) == SQLITE_OK)
+    {
+        //Areas table checking...
+        NSString *querySQL = [NSString stringWithFormat: @"SELECT * FROM Areas ORDER BY Sort"];
+        
+        const char *query_stmt = [querySQL UTF8String];
+        
+        if (sqlite3_prepare_v2(projectDB, query_stmt, -1, &statement, NULL) == SQLITE_OK)
+        {
+            
+            while (sqlite3_step(statement) == SQLITE_ROW)
+            {
+                
+                Area *obj = [[Area alloc]init];
+                obj.areaID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+                obj.areaStateID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)];
+                obj.areaNameAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
+                obj.areaNameEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
+                obj.sort = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 4)];
 
+                [[Setting sharedInstance].Areas addObject:obj];
+                
+            }
+            sqlite3_finalize(statement);
+            
+        }
+        
+        querySQL = [NSString stringWithFormat: @"SELECT * FROM States ORDER BY Sort"];
+        
+        query_stmt = [querySQL UTF8String];
+        
+        if (sqlite3_prepare_v2(projectDB, query_stmt, -1, &statement, NULL) == SQLITE_OK)
+        {
+            
+            while (sqlite3_step(statement) == SQLITE_ROW)
+            {
+                
+                State *obj = [[State alloc]init];
+                obj.stateID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+                obj.stateNameAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)];
+                obj.stateNameEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
+                obj.sort = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
+
+                [[Setting sharedInstance].Cities addObject:obj];
+                
+            }
+            sqlite3_finalize(statement);
+            
+        }
+        
+        querySQL = [NSString stringWithFormat: @"SELECT * FROM MainCateogry ORDER BY Sort"];
+        
+        query_stmt = [querySQL UTF8String];
+        
+        if (sqlite3_prepare_v2(projectDB, query_stmt, -1, &statement, NULL) == SQLITE_OK)
+        {
+            while (sqlite3_step(statement) == SQLITE_ROW)
+            {
+                
+                MainCategory *obj = [[MainCategory alloc]init];
+                obj.mainCatID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+                obj.mainCatNameAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)];
+                obj.mainCatNameEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
+                obj.sort = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
+                
+                [[Setting sharedInstance].MainCategories addObject:obj];
+                
+            }
+            sqlite3_finalize(statement);
+            
+        }
+        
+        querySQL = [NSString stringWithFormat: @"SELECT * FROM SubCategory ORDER BY Sort"];
+        
+        query_stmt = [querySQL UTF8String];
+        
+        if (sqlite3_prepare_v2(projectDB, query_stmt, -1, &statement, NULL) == SQLITE_OK)
+        {
+            while (sqlite3_step(statement) == SQLITE_ROW)
+            {
+                
+                SubCategory *obj = [[SubCategory alloc]init];
+                obj.subCatID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+                obj.mainCatID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)];
+                obj.subCatAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
+                obj.subCatEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
+                obj.sort = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 4)];
+                obj.subCatMeasures = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 5)];
+                
+                [[Setting sharedInstance].SubCategories addObject:obj];
+                
+            }
+            sqlite3_finalize(statement);
+            
+        }
+        
+        querySQL = [NSString stringWithFormat: @"SELECT * FROM Measures ORDER BY Sort"];
+        
+        query_stmt = [querySQL UTF8String];
+        
+        if (sqlite3_prepare_v2(projectDB, query_stmt, -1, &statement, NULL) == SQLITE_OK)
+        {
+            while (sqlite3_step(statement) == SQLITE_ROW)
+            {
+                
+                Measures *obj = [[Measures alloc]init];
+                obj.measureID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+                obj.measureNameAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)];
+                obj.measureNameEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
+                obj.sort = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
+                
+                [[Setting sharedInstance].arrayMeasures addObject:obj];
+                
+            }
+            sqlite3_finalize(statement);
+            
+        }
+        
+        
+        
+        sqlite3_close(projectDB);
+    }
+}
+- (void)saveDatatoLocalDB{
+    const char *dbpath = [databasePath UTF8String];
+    sqlite3_stmt    *statement;
+    BOOL flag = FALSE;
+     if (sqlite3_open(dbpath, &projectDB) == SQLITE_OK)
+    {
+            for (int i = 0; i < [Setting sharedInstance].Areas.count; i++) {
+                Area *obj = [[Setting sharedInstance].Areas objectAtIndex:i];
+                NSString *areaSQL = [NSString stringWithFormat: @"INSERT INTO Areas (ID, StateID, AreaNameAr, AreaNameEn, Sort) VALUES (\"%@\", \"%@\", \"%@\", \"%@\", \"%@\")", obj.areaID, obj.areaStateID, obj.areaNameAr, obj.areaNameEn, obj.sort];
+                
+                const char *query_stmt1 = [areaSQL UTF8String];
+                
+                if (sqlite3_prepare_v2(projectDB, query_stmt1, -1, &statement, NULL) == SQLITE_OK)
+                {
+                    if (sqlite3_step(statement) == SQLITE_DONE)
+                    {
+                        NSLog(@"Area success");
+                        
+                    }
+                    sqlite3_finalize(statement);
+                }
+            }
+            for (int i = 0; i < [Setting sharedInstance].Cities.count; i++) {
+                State *obj = [[Setting sharedInstance].Cities objectAtIndex:i];
+                
+                NSString *areaSQL = [NSString stringWithFormat: @"INSERT INTO States (ID, StateNameAr, StateNameEn, Sort) VALUES (\"%@\", \"%@\", \"%@\", \"%@\")", obj.stateID, obj.stateNameAr, obj.stateNameEn, obj.sort];
+                
+                const char *query_stmt1 = [areaSQL UTF8String];
+                
+                if (sqlite3_prepare_v2(projectDB, query_stmt1, -1, &statement, NULL) == SQLITE_OK)
+                {
+                    if (sqlite3_step(statement) == SQLITE_DONE)
+                    {
+                        NSLog(@"State success");
+                        
+                    }
+                    sqlite3_finalize(statement);
+                }
+            }
+            for (int i = 0; i < [Setting sharedInstance].MainCategories.count; i++) {
+                MainCategory *obj = [[Setting sharedInstance].MainCategories objectAtIndex:i];
+                
+                NSString *areaSQL = [NSString stringWithFormat: @"INSERT INTO MainCateogry (ID, CatNameAr, CatNameEn, Sort) VALUES (\"%@\", \"%@\", \"%@\", \"%@\")", obj.mainCatID, obj.mainCatNameAr, obj.mainCatNameEn, obj.sort];
+                
+                const char *query_stmt1 = [areaSQL UTF8String];
+                
+                if (sqlite3_prepare_v2(projectDB, query_stmt1, -1, &statement, NULL) == SQLITE_OK)
+                {
+                    if (sqlite3_step(statement) == SQLITE_DONE)
+                    {
+                        NSLog(@"MainCategory success");
+                        
+                    }
+                    sqlite3_finalize(statement);
+                }
+            }
+            for (int i = 0; i < [Setting sharedInstance].SubCategories.count; i++) {
+                SubCategory *obj = [[Setting sharedInstance].SubCategories objectAtIndex:i];
+                
+                NSString *areaSQL = [NSString stringWithFormat: @"INSERT INTO SubCategory (ID, MainCatID, SubCatAr, SubCatEn, Sort, CatMeasures) VALUES (\"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\")", obj.subCatID, obj.mainCatID, obj.subCatAr, obj.subCatEn, obj.sort, obj.subCatMeasures];
+                
+                const char *query_stmt1 = [areaSQL UTF8String];
+                
+                if (sqlite3_prepare_v2(projectDB, query_stmt1, -1, &statement, NULL) == SQLITE_OK)
+                {
+                    if (sqlite3_step(statement) == SQLITE_DONE)
+                    {
+                        NSLog(@"SubCategory success");
+                        
+                    }
+                    sqlite3_finalize(statement);
+                }
+            }
+            for (int i = 0; i < [Setting sharedInstance].arrayMeasures.count; i++) {
+                Measures *obj = [[Setting sharedInstance].arrayMeasures objectAtIndex:i];
+                
+                NSString *areaSQL = [NSString stringWithFormat: @"INSERT INTO Measures (ID, MeasureNameAr, MeasureNameEn, Sort) VALUES (\"%@\", \"%@\", \"%@\", \"%@\")", obj.measureID, obj.measureNameAr, obj.measureNameEn, obj.sort];
+                
+                const char *query_stmt1 = [areaSQL UTF8String];
+                
+                if (sqlite3_prepare_v2(projectDB, query_stmt1, -1, &statement, NULL) == SQLITE_OK)
+                {
+                    if (sqlite3_step(statement) == SQLITE_DONE)
+                    {
+                        NSLog(@"SubCategory success");
+                        
+                    }
+                    sqlite3_finalize(statement);
+                }
+            }
+        
+        
+        
+        sqlite3_close(projectDB);
+    }
+}
 - (IBAction)onBtnArab:(id)sender {
+    if ([self checklocalDB] == FALSE) {
+        [self saveDatatoLocalDB];
+    }
     [Setting sharedInstance].myLanguage = @"Arab";
     UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     UITabBarController *tabVC = [mainstoryboard instantiateViewControllerWithIdentifier:@"TabBarView"];
@@ -209,6 +477,9 @@
 }
 
 - (IBAction)onBtnEnglish:(id)sender {
+    if ([self checklocalDB] == FALSE) {
+        [self saveDatatoLocalDB];
+    }
     [Setting sharedInstance].myLanguage = @"En";
     UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     UITabBarController *tabVC = [mainstoryboard instantiateViewControllerWithIdentifier:@"TabBarView"];
@@ -554,8 +825,10 @@
             responseType = @"";
             responseNum++;
             if (responseNum == 5) {
+                
                 self.btnArab.hidden = NO;
                 self.btnEnglish.hidden = NO;
+                
             }
         }
         if( [elementName isEqualToString:@"AreaResult"])

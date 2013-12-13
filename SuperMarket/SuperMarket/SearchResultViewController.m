@@ -33,6 +33,9 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+ 
+}
+- (void)viewWillAppear:(BOOL)animated{
     int resNum = 0;
     for (int i = 0; i < arrayProductsWithCategory.count; i++)
     {
@@ -41,14 +44,37 @@
             resNum++;
     }
     lb_title.text = [NSString stringWithFormat:@"SearchResult(%d)", resNum];
-/*    [table_Products setBackgroundColor:[UIColor clearColor]];
-    UIImageView *tempImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"product_back.png"]];
-    [tempImageView setFrame:table_Products.frame];
-    table_Products.backgroundView = tempImageView;*/
+    /*    [table_Products setBackgroundColor:[UIColor clearColor]];
+     UIImageView *tempImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"product_back.png"]];
+     [tempImageView setFrame:table_Products.frame];
+     table_Products.backgroundView = tempImageView;*/
     table_Products.separatorStyle = UITableViewCellSeparatorStyleNone;
     table_Products.backgroundColor = [UIColor clearColor];
+    [[Setting sharedInstance].myFavoriteList removeAllObjects];
+    [[Setting sharedInstance].myPurchaseList removeAllObjects];
+    [[Setting sharedInstance] loadFavoriteListFromLocalDB:[Setting sharedInstance].customer.customerID];
+    [[Setting sharedInstance] loadPurchaseListFromLocalDB:[Setting sharedInstance].customer.customerID];
+    for (int i = 0; i < arrayProductsWithCategory.count; i++){
+        ProductsWithCategory *obj = [arrayProductsWithCategory objectAtIndex:i];
+        if (obj.isCategory == FALSE){
+            if ([[Setting sharedInstance] isFavoriteExist:obj.obj.prodID] == FALSE)
+            {
+                obj.obj.prodFavoriteProducts = @"";
+            }
+            else{
+                obj.obj.prodFavoriteProducts = @"true";
+            }
+            if ([[Setting sharedInstance] isPurchaseExist:obj.obj.prodID] == FALSE)
+            {
+                obj.obj.prodPurchasedProducts = @"";
+            }
+            else{
+                obj.obj.prodPurchasedProducts = @"true";
+            }
+        }
+    }
+    [table_Products reloadData];
 }
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -56,51 +82,91 @@
 }
 
 - (IBAction)onBtnFavorite:(id)sender {
-    NSIndexPath *indexPath = [table_Products indexPathForCell:(UITableViewCell *)[[sender superview]superview]];
-    ProductsWithCategory *catObj = [arrayProductsWithCategory objectAtIndex:indexPath.row];
-    if (catObj.isCategory == FALSE){
-        if ([catObj.obj.prodFavoriteProducts isEqualToString:@""]){
-            catObj.obj.prodFavoriteProducts = @"true";
-            [[Setting sharedInstance].myFavoriteList addObject:catObj.obj];
-        }
-        else{
-            catObj.obj.prodFavoriteProducts = @"";
-            for (int i = 0; i < [Setting sharedInstance].myFavoriteList.count; i++){
-                ProductObject *obj = [[Setting sharedInstance].myFavoriteList objectAtIndex:i];
-                if ([obj.prodID isEqualToString:catObj.obj.prodID])
-                {
-                    [[Setting sharedInstance].myFavoriteList removeObjectAtIndex:i];
-                    break;
+    if (![[Setting sharedInstance].customer.customerID isEqualToString:@"0"]){
+        NSIndexPath *indexPath = [table_Products indexPathForCell:(UITableViewCell *)[[sender superview]superview]];
+        ProductsWithCategory *catObj = [arrayProductsWithCategory objectAtIndex:indexPath.row];
+        if (catObj.isCategory == FALSE){
+            if ([catObj.obj.prodFavoriteProducts isEqualToString:@""]){
+                catObj.obj.prodFavoriteProducts = @"true";
+                NSDate *addDate = [[NSDate alloc]init];
+                NSDateFormatter *df1 = [[NSDateFormatter alloc]init];
+                [df1 setDateFormat:@"dd/MM/yyyy"];
+                NSLocale *locale1 = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+                [df1 setLocale:locale1];
+                NSTimeZone *tz1 = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+                [df1 setTimeZone:tz1];
+                catObj.obj.prodAddDate = [df1 stringFromDate:addDate];
+                [[Setting sharedInstance].myFavoriteList addObject:catObj.obj];
+                [[Setting sharedInstance] addFavoriteProduct:[Setting sharedInstance].customer.customerID withProdID:catObj.obj.prodID withDate:catObj.obj.prodAddDate withCompany:catObj.obj.prodCompanyID];
+                [[Setting sharedInstance] sendFavoriteRequest:catObj.obj];                
+            }
+            else{
+                catObj.obj.prodFavoriteProducts = @"";
+                catObj.obj.prodAddDate = @"";
+                for (int i = 0; i < [Setting sharedInstance].myFavoriteList.count; i++){
+                    ProductObject *obj = [[Setting sharedInstance].myFavoriteList objectAtIndex:i];
+                    if ([obj.prodID isEqualToString:catObj.obj.prodID])
+                    {
+                        [[Setting sharedInstance].myFavoriteList removeObjectAtIndex:i];
+                        [[Setting sharedInstance] removeFavoriteProduct:[Setting sharedInstance].customer.customerID withProdID:catObj.obj.prodID];
+                        break;
+                    }
                 }
             }
         }
+        
+        [table_Products reloadData];
     }
-    
-    [table_Products reloadData];
+    else{
+        UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
+                                                    message:@"You must login to add/remove favorite product." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        
+        [mes show];
+    }
 }
 
 - (IBAction)onBtnPurchase:(id)sender {
-    NSIndexPath *indexPath = [table_Products indexPathForCell:(UITableViewCell *)[[sender superview]superview]];
-    ProductsWithCategory *catObj = [arrayProductsWithCategory objectAtIndex:indexPath.row];
-    if (catObj.isCategory == FALSE){
-        if ([catObj.obj.prodPurchasedProducts isEqualToString:@""]){
-            catObj.obj.prodPurchasedProducts = @"true";
-            [[Setting sharedInstance].myPurchaseList addObject:catObj.obj];
-        }
-        else{
-            catObj.obj.prodPurchasedProducts = @"";
-            for (int i = 0; i < [Setting sharedInstance].myPurchaseList.count; i++){
-                ProductObject *obj = [[Setting sharedInstance].myPurchaseList objectAtIndex:i];
-                if ([obj.prodID isEqualToString:catObj.obj.prodID])
-                {
-                    [[Setting sharedInstance].myPurchaseList removeObjectAtIndex:i];
-                    break;
+    if (![[Setting sharedInstance].customer.customerID isEqualToString:@"0"]){
+        NSIndexPath *indexPath = [table_Products indexPathForCell:(UITableViewCell *)[[sender superview]superview]];
+        ProductsWithCategory *catObj = [arrayProductsWithCategory objectAtIndex:indexPath.row];
+        if (catObj.isCategory == FALSE){
+            if ([catObj.obj.prodPurchasedProducts isEqualToString:@""]){
+                catObj.obj.prodPurchasedProducts = @"true";
+                NSDate *addDate = [[NSDate alloc]init];
+                NSDateFormatter *df1 = [[NSDateFormatter alloc]init];
+                [df1 setDateFormat:@"dd/MM/yyyy"];
+                NSLocale *locale1 = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+                [df1 setLocale:locale1];
+                NSTimeZone *tz1 = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+                [df1 setTimeZone:tz1];
+                catObj.obj.prodAddPurchaseDate = [df1 stringFromDate:addDate];
+                [[Setting sharedInstance].myPurchaseList addObject:catObj.obj];
+                [[Setting sharedInstance] addPurchaseProduct:[Setting sharedInstance].customer.customerID withProdID:catObj.obj.prodID withDate:catObj.obj.prodAddDate withCompany:catObj.obj.prodCompanyID];
+                [[Setting sharedInstance] sendPurchaseRequest:catObj.obj];
+            }
+            else{
+                catObj.obj.prodPurchasedProducts = @"";
+                catObj.obj.prodAddPurchaseDate = @"";
+                for (int i = 0; i < [Setting sharedInstance].myPurchaseList.count; i++){
+                    ProductObject *obj = [[Setting sharedInstance].myPurchaseList objectAtIndex:i];
+                    if ([obj.prodID isEqualToString:catObj.obj.prodID])
+                    {
+                        [[Setting sharedInstance].myPurchaseList removeObjectAtIndex:i];
+                        [[Setting sharedInstance] removePurchaseProduct:[Setting sharedInstance].customer.customerID withProdID:catObj.obj.prodID];
+                        break;
+                    }
                 }
             }
         }
+        
+        [table_Products reloadData];
     }
-    
-    [table_Products reloadData];
+    else{
+        UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
+                                                    message:@"You must login to add/remove favorite product." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        
+        [mes show];
+    }
 }
 
 - (IBAction)onFriend:(id)sender {

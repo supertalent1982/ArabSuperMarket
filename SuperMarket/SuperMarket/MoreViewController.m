@@ -10,6 +10,10 @@
 #import "MyAccountViewController.h"
 #import "PPRevealSideViewController.h"
 #import "FriendViewController.h"
+#import "Setting.h"
+#import "RegisterViewController.h"
+#import "LangViewController.h"
+#import "PurchaseViewController.h"
 @interface MoreViewController ()
 
 @end
@@ -37,7 +41,16 @@
     [itemList addObject:@"About Us"];
     [itemList addObject:@"Rate this App"];
 }
-
+- (void)viewWillAppear:(BOOL)animated{
+    if ([[Setting sharedInstance].customer.customerID isEqualToString:@"0"]){
+        self.btnLogout.userInteractionEnabled = NO;
+        self.btnLogout.alpha = 0.5;
+    }
+    else{
+        self.btnLogout.userInteractionEnabled = YES;
+        self.btnLogout.alpha = 1.0;
+    }
+}
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -71,18 +84,30 @@
         case 0:
         {
             UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-            MyAccountViewController *VC = [mainstoryboard instantiateViewControllerWithIdentifier:@"AccountView"];
-            [self.navigationController pushViewController:VC animated:YES];
+            if ([[Setting sharedInstance].customer.customerID isEqualToString:@"0"]){
+                MyAccountViewController *VC = [mainstoryboard instantiateViewControllerWithIdentifier:@"AccountView"];
+                [self.navigationController pushViewController:VC animated:YES];
+            }
+            else{
+                RegisterViewController *VC = [mainstoryboard instantiateViewControllerWithIdentifier:@"RegisterView"];
+                [self.navigationController pushViewController:VC animated:YES];
+            }
         }
             break;
         case 1:
         {
+            UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             
+            PurchaseViewController *VC = [mainstoryboard instantiateViewControllerWithIdentifier:@"PurchaseView"];
+            [self.navigationController pushViewController:VC animated:YES];
         }
             break;
         case 2:
         {
+            UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
             
+                LangViewController *VC = [mainstoryboard instantiateViewControllerWithIdentifier:@"LanguageView"];
+                [self.navigationController pushViewController:VC animated:YES];
         }
             break;
         case 3:
@@ -102,6 +127,10 @@
 }
 
 - (IBAction)onBtnLogout:(id)sender {
+    [Setting sharedInstance].customer = Nil;
+    [Setting sharedInstance].customer = [[CustomerObject alloc] init];
+    self.btnLogout.userInteractionEnabled = NO;
+    self.btnLogout.alpha = 0.5;
 }
 
 - (IBAction)onBtnList:(id)sender {

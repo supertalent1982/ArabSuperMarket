@@ -47,6 +47,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    
+}
+-(void)viewWillAppear:(BOOL)animated{
     errEncounter  = FALSE;
 	// Do any additional setup after loading the view.
     self.btnCancel.hidden = YES;
@@ -84,7 +88,7 @@
     currentArray = [[NSMutableArray alloc]init];
     expiredofferArray = [[NSMutableArray alloc]init];
     expiredArray = [[NSMutableArray alloc]init];
-
+    
     currentTable.backgroundColor = [UIColor clearColor];
     currentTable.separatorStyle = UITableViewCellSeparatorStyleNone;
     expireTable.backgroundColor = [UIColor clearColor];
@@ -104,55 +108,169 @@
         }
     }
     
+    NSString *docsDir;
+    NSArray *dirPaths;
     
-  /*  NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-    [df setLocale:locale];
-    NSTimeZone *timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
-    [df setTimeZone:timeZone];*/
+    // Get the documents directory
+    dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     
-}
--(void)viewWillAppear:(BOOL)animated{
-    NSDate *date = [[NSDate alloc]init];
-    NSDateFormatter *df = [[NSDateFormatter alloc]init];
-    [df setDateFormat:@"yyyy-MM-dd"];
-    NSString *dateStr = [df stringFromDate:date];
-    NSLog(@"date = %@", dateStr);
-    [df setDateFormat:@"hh:mm:ss"];
-    NSString *timeStr = [df stringFromDate:date];
-    NSString *reqUpdateTimeStr = [NSString stringWithFormat:@"%@T%@", dateStr, timeStr];
-    NSString *soapMessage = [NSString stringWithFormat:
-                             @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
-                             "<soap:Body>\n"
-                             "<GetCompanyOffers xmlns=\"http://tempuri.org/\">\n"
-                             "<CompanyID>%@</CompanyID>\n"
-                             "<LastUpdateTime>%@</LastUpdateTime>\n"
-                             "<CustomerID>0</CustomerID>\n"
-                             "</GetCompanyOffers>\n"
-                             "</soap:Body>\n"
-                             "</soap:Envelope>\n", selCompany.companyID, @"2013-07-15T00:00:00"];
-	NSLog(@"soapMessage = %@\n", soapMessage);
+    docsDir = [dirPaths objectAtIndex:0];
     
+    // Build the path to the database file
+    databasePath = [[NSString alloc] initWithString: [docsDir stringByAppendingPathComponent: @"Q8SuperMarketDB.db"]];
     
-	NSURL *url = [NSURL URLWithString:@"http://q8supermarket.com/Services/MobileService.asmx?op=GetCompanyOffers"];
-	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
-	NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
-	
-	[theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
-	[theRequest addValue: @"http://tempuri.org/GetCompanyOffers" forHTTPHeaderField:@"SOAPAction"];
-	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
-	[theRequest setHTTPMethod:@"POST"];
-	[theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
-	
-	NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
-    if( theConnection )
-	{
-		webData = [[NSMutableData alloc]init];
-	}
-	else
-	{
-		NSLog(@"theConnection is NULL");
-	}
+    /*  NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+     [df setLocale:locale];
+     NSTimeZone *timeZone = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+     [df setTimeZone:timeZone];*/
+    sqlite3_stmt    *statement;
+    
+    BOOL flag = TRUE;
+    const char *dbpath = [databasePath UTF8String];
+    if (sqlite3_open(dbpath, &projectDB) == SQLITE_OK)
+    {
+        
+        NSString *querySQL = [NSString stringWithFormat: @"SELECT * FROM Offers where CompanyID = \"%@\"", selCompany.companyID];
+        const char *query_stmt = [querySQL UTF8String];
+        if (sqlite3_prepare_v2(projectDB, query_stmt, -1, &statement, NULL) == SQLITE_OK)
+        {
+            if (sqlite3_step(statement) != SQLITE_ROW) {
+                flag = FALSE;
+            }
+            else{
+                
+                
+                OfferObject *obj = [[OfferObject alloc]init];
+                obj.offerID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+                obj.offerCompanyID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)];
+                obj.offerTitleAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
+                obj.offerTitleEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
+                obj.offerDescAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 4)];
+                obj.offerDescEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 5)];
+                obj.offerPhotoURL = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 6)];
+                obj.offerStartDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 7)];
+                obj.offerEndDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 8)];
+                obj.offerIsActive = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 9)];
+                obj.offerBranchList = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 10)];
+                obj.offerlastUpdateTime = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 11)];
+                obj.offerProducts = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 12)];
+                
+                if ([obj.offerIsActive isEqualToString:@"true"])
+                {
+                    
+                    NSString *endTimeStr = [obj.offerEndDate stringByReplacingOccurrencesOfString:@"T" withString:@" "];
+                    NSDateFormatter *df = [[NSDateFormatter alloc]init];
+                    [df setDateFormat:@"yyyy-MM-dd hh:mm:ss"];
+                    NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+                    [df setLocale:locale];
+                    NSTimeZone *tz = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+                    [df setTimeZone:tz];
+                    NSDate *endDate = [df dateFromString:endTimeStr];
+                    NSDate *today = [[NSDate alloc]init];
+                    
+                    if ([today compare:endDate] == NSOrderedAscending){
+                        [currentofferArray addObject:obj];
+                        [currentArray addObject:obj];
+                    }
+                    else{
+                        [expiredofferArray addObject:obj];
+                        [expiredArray addObject:obj];
+                    }
+                }
+                
+                while (sqlite3_step(statement) == SQLITE_ROW)
+                {
+                    OfferObject *obj1 = [[OfferObject alloc]init];
+                    obj1.offerID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+                    obj1.offerCompanyID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)];
+                    obj1.offerTitleAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
+                    obj1.offerTitleEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
+                    obj1.offerDescAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 4)];
+                    obj1.offerDescEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 5)];
+                    obj1.offerPhotoURL = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 6)];
+                    obj1.offerStartDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 7)];
+                    obj1.offerEndDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 8)];
+                    obj1.offerIsActive = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 9)];
+                    obj1.offerBranchList = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 10)];
+                    obj1.offerlastUpdateTime = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 11)];
+                    obj1.offerProducts = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 12)];
+                    
+                    if ([obj1.offerIsActive isEqualToString:@"true"])
+                    {
+                        
+                        NSString *endTimeStr = [obj1.offerEndDate stringByReplacingOccurrencesOfString:@"T" withString:@" "];
+                        NSDateFormatter *df = [[NSDateFormatter alloc]init];
+                        [df setDateFormat:@"yyyy-MM-dd hh:mm:ss"];
+                        NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+                        [df setLocale:locale];
+                        NSTimeZone *tz = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+                        [df setTimeZone:tz];
+                        NSDate *endDate = [df dateFromString:endTimeStr];
+                        NSDate *today = [[NSDate alloc]init];
+                        
+                        if ([today compare:endDate] == NSOrderedAscending){
+                            [currentofferArray addObject:obj1];
+                            [currentArray addObject:obj1];
+                        }
+                        else{
+                            [expiredofferArray addObject:obj1];
+                            [expiredArray addObject:obj1];
+                        }
+                    }
+                    
+                    
+                }
+            }
+            sqlite3_finalize(statement);
+        }
+        sqlite3_close(projectDB);
+        [currentTable reloadData];
+        [expireTable reloadData];
+    }
+    if (flag == FALSE){
+        NSDate *date = [[NSDate alloc]init];
+        NSDateFormatter *df = [[NSDateFormatter alloc]init];
+        [df setDateFormat:@"yyyy-MM-dd"];
+        NSString *dateStr = [df stringFromDate:date];
+        NSLog(@"date = %@", dateStr);
+        [df setDateFormat:@"hh:mm:ss"];
+        NSString *timeStr = [df stringFromDate:date];
+        NSString *reqUpdateTimeStr = [NSString stringWithFormat:@"%@T%@", dateStr, timeStr];
+        NSString *soapMessage = [NSString stringWithFormat:
+                                 @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                                 "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                                 "<soap:Body>\n"
+                                 "<GetCompanyOffers xmlns=\"http://tempuri.org/\">\n"
+                                 "<CompanyID>%@</CompanyID>\n"
+                                 "<LastUpdateTime>%@</LastUpdateTime>\n"
+                                 "<CustomerID>%@</CustomerID>\n"
+                                 "</GetCompanyOffers>\n"
+                                 "</soap:Body>\n"
+                                 "</soap:Envelope>\n", selCompany.companyID, @"2013-07-15T00:00:00", [Setting sharedInstance].customer.customerID];
+        NSLog(@"soapMessage = %@\n", soapMessage);
+        
+        
+        NSURL *url = [NSURL URLWithString:@"http://q8supermarket.com/Services/MobileService.asmx?op=GetCompanyOffers"];
+        NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
+        NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
+        
+        [theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+        [theRequest addValue: @"http://tempuri.org/GetCompanyOffers" forHTTPHeaderField:@"SOAPAction"];
+        [theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
+        [theRequest setHTTPMethod:@"POST"];
+        [theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+        if( theConnection )
+        {
+            webData = [[NSMutableData alloc]init];
+        }
+        else
+        {
+            NSLog(@"theConnection is NULL");
+        }
+    }
+    
 }
 
 -(UITableViewCell *)tableView:(UITableView *)_tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -502,6 +620,7 @@ bool errEncounter = FALSE;
             [self.navigationController popViewControllerAnimated:YES];
             return;
         }
+        [self saveOfferInfo];
         [currentTable reloadData];
         [expireTable reloadData];
       //  [self showCompanyLogo];
@@ -600,5 +719,46 @@ bool errEncounter = FALSE;
         soapResults = nil;
     }
 
+}
+-(void)saveOfferInfo{
+    const char *dbpath = [databasePath UTF8String];
+    sqlite3_stmt    *statement;
+    
+    if (sqlite3_open(dbpath, &projectDB) == SQLITE_OK)
+    {
+        for (int i = 0; i < currentofferArray.count; i++) {
+            OfferObject *obj = [currentofferArray objectAtIndex:i];
+            NSString *querySQL = [NSString stringWithFormat: @"INSERT INTO Offers (ID, CompanyID, TitleAr, TitleEn, DescAr, DescEn, Photo, StartDate, EndDate, IsActive, BranchList, lastUpdateTime, totalProducts) VALUES (\"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\")", obj.offerID, obj.offerCompanyID, obj.offerTitleAr, obj.offerTitleEn, obj.offerDescAr, obj.offerDescEn, obj.offerPhotoURL, obj.offerStartDate, obj.offerEndDate, obj.offerIsActive, obj.offerBranchList, obj.offerlastUpdateTime, obj.offerProducts];
+            
+            const char *query_stmt1 = [querySQL UTF8String];
+            
+            if (sqlite3_prepare_v2(projectDB, query_stmt1, -1, &statement, NULL) == SQLITE_OK)
+            {
+                if (sqlite3_step(statement) == SQLITE_DONE)
+                {
+                    NSLog(@"Offer success");
+                    
+                }
+                sqlite3_finalize(statement);
+            }
+        }
+        for (int i = 0; i < expiredofferArray.count; i++) {
+            OfferObject *obj = [expiredofferArray objectAtIndex:i];
+            NSString *querySQL = [NSString stringWithFormat: @"INSERT INTO Offers (ID, CompanyID, TitleAr, TitleEn, DescAr, DescEn, Photo, StartDate, EndDate, IsActive, BranchList, lastUpdateTime, totalProducts) VALUES (\"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\")", obj.offerID, obj.offerCompanyID, obj.offerTitleAr, obj.offerTitleEn, obj.offerDescAr, obj.offerDescEn, obj.offerPhotoURL, obj.offerStartDate, obj.offerEndDate, obj.offerIsActive, obj.offerBranchList, obj.offerlastUpdateTime, obj.offerProducts];
+            
+            const char *query_stmt1 = [querySQL UTF8String];
+            
+            if (sqlite3_prepare_v2(projectDB, query_stmt1, -1, &statement, NULL) == SQLITE_OK)
+            {
+                if (sqlite3_step(statement) == SQLITE_DONE)
+                {
+                    NSLog(@"Offer success");
+                    
+                }
+                sqlite3_finalize(statement);
+            }
+        }
+        sqlite3_close(projectDB);
+    }
 }
 @end

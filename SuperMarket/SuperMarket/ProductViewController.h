@@ -11,7 +11,12 @@
 #import "OfferObject.h"
 #import "ProductObject.h"
 #import "ProductsWithCategory.h"
+#import <sqlite3.h>
 @interface ProductViewController : UIViewController<UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate>
+{
+    sqlite3 *projectDB;
+    NSString *databasePath;
+}
 @property (weak, nonatomic) IBOutlet UITableView *table_Products;
 @property (weak, nonatomic) IBOutlet UILabel *lb_title;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;

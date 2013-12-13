@@ -10,6 +10,7 @@
 #import "NewListViewController.h"
 #import "PPRevealSideViewController.h"
 #import "FriendViewController.h"
+#import "Setting.h"
 @interface MyListViewController ()
 
 @end
@@ -38,10 +39,17 @@
 }
 
 - (IBAction)onBtnAdd:(id)sender {
-    UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    NewListViewController *VC = [mainstoryboard instantiateViewControllerWithIdentifier:@"NewListView"];
-    
-    [self.navigationController pushViewController:VC animated:YES];
+    if ([[Setting sharedInstance].customer.customerID isEqualToString:@"0"]){
+        UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
+                                                    message:@"You must login to add your list." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        
+        [mes show];
+    }
+    else{
+        UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        NewListViewController *VC = [mainstoryboard instantiateViewControllerWithIdentifier:@"NewListView"];
+        [self.navigationController pushViewController:VC animated:YES];
+    }
 }
 
 - (IBAction)onBtnList:(id)sender {

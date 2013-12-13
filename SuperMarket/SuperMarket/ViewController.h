@@ -12,8 +12,12 @@
 #import "Measures.h"
 #import "MainCategory.h"
 #import "SubCategory.h"
-
+#import <sqlite3.h>
 @interface ViewController : UIViewController
+{
+    sqlite3 *projectDB;
+    NSString *databasePath;
+}
 - (IBAction)onBtnArab:(id)sender;
 - (IBAction)onBtnEnglish:(id)sender;
 @property (nonatomic, strong) NSMutableArray *arrayRequest;

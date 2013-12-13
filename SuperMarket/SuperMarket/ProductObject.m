@@ -12,7 +12,31 @@
 - (id)init
 {
     self = [super init];
-    
+    self.OfferID = @"";
+    self.prodAddDate = @"";
+    self.prodAddPurchaseDate = @"";
+    self.prodBranchList = @"";
+    self.prodCompanyID = @"";
+    self.prodCurPrice = @"";
+    self.prodDescAr = @"";
+    self.prodDescEn = @"";
+    self.prodEndDate = @"";
+    self.prodFavoriteProducts = @"";
+    self.prodHomeOrderProducts = @"";
+    self.prodID = @"";
+    self.prodIsActive = @"";
+    self.prodlastUpdateTime = @"";
+    self.prodMainCatID = @"";
+    self.prodMeasureID = @"";
+    self.prodOrgPrice = @"";
+    self.prodPhotoURL = @"";
+    self.prodPurchasedProducts = @"";
+    self.prodQuantity = @"";
+    self.prodStartDate = @"";
+    self.prodSubCatID = @"";
+    self.prodTitleAr = @"";
+    self.prodTitleEn = @"";
+    self.prodVisitsCount = @"";
     return self;
 }
 

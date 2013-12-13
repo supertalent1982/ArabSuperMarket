@@ -8,7 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "ProductObject.h"
-@interface SearchViewController : UIViewController<UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate>
+#import <sqlite3.h>
+@interface SearchViewController : UIViewController<UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate>{
+    sqlite3 *projectDB;
+    NSString *databasePath;
+}
 - (IBAction)onDone:(id)sender;
 - (IBAction)onBtnSearch:(id)sender;
 @property (weak, nonatomic) IBOutlet UILabel *lb_pickerTitle;

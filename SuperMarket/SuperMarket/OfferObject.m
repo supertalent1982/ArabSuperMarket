@@ -12,7 +12,19 @@
 - (id)init
 {
     self = [super init];
-    
+    self.offerBranchList = @"";
+    self.offerCompanyID = @"";
+    self.offerDescAr = @"";
+    self.offerDescEn = @"";
+    self.offerEndDate = @"";
+    self.offerID = @"";
+    self.offerIsActive = @"";
+    self.offerlastUpdateTime = @"";
+    self.offerPhotoURL = @"";
+    self.offerProducts = @"";
+    self.offerStartDate = @"";
+    self.offerTitleAr = @"";
+    self.offerTitleEn = @"";
     return self;
 }
 

@@ -6,9 +6,19 @@
 //  Copyright (c) 2013 phoenix. All rights reserved.
 //
 
-#import "ViewController.h"
-
-@interface RegisterViewController : ViewController<UITextFieldDelegate>
+#import <UIKit/UIKit.h>
+#import <sqlite3.h>
+@interface RegisterViewController : UIViewController<UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate>{
+    sqlite3 *projectDB;
+    NSString *databasePath;
+}
+@property (weak, nonatomic) IBOutlet UILabel *lb_title;
+@property (weak, nonatomic) IBOutlet UIButton *btn_Register;
+@property (weak, nonatomic) IBOutlet UILabel *lb_pickerTitle;
+- (IBAction)onDone:(id)sender;
+@property (weak, nonatomic) IBOutlet UIView *selectView;
+@property (weak, nonatomic) IBOutlet UIPickerView *dataPicker;
+@property (nonatomic, strong) NSMutableArray *cityArray;
 - (IBAction)onBtnBack:(id)sender;
 - (IBAction)onBtnList:(id)sender;
 - (IBAction)onBtnSelectCity:(id)sender;
@@ -20,5 +30,17 @@
 @property (weak, nonatomic) IBOutlet UITextField *tUsername;
 @property (weak, nonatomic) IBOutlet UITextField *tPassword;
 @property (weak, nonatomic) IBOutlet UITextField *tConfirm;
+@property (nonatomic, strong) NSString *tmobileID;
+@property (nonatomic, strong) NSString *tareaID;
+@property (nonatomic, strong) NSString *tcityID;
+@property (nonatomic, strong) NSString *taddress;
+@property (nonatomic, strong) NSString *tmobileType;
+@property (nonatomic, strong) NSString *tuserType;
+@property (nonatomic, strong) NSString *taccessToken;
+@property (nonatomic, assign) int selIndex;
+@property(nonatomic, retain) NSXMLParser *xmlParser;
+@property(nonatomic, retain) NSMutableString *soapResults;
+@property(nonatomic, retain) NSMutableData *webData;
+@property(nonatomic, assign) 	BOOL recordResults;
 
 @end

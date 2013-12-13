@@ -104,6 +104,10 @@
 		D0029264182402AE00457166 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D0029263182402AE00457166 /* libsqlite3.0.dylib */; };
 		D0029266182402BA00457166 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D0029265182402BA00457166 /* libsqlite3.dylib */; };
 		D00292691824273500457166 /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D00292681824273500457166 /* AboutViewController.m */; };
+		D05951691854618400FD7A54 /* LangViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D05951681854618400FD7A54 /* LangViewController.m */; };
+		D059516C1854641000FD7A54 /* cell1.png in Resources */ = {isa = PBXBuildFile; fileRef = D059516A1854641000FD7A54 /* cell1.png */; };
+		D059516D1854641000FD7A54 /* cell2.png in Resources */ = {isa = PBXBuildFile; fileRef = D059516B1854641000FD7A54 /* cell2.png */; };
+		D059517018546EE600FD7A54 /* PurchaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D059516F18546EE600FD7A54 /* PurchaseViewController.m */; };
 		D0731A1018355CFD007C755D /* OfferObject.m in Sources */ = {isa = PBXBuildFile; fileRef = D0731A0F18355CFD007C755D /* OfferObject.m */; };
 		D0731A1318378636007C755D /* ProductViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0731A1218378636007C755D /* ProductViewController.m */; };
 		D0731A2C18389638007C755D /* product_back.png in Resources */ = {isa = PBXBuildFile; fileRef = D0731A2818389638007C755D /* product_back.png */; };
@@ -132,6 +136,11 @@
 		D08AA2311833A3CE007711F8 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = D08AA2301833A3CE007711F8 /* MBProgressHUD.m */; };
 		D08AA2351833E857007711F8 /* AsyncImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = D08AA2341833E857007711F8 /* AsyncImageView.m */; };
 		D08AA2371834096A007711F8 /* logoCase.png in Resources */ = {isa = PBXBuildFile; fileRef = D08AA2361834096A007711F8 /* logoCase.png */; };
+		D0D85B0918511CD10056AB67 /* CustomerObject.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D85B0818511CD10056AB67 /* CustomerObject.m */; };
+		D0D85B0B18512FF10056AB67 /* btn_update.png in Resources */ = {isa = PBXBuildFile; fileRef = D0D85B0A18512FF10056AB67 /* btn_update.png */; };
+		D0D85B0E1853E7130056AB67 /* MyListItem.m in Sources */ = {isa = PBXBuildFile; fileRef = D0D85B0D1853E7130056AB67 /* MyListItem.m */; };
+		D0D85B111854118F0056AB67 /* btn_add_measure.png in Resources */ = {isa = PBXBuildFile; fileRef = D0D85B0F1854118F0056AB67 /* btn_add_measure.png */; };
+		D0D85B121854118F0056AB67 /* btn_cancel_measure.png in Resources */ = {isa = PBXBuildFile; fileRef = D0D85B101854118F0056AB67 /* btn_cancel_measure.png */; };
 		D0FBD5A81827458B00CE728B /* MyAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0FBD5A71827458B00CE728B /* MyAccountViewController.m */; };
 		D0FBD5B018274E0800CE728B /* RegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D0FBD5AF18274E0800CE728B /* RegisterViewController.m */; };
 		D0FBD5B31827786D00CE728B /* favorite_tab_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = D0FBD5B11827786D00CE728B /* favorite_tab_bg.png */; };
@@ -275,6 +284,12 @@
 		D0029265182402BA00457166 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		D00292671824273500457166 /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
 		D00292681824273500457166 /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
+		D05951671854618400FD7A54 /* LangViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LangViewController.h; sourceTree = "<group>"; };
+		D05951681854618400FD7A54 /* LangViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LangViewController.m; sourceTree = "<group>"; };
+		D059516A1854641000FD7A54 /* cell1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cell1.png; sourceTree = "<group>"; };
+		D059516B1854641000FD7A54 /* cell2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cell2.png; sourceTree = "<group>"; };
+		D059516E18546EE600FD7A54 /* PurchaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PurchaseViewController.h; sourceTree = "<group>"; };
+		D059516F18546EE600FD7A54 /* PurchaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PurchaseViewController.m; sourceTree = "<group>"; };
 		D0731A0E18355CFD007C755D /* OfferObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OfferObject.h; sourceTree = "<group>"; };
 		D0731A0F18355CFD007C755D /* OfferObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OfferObject.m; sourceTree = "<group>"; };
 		D0731A1118378636007C755D /* ProductViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductViewController.h; sourceTree = "<group>"; };
@@ -320,6 +335,13 @@
 		D08AA2331833E857007711F8 /* AsyncImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AsyncImageView.h; sourceTree = "<group>"; };
 		D08AA2341833E857007711F8 /* AsyncImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AsyncImageView.m; sourceTree = "<group>"; };
 		D08AA2361834096A007711F8 /* logoCase.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logoCase.png; sourceTree = "<group>"; };
+		D0D85B0718511CD10056AB67 /* CustomerObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomerObject.h; sourceTree = "<group>"; };
+		D0D85B0818511CD10056AB67 /* CustomerObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomerObject.m; sourceTree = "<group>"; };
+		D0D85B0A18512FF10056AB67 /* btn_update.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_update.png; sourceTree = "<group>"; };
+		D0D85B0C1853E7130056AB67 /* MyListItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyListItem.h; sourceTree = "<group>"; };
+		D0D85B0D1853E7130056AB67 /* MyListItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyListItem.m; sourceTree = "<group>"; };
+		D0D85B0F1854118F0056AB67 /* btn_add_measure.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_add_measure.png; sourceTree = "<group>"; };
+		D0D85B101854118F0056AB67 /* btn_cancel_measure.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_cancel_measure.png; sourceTree = "<group>"; };
 		D0FBD5A61827458B00CE728B /* MyAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAccountViewController.h; sourceTree = "<group>"; };
 		D0FBD5A71827458B00CE728B /* MyAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyAccountViewController.m; sourceTree = "<group>"; };
 		D0FBD5AE18274E0800CE728B /* RegisterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegisterViewController.h; sourceTree = "<group>"; };
@@ -470,6 +492,11 @@
 		D00291CB1823B5F400457166 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				D059516A1854641000FD7A54 /* cell1.png */,
+				D059516B1854641000FD7A54 /* cell2.png */,
+				D0D85B0F1854118F0056AB67 /* btn_add_measure.png */,
+				D0D85B101854118F0056AB67 /* btn_cancel_measure.png */,
+				D0D85B0A18512FF10056AB67 /* btn_update.png */,
 				D0731AE218413219007C755D /* header_select_search.png */,
 				D0731ADB1840B27A007C755D /* bg_productDetail.png */,
 				D0731ADC1840B27A007C755D /* btn_detailClose.png */,
@@ -596,6 +623,10 @@
 				D0731ACC183DA5F0007C755D /* ProductsWithCategory.m */,
 				D0731AD018409D1D007C755D /* BranchObject.h */,
 				D0731AD118409D1D007C755D /* BranchObject.m */,
+				D0D85B0718511CD10056AB67 /* CustomerObject.h */,
+				D0D85B0818511CD10056AB67 /* CustomerObject.m */,
+				D0D85B0C1853E7130056AB67 /* MyListItem.h */,
+				D0D85B0D1853E7130056AB67 /* MyListItem.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -683,6 +714,10 @@
 				D0FBD5A71827458B00CE728B /* MyAccountViewController.m */,
 				D0FBD5AE18274E0800CE728B /* RegisterViewController.h */,
 				D0FBD5AF18274E0800CE728B /* RegisterViewController.m */,
+				D05951671854618400FD7A54 /* LangViewController.h */,
+				D05951681854618400FD7A54 /* LangViewController.m */,
+				D059516E18546EE600FD7A54 /* PurchaseViewController.h */,
+				D059516F18546EE600FD7A54 /* PurchaseViewController.m */,
 			);
 			name = MoreTab;
 			sourceTree = "<group>";
@@ -775,6 +810,7 @@
 				D00292231823B5F400457166 /* btn_list_done_mylist.png in Resources */,
 				D00290EA1820E74C00457166 /* Images.xcassets in Resources */,
 				D00292241823B5F400457166 /* btn_list_search_mylist.png in Resources */,
+				D0D85B111854118F0056AB67 /* btn_add_measure.png in Resources */,
 				D0731A2C18389638007C755D /* product_back.png in Resources */,
 				D00292321823B5F400457166 /* btn_sel_favorite.png in Resources */,
 				D00292461823B5F400457166 /* mylist_arrow.png in Resources */,
@@ -783,6 +819,7 @@
 				D00292401823B5F400457166 /* friend_list_bg.png in Resources */,
 				D00292171823B5F400457166 /* btn_about_market.png in Resources */,
 				D002924C1823B5F400457166 /* offer_company_bg.png in Resources */,
+				D059516C1854641000FD7A54 /* cell1.png in Resources */,
 				D00292291823B5F400457166 /* btn_nav_list.png in Resources */,
 				D0FBD5B41827786D00CE728B /* favorite_tab1_bg.png in Resources */,
 				D00292571823B5F400457166 /* tab_favorite_top.png in Resources */,
@@ -800,6 +837,7 @@
 				D002923A1823B5F400457166 /* check_sendlist.png in Resources */,
 				D0FBD5B8182795B300CE728B /* btn_nav_add.png in Resources */,
 				D00290DC1820E74C00457166 /* InfoPlist.strings in Resources */,
+				D059516D1854641000FD7A54 /* cell2.png in Resources */,
 				D002925B1823B5F400457166 /* table_sec_currentoffer.png in Resources */,
 				D002923F1823B5F400457166 /* firstbg.png in Resources */,
 				D002923D1823B5F400457166 /* favorite_header.png in Resources */,
@@ -823,6 +861,7 @@
 				D00292541823B5F400457166 /* search_tab.png in Resources */,
 				D00292251823B5F400457166 /* btn_login.png in Resources */,
 				D002921A1823B5F400457166 /* btn_cancel_friend.png in Resources */,
+				D0D85B0B18512FF10056AB67 /* btn_update.png in Resources */,
 				D00292421823B5F400457166 /* img_badge.png in Resources */,
 				D00292351823B5F400457166 /* btn_share_header.png in Resources */,
 				D00292521823B5F400457166 /* progressbar.png in Resources */,
@@ -845,6 +884,7 @@
 				D0731AE318413219007C755D /* header_select_search.png in Resources */,
 				D0731ADE1840B27A007C755D /* btn_detailClose.png in Resources */,
 				D00292361823B5F400457166 /* btn_twitter_login.png in Resources */,
+				D0D85B121854118F0056AB67 /* btn_cancel_measure.png in Resources */,
 				D00292211823B5F400457166 /* btn_lang_arab.png in Resources */,
 				D00292341823B5F400457166 /* btn_send_friend.png in Resources */,
 				D0FBD5DC18294EE900CE728B /* tab_offer@2x.png in Resources */,
@@ -896,6 +936,7 @@
 				D0731AE618417B94007C755D /* SearchResultViewController.m in Sources */,
 				D0731A3B18395A09007C755D /* MainCategory.m in Sources */,
 				D0731AE11840FE4B007C755D /* DetailViewController.m in Sources */,
+				D0D85B0E1853E7130056AB67 /* MyListItem.m in Sources */,
 				D0731A4818396B27007C755D /* Measures.m in Sources */,
 				D00292601823BD2100457166 /* CompanyViewController.m in Sources */,
 				D0731A1018355CFD007C755D /* OfferObject.m in Sources */,
@@ -905,12 +946,15 @@
 				D0731ACD183DA5F0007C755D /* ProductsWithCategory.m in Sources */,
 				D00290E21820E74C00457166 /* AppDelegate.m in Sources */,
 				D00291C71823AD2100457166 /* FavoriteViewController.m in Sources */,
+				D059517018546EE600FD7A54 /* PurchaseViewController.m in Sources */,
 				D0731A1318378636007C755D /* ProductViewController.m in Sources */,
 				D00291BE1823AD0200457166 /* OffersViewController.m in Sources */,
 				D08AA22D18339DDD007711F8 /* CompanyObject.m in Sources */,
 				D00291CA1823AD2C00457166 /* MoreViewController.m in Sources */,
 				D00291BA1823A88400457166 /* Setting.m in Sources */,
+				D05951691854618400FD7A54 /* LangViewController.m in Sources */,
 				D0FBD5C21827C70600CE728B /* FriendViewController.m in Sources */,
+				D0D85B0918511CD10056AB67 /* CustomerObject.m in Sources */,
 				D0731A341838CD91007C755D /* ProductObject.m in Sources */,
 				D00291C41823AD1600457166 /* MyListViewController.m in Sources */,
 				D0FBD5BF1827B74000CE728B /* PPRevealSideViewController.m in Sources */,

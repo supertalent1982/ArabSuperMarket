@@ -11,6 +11,7 @@
 @interface ProductsWithCategory : NSObject
 @property (nonatomic, strong) ProductObject *obj;
 @property (nonatomic, assign) BOOL isCategory;
-@property (nonatomic, assign) NSString* mainID;
-@property (nonatomic, assign) NSString* subID;
+@property (nonatomic, strong) NSString *mainID;
+@property (nonatomic, strong) NSString *subID;
+@property (nonatomic, strong) NSString *companyID;
 @end

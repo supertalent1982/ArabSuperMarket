@@ -1,23 +1,23 @@
 //
-//  FavoriteViewController.m
+//  PurchaseViewController.m
 //  SuperMarket
 //
-//  Created by phoenix on 11/1/13.
+//  Created by phoenix on 12/8/13.
 //  Copyright (c) 2013 phoenix. All rights reserved.
 //
 
-#import "FavoriteViewController.h"
+#import "PurchaseViewController.h"
 #import "PPRevealSideViewController.h"
 #import "FriendViewController.h"
 #import "Setting.h"
 #import "ProductObject.h"
 #import "AsyncImageView.h"
 #import "ProductsWithCategory.h"
-@interface FavoriteViewController ()
+@interface PurchaseViewController ()
 
 @end
 
-@implementation FavoriteViewController
+@implementation PurchaseViewController
 @synthesize img_back;
 @synthesize arrayCurrentFavorite;
 @synthesize arrayExpireFavorite;
@@ -31,7 +31,6 @@
     }
     return self;
 }
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -49,13 +48,13 @@
     NSMutableArray *currentFavor = [[NSMutableArray alloc]init];
     NSMutableArray *expireFavor = [[NSMutableArray alloc]init];
     
-    if ([Setting sharedInstance].myFavoriteList.count > 1){
-        for (int i = 0; i < [Setting sharedInstance].myFavoriteList.count - 1; i++){
-            ProductObject *tmpObj = [[Setting sharedInstance].myFavoriteList objectAtIndex:i];
-            ProductObject *firstObj = [[Setting sharedInstance].myFavoriteList objectAtIndex:i];
+    if ([Setting sharedInstance].myPurchaseList.count > 1){
+        for (int i = 0; i < [Setting sharedInstance].myPurchaseList.count - 1; i++){
+            ProductObject *tmpObj = [[Setting sharedInstance].myPurchaseList objectAtIndex:i];
+            ProductObject *firstObj = [[Setting sharedInstance].myPurchaseList objectAtIndex:i];
             int index = i;
-            for (int j = i + 1; j < [Setting sharedInstance].myFavoriteList.count; j++){
-                ProductObject *secondObj = [[Setting sharedInstance].myFavoriteList objectAtIndex:j];
+            for (int j = i + 1; j < [Setting sharedInstance].myPurchaseList.count; j++){
+                ProductObject *secondObj = [[Setting sharedInstance].myPurchaseList objectAtIndex:j];
                 NSString *sortNum1 = [[Setting sharedInstance] getSortNum:tmpObj.prodCompanyID withType:@"company"];
                 NSString *sortNum2 = [[Setting sharedInstance] getSortNum:secondObj.prodCompanyID withType:@"company"];
                 if ([sortNum1 intValue] > [sortNum2 intValue]) {
@@ -65,20 +64,20 @@
                 }
             }
             
-            [[Setting sharedInstance].myFavoriteList replaceObjectAtIndex:i withObject:tmpObj];
-            [[Setting sharedInstance].myFavoriteList replaceObjectAtIndex:index withObject:firstObj];
+            [[Setting sharedInstance].myPurchaseList replaceObjectAtIndex:i withObject:tmpObj];
+            [[Setting sharedInstance].myPurchaseList replaceObjectAtIndex:index withObject:firstObj];
             
         }
     }
     
-    for (int i = 0; i < [Setting sharedInstance].myFavoriteList.count; i++)
+    for (int i = 0; i < [Setting sharedInstance].myPurchaseList.count; i++)
     {
-        ProductObject *obj = [[Setting sharedInstance].myFavoriteList objectAtIndex:i];
-        if ([[Setting sharedInstance] isPurchaseExist:obj.prodID] == TRUE) {
-            obj.prodPurchasedProducts = @"true";
+        ProductObject *obj = [[Setting sharedInstance].myPurchaseList objectAtIndex:i];
+        if ([[Setting sharedInstance] isFavoriteExist:obj.prodID] == TRUE) {
+            obj.prodFavoriteProducts = @"true";
         }
         else
-            obj.prodPurchasedProducts = @"";
+            obj.prodFavoriteProducts = @"";
         NSDateFormatter *df = [[NSDateFormatter alloc]init];
         [df setDateFormat:@"yyyy-MM-dd hh:mm:ss"];
         NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
@@ -187,14 +186,14 @@
     if (tableState == TRUE){
         ProductsWithCategory *catObj = [arrayCurrentFavorite objectAtIndex:indexPath.row];
         if (catObj.isCategory == FALSE){
-            catObj.obj.prodFavoriteProducts = @"";
-            catObj.obj.prodAddDate = @"";
-            for (int i = 0; i < [Setting sharedInstance].myFavoriteList.count; i++){
-                ProductObject *obj = [[Setting sharedInstance].myFavoriteList objectAtIndex:i];
+            catObj.obj.prodPurchasedProducts = @"";
+            catObj.obj.prodAddPurchaseDate = @"";
+            for (int i = 0; i < [Setting sharedInstance].myPurchaseList.count; i++){
+                ProductObject *obj = [[Setting sharedInstance].myPurchaseList objectAtIndex:i];
                 if ([obj.prodID isEqualToString:catObj.obj.prodID])
                 {
-                    [[Setting sharedInstance].myFavoriteList removeObjectAtIndex:i];
-                    [[Setting sharedInstance] removeFavoriteProduct:[Setting sharedInstance].customer.customerID withProdID:catObj.obj.prodID];
+                    [[Setting sharedInstance].myPurchaseList removeObjectAtIndex:i];
+                    [[Setting sharedInstance] removePurchaseProduct:[Setting sharedInstance].customer.customerID withProdID:catObj.obj.prodID];
                     break;
                 }
             }
@@ -220,14 +219,14 @@
     else{
         ProductsWithCategory *catObj = [arrayExpireFavorite objectAtIndex:indexPath.row];
         if (catObj.isCategory == FALSE){
-            catObj.obj.prodFavoriteProducts = @"";
-            catObj.obj.prodAddDate = @"";
-            for (int i = 0; i < [Setting sharedInstance].myFavoriteList.count; i++){
-                ProductObject *obj = [[Setting sharedInstance].myFavoriteList objectAtIndex:i];
+            catObj.obj.prodPurchasedProducts = @"";
+            catObj.obj.prodAddPurchaseDate = @"";
+            for (int i = 0; i < [Setting sharedInstance].myPurchaseList.count; i++){
+                ProductObject *obj = [[Setting sharedInstance].myPurchaseList objectAtIndex:i];
                 if ([obj.prodID isEqualToString:catObj.obj.prodID])
                 {
-                    [[Setting sharedInstance].myFavoriteList removeObjectAtIndex:i];
-                    [[Setting sharedInstance] removeFavoriteProduct:[Setting sharedInstance].customer.customerID withProdID:catObj.obj.prodID];
+                    [[Setting sharedInstance].myPurchaseList removeObjectAtIndex:i];
+                    [[Setting sharedInstance] removePurchaseProduct:[Setting sharedInstance].customer.customerID withProdID:catObj.obj.prodID];
                     break;
                 }
             }
@@ -244,7 +243,7 @@
                 if (tmpObj2 == nil || tmpObj2.isCategory == TRUE)
                     delFlag = TRUE;
             }
-
+            
             [arrayExpireFavorite removeObjectAtIndex:indexPath.row];
             if (delFlag == TRUE)
                 [arrayExpireFavorite removeObjectAtIndex:indexPath.row - 1];
@@ -255,9 +254,9 @@
 }
 
 - (IBAction)onBtnPurchase:(id)sender {
-
+    
     NSIndexPath *indexPath = [favoriteTable indexPathForCell:(UITableViewCell *)[[sender superview]superview]];
-        ProductsWithCategory *catObj;
+    ProductsWithCategory *catObj;
     if (tableState == TRUE){
         catObj = [arrayCurrentFavorite objectAtIndex:indexPath.row];
     }
@@ -268,8 +267,8 @@
     
     
     if (catObj.isCategory == FALSE){
-        if ([catObj.obj.prodPurchasedProducts isEqualToString:@""]){
-            catObj.obj.prodPurchasedProducts = @"true";
+        if ([catObj.obj.prodFavoriteProducts isEqualToString:@""]){
+            catObj.obj.prodFavoriteProducts = @"true";
             NSDate *addDate = [[NSDate alloc]init];
             NSDateFormatter *df1 = [[NSDateFormatter alloc]init];
             [df1 setDateFormat:@"dd/MM/yyyy"];
@@ -277,27 +276,31 @@
             [df1 setLocale:locale1];
             NSTimeZone *tz1 = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
             [df1 setTimeZone:tz1];
-            catObj.obj.prodAddPurchaseDate = [df1 stringFromDate:addDate];
-            [[Setting sharedInstance].myPurchaseList addObject:catObj.obj];
-            [[Setting sharedInstance] addPurchaseProduct:[Setting sharedInstance].customer.customerID withProdID:catObj.obj.prodID withDate:catObj.obj.prodAddPurchaseDate withCompany:catObj.obj.prodCompanyID];
-            [[Setting sharedInstance] sendPurchaseRequest:catObj.obj];
+            catObj.obj.prodAddDate = [df1 stringFromDate:addDate];
+            [[Setting sharedInstance].myFavoriteList addObject:catObj.obj];
+            [[Setting sharedInstance] addFavoriteProduct:[Setting sharedInstance].customer.customerID withProdID:catObj.obj.prodID withDate:catObj.obj.prodAddPurchaseDate withCompany:catObj.obj.prodCompanyID];
+            [[Setting sharedInstance] sendFavoriteRequest:catObj.obj];
         }
         else{
-            catObj.obj.prodPurchasedProducts = @"";
-            catObj.obj.prodAddPurchaseDate = @"";
-            for (int i = 0; i < [Setting sharedInstance].myPurchaseList.count; i++){
-                ProductObject *obj = [[Setting sharedInstance].myPurchaseList objectAtIndex:i];
+            catObj.obj.prodFavoriteProducts = @"";
+            catObj.obj.prodAddDate = @"";
+            for (int i = 0; i < [Setting sharedInstance].myFavoriteList.count; i++){
+                ProductObject *obj = [[Setting sharedInstance].myFavoriteList objectAtIndex:i];
                 if ([obj.prodID isEqualToString:catObj.obj.prodID])
                 {
-                    [[Setting sharedInstance].myPurchaseList removeObjectAtIndex:i];
-                    [[Setting sharedInstance] removePurchaseProduct:[Setting sharedInstance].customer.customerID withProdID:catObj.obj.prodID];
+                    [[Setting sharedInstance].myFavoriteList removeObjectAtIndex:i];
+                    [[Setting sharedInstance] removeFavoriteProduct:[Setting sharedInstance].customer.customerID withProdID:catObj.obj.prodID];
                     break;
                 }
             }
         }
     }
-
+    
     [favoriteTable reloadData];
+}
+
+- (IBAction)onBtnBack:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 -(UITableViewCell *)tableView:(UITableView *)_tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell;
@@ -351,7 +354,7 @@
         lb_mainCat.text = mainStr;
         
         UILabel *lb_addDate = (UILabel*)[cell viewWithTag:104];
-        lb_addDate.text = [NSString stringWithFormat:@"Added: %@", obj.prodAddDate];
+        lb_addDate.text = [NSString stringWithFormat:@"Added: %@", obj.prodAddPurchaseDate];
         
         
         UILabel *lb_date = (UILabel*)[cell viewWithTag:105];
@@ -396,15 +399,15 @@
         
         
         UIButton *btnPurchase = (UIButton*)[cell viewWithTag:109];
-        if ([obj.prodPurchasedProducts isEqualToString:@""]){
-            [btnPurchase setBackgroundImage:[UIImage imageNamed:@"btn_unsel_purchase.png"] forState:UIControlStateNormal];
-            [btnPurchase setBackgroundImage:[UIImage imageNamed:@"btn_unsel_purchase.png"] forState:UIControlStateHighlighted];
-            [btnPurchase setBackgroundImage:[UIImage imageNamed:@"btn_unsel_purchase.png"] forState:UIControlStateSelected];
+        if ([obj.prodFavoriteProducts isEqualToString:@""]){
+            [btnPurchase setBackgroundImage:[UIImage imageNamed:@"btn_unsel_favorite.png"] forState:UIControlStateNormal];
+            [btnPurchase setBackgroundImage:[UIImage imageNamed:@"btn_unsel_favorite.png"] forState:UIControlStateHighlighted];
+            [btnPurchase setBackgroundImage:[UIImage imageNamed:@"btn_unsel_favorite.png"] forState:UIControlStateSelected];
         }
         else{
-            [btnPurchase setBackgroundImage:[UIImage imageNamed:@"btn_sel_purchase.png"] forState:UIControlStateNormal];
-            [btnPurchase setBackgroundImage:[UIImage imageNamed:@"btn_sel_purchase.png"] forState:UIControlStateHighlighted];
-            [btnPurchase setBackgroundImage:[UIImage imageNamed:@"btn_sel_purchase.png"] forState:UIControlStateSelected];
+            [btnPurchase setBackgroundImage:[UIImage imageNamed:@"btn_sel_favorite.png"] forState:UIControlStateNormal];
+            [btnPurchase setBackgroundImage:[UIImage imageNamed:@"btn_sel_favorite.png"] forState:UIControlStateHighlighted];
+            [btnPurchase setBackgroundImage:[UIImage imageNamed:@"btn_sel_favorite.png"] forState:UIControlStateSelected];
         }
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
