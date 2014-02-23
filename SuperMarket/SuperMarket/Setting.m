@@ -34,6 +34,8 @@ static Setting *instance = nil;
 @synthesize webData;
 @synthesize recordResults;
 @synthesize soapResults;
+@synthesize errEncounter;
+@synthesize myFriend;
 + (Setting *)sharedInstance
 {
     if (instance == nil)
@@ -51,14 +53,43 @@ static Setting *instance = nil;
     myFavoriteList = [[NSMutableArray alloc]init];
     myPurchaseList = [[NSMutableArray alloc]init];
     self.customer = [[CustomerObject alloc]init];
+    self.arrayPendingFriends = [[NSMutableArray alloc]init];
+    self.arrayRealFriends = [[NSMutableArray alloc]init];
+    self.searchSubCatID = @"";
     return self;
 }
 
 - (void)customizeTabBar{
  //   UITabBar *tabBar = [Setting sharedInstance].tabBarController.tabBar;
   //  [tabBar setBackgroundImage:[UIImage imageNamed:@"tabbar_bg.png"]];
+    self.ARtabBarController = [[UITabBarController alloc]init];
     UIImage* tabBarBackground = [UIImage imageNamed:@"tabbar_bg.png"];
     [[UITabBar appearance] setBackgroundImage:tabBarBackground];
+    if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"]){
+        NSMutableArray* newArray = [NSMutableArray arrayWithArray:self.tabBarController.viewControllers];
+        NSMutableArray *arabArray = [[NSMutableArray alloc]init];
+        for (int i = newArray.count - 1; i >= 0; i--){
+            UIViewController *vc = [newArray objectAtIndex:i];
+            [arabArray addObject:vc];
+        }
+        [self.ARtabBarController setViewControllers:arabArray animated:YES];
+        self.tabBarController = self.ARtabBarController;
+        [[self.tabBarController.tabBar.items objectAtIndex:0] setTitle:@"المزيد"];
+        [[self.tabBarController.tabBar.items objectAtIndex:1] setTitle:@"المفضلة"];
+        [[self.tabBarController.tabBar.items objectAtIndex:2] setTitle:@"طلبات البيت"];
+        [[self.tabBarController.tabBar.items objectAtIndex:3] setTitle:@"البحث"];
+        [[self.tabBarController.tabBar.items objectAtIndex:4] setTitle:@"العروض"];
+
+    }
+    else{
+        self.ENtabBarController = self.tabBarController;
+        [[self.tabBarController.tabBar.items objectAtIndex:0] setTitle:@"Offers"];
+        [[self.tabBarController.tabBar.items objectAtIndex:1] setTitle:@"Search"];
+        [[self.tabBarController.tabBar.items objectAtIndex:2] setTitle:@"My List"];
+        [[self.tabBarController.tabBar.items objectAtIndex:3] setTitle:@"Favorite"];
+        [[self.tabBarController.tabBar.items objectAtIndex:4] setTitle:@"More"];
+
+    }
 }
 - (void)addPurchaseProduct:(NSString*)customerID withProdID:(NSString*)prodID withDate:(NSString*)addDate withCompany:(NSString*)companyID{
 
@@ -302,23 +333,23 @@ static Setting *instance = nil;
                 {
                     while (sqlite3_step(statement) == SQLITE_ROW) {
                         obj.OfferID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)];
-                        obj.prodQuantity = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
-                        obj.prodMainCatID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
-                        obj.prodMeasureID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 4)];
-                        obj.prodSubCatID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 5)];
-                        obj.prodOrgPrice = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 6)];
-                        obj.prodCurPrice = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 7)];
-                        obj.prodPhotoURL = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 8)];
-                        obj.prodDescAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 9)];
-                        obj.prodDescEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 10)];
-                        obj.prodStartDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 11)];
-                        obj.prodEndDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 12)];
-                        obj.prodBranchList = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 13)];
-                        obj.prodVisitsCount = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 14)];
-                        obj.prodTitleAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 15)];
-                        obj.prodTitleEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 16)];
-                        obj.prodIsActive = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 17)];
-                        obj.prodlastUpdateTime = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 18)];
+                        obj.prodQuantity = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
+                        obj.prodMainCatID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 4)];
+                        obj.prodMeasureID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 5)];
+                        obj.prodSubCatID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 6)];
+                        obj.prodOrgPrice = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 7)];
+                        obj.prodCurPrice = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 8)];
+                        obj.prodPhotoURL = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 9)];
+                        obj.prodDescAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 10)];
+                        obj.prodDescEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 11)];
+                        obj.prodStartDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 12)];
+                        obj.prodEndDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 13)];
+                        obj.prodBranchList = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 14)];
+                        obj.prodVisitsCount = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 15)];
+                        obj.prodTitleAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 16)];
+                        obj.prodTitleEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 17)];
+                        obj.prodIsActive = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 18)];
+                        obj.prodlastUpdateTime = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 19)];
                         obj.prodPurchasedProducts = @"true";
                         
                     }
@@ -382,23 +413,23 @@ static Setting *instance = nil;
                 {
                     while (sqlite3_step(statement) == SQLITE_ROW) {
                         obj.OfferID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)];
-                        obj.prodQuantity = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
-                        obj.prodMainCatID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
-                        obj.prodMeasureID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 4)];
-                        obj.prodSubCatID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 5)];
-                        obj.prodOrgPrice = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 6)];
-                        obj.prodCurPrice = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 7)];
-                        obj.prodPhotoURL = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 8)];
-                        obj.prodDescAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 9)];
-                        obj.prodDescEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 10)];
-                        obj.prodStartDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 11)];
-                        obj.prodEndDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 12)];
-                        obj.prodBranchList = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 13)];
-                        obj.prodVisitsCount = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 14)];
-                        obj.prodTitleAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 15)];
-                        obj.prodTitleEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 16)];
-                        obj.prodIsActive = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 17)];
-                        obj.prodlastUpdateTime = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 18)];
+                        obj.prodQuantity = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
+                        obj.prodMainCatID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 4)];
+                        obj.prodMeasureID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 5)];
+                        obj.prodSubCatID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 6)];
+                        obj.prodOrgPrice = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 7)];
+                        obj.prodCurPrice = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 8)];
+                        obj.prodPhotoURL = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 9)];
+                        obj.prodDescAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 10)];
+                        obj.prodDescEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 11)];
+                        obj.prodStartDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 12)];
+                        obj.prodEndDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 13)];
+                        obj.prodBranchList = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 14)];
+                        obj.prodVisitsCount = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 15)];
+                        obj.prodTitleAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 16)];
+                        obj.prodTitleEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 17)];
+                        obj.prodIsActive = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 18)];
+                        obj.prodlastUpdateTime = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 19)];
                         obj.prodFavoriteProducts = @"true";
                         
                     }
@@ -612,6 +643,7 @@ static Setting *instance = nil;
     }
     return FALSE;
 }
+
 - (void)sendFavoriteRequest:(ProductObject*)obj{
     int myLang = 0;
     if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]) {
@@ -688,5 +720,272 @@ static Setting *instance = nil;
     }
     
     return arraySubCategory;
+}
+-(BOOL)checkAndDelete:(NSDate*)endDate withOfferID:(NSString*)offerID{
+    
+    NSDate *today = [[NSDate alloc]init];
+    NSDateFormatter *df = [[NSDateFormatter alloc]init];
+    [df setDateFormat:@"MM"];
+    NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    [df setLocale:locale];
+    NSTimeZone *tz = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+    [df setTimeZone:tz];
+    NSString *thisMonth = [df stringFromDate:today];
+    [df setDateFormat:@"yyyy"];
+    [df setTimeZone:tz];
+    NSString *thisYear = [df stringFromDate:today];
+    NSString *checkMonth;
+    NSString *checkYear;
+    int yearValue = [thisYear integerValue];
+    switch ([thisMonth integerValue]) {
+        case 1:
+            checkMonth = @"12";
+            yearValue--;
+            checkYear = [NSString stringWithFormat:@"%d", yearValue];
+            break;
+        case 2:
+            checkMonth = @"01";
+            checkYear = [NSString stringWithFormat:@"%d", yearValue];
+            break;
+        case 3:
+            checkMonth = @"02";
+            checkYear = [NSString stringWithFormat:@"%d", yearValue];
+            break;
+        case 4:
+            checkMonth = @"03";
+            checkYear = [NSString stringWithFormat:@"%d", yearValue];
+            break;
+        case 5:
+            checkMonth = @"04";
+            checkYear = [NSString stringWithFormat:@"%d", yearValue];
+            break;
+        case 6:
+            checkMonth = @"05";
+            checkYear = [NSString stringWithFormat:@"%d", yearValue];
+            break;
+        case 7:
+            checkMonth = @"06";
+            checkYear = [NSString stringWithFormat:@"%d", yearValue];
+            break;
+        case 8:
+            checkMonth = @"07";
+            checkYear = [NSString stringWithFormat:@"%d", yearValue];
+            break;
+        case 9:
+            checkMonth = @"08";
+            checkYear = [NSString stringWithFormat:@"%d", yearValue];
+            break;
+        case 10:
+            checkMonth = @"09";
+            checkYear = [NSString stringWithFormat:@"%d", yearValue];
+            break;
+        case 11:
+            checkMonth = @"10";
+            checkYear = [NSString stringWithFormat:@"%d", yearValue];
+            break;
+        case 12:
+            checkMonth = @"11";
+            checkYear = [NSString stringWithFormat:@"%d", yearValue];
+            break;
+            
+        default:
+            break;
+    }
+    NSString *checkDateString = [NSString stringWithFormat:@"%@/%@/01", checkYear, checkMonth];
+    [df setDateFormat:@"yyyy/MM/dd"];
+    NSDate *checkDate = [df dateFromString:checkDateString];
+    if ([checkDate compare:endDate] == NSOrderedAscending){
+        return TRUE;
+    }
+    const char *dbpath = [databasePath UTF8String];
+    sqlite3_stmt    *statement;
+    
+    if (sqlite3_open(dbpath, &projectDB) == SQLITE_OK)
+    {
+        NSString *delStr = [NSString stringWithFormat:@"DELETE FROM Offers WHERE ID = %@", offerID];
+        const char *query_stmt_del = [delStr UTF8String];
+        if (sqlite3_prepare_v2(projectDB, query_stmt_del, -1, &statement, NULL) == SQLITE_OK)
+        {
+            if (sqlite3_step(statement) == SQLITE_DONE)
+            {
+                NSLog(@"Offer is removed");
+                
+            }
+            sqlite3_finalize(statement);
+        }
+        delStr = [NSString stringWithFormat:@"DELETE FROM Products WHERE OfferID = %@", offerID];
+        const char *query_stmt_del1 = [delStr UTF8String];
+        if (sqlite3_prepare_v2(projectDB, query_stmt_del1, -1, &statement, NULL) == SQLITE_OK)
+        {
+            if (sqlite3_step(statement) == SQLITE_DONE)
+            {
+                NSLog(@"Products is removed");
+                
+            }
+            sqlite3_finalize(statement);
+        }
+        
+        
+        sqlite3_close(projectDB);
+    }
+    return FALSE;
+}
+
+- (void)getFriendsFromOnline{
+    int myLang = 0;
+    if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]) {
+        myLang = 1;
+    }
+    else if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
+        myLang = 2;
+    NSString *soapMessage = [NSString stringWithFormat:
+                             @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                             "<soap:Body>\n"
+                             "<FriendGetList xmlns=\"http://tempuri.org/\">\n"
+                             "<CustomerID>%d</CustomerID>\n"
+                             "<Language>%d</Language>\n"
+                             "</FriendGetList>\n"
+                             "</soap:Body>\n"
+                             "</soap:Envelope>\n", [[Setting sharedInstance].customer.customerID intValue], myLang];
+	NSLog(@"soapMessage = %@\n", soapMessage);
+    
+	NSURL *url = [NSURL URLWithString:@"http://q8supermarket.com/Services/MobileService.asmx?op=FriendGetList"];
+	NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
+	NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
+	
+	[theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+	[theRequest addValue: @"http://tempuri.org/FriendGetList" forHTTPHeaderField:@"SOAPAction"];
+	[theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
+	[theRequest setHTTPMethod:@"POST"];
+	[theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
+	
+	NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+    if( theConnection )
+	{
+		webData = [[NSMutableData alloc]init];
+	}
+	else
+	{
+		NSLog(@"theConnection is NULL");
+	}
+}
+-(void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *) namespaceURI qualifiedName:(NSString *)qName
+   attributes: (NSDictionary *)attributeDict
+{
+	
+    if ([elementName isEqualToString:@"ErrMessage"]){
+        if(!soapResults)
+		{
+			soapResults = [[NSMutableString alloc] init];
+		}
+        recordResults = TRUE;
+    }
+    if ([elementName isEqualToString:@"FriendGetListResult"]){
+        [[Setting sharedInstance].arrayPendingFriends removeAllObjects];
+        [[Setting sharedInstance].arrayRealFriends removeAllObjects];
+        if(!soapResults)
+		{
+			soapResults = [[NSMutableString alloc] init];
+		}
+        recordResults = TRUE;
+    }
+    if ([elementName isEqualToString:@"FriendListResult"]){
+        if(!soapResults)
+		{
+			soapResults = [[NSMutableString alloc] init];
+		}
+        recordResults = TRUE;
+        myFriend = [[FriendObject alloc]init];
+    }
+    
+    if ([elementName isEqualToString:@"FriendID"]){
+        if(!soapResults)
+		{
+			soapResults = [[NSMutableString alloc] init];
+		}
+        recordResults = TRUE;
+    }
+    if ([elementName isEqualToString:@"FriendName"]){
+        if(!soapResults)
+		{
+			soapResults = [[NSMutableString alloc] init];
+		}
+        recordResults = TRUE;
+    }
+    if ([elementName isEqualToString:@"IsPendingRequest"]){
+        if(!soapResults)
+		{
+			soapResults = [[NSMutableString alloc] init];
+		}
+        recordResults = TRUE;
+    }
+}
+-(void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string
+{
+    if( recordResults )
+	{
+		[soapResults appendString: string];
+	}
+}
+
+-(void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName
+{
+    if ([elementName isEqualToString:@"ErrMessage"]){
+        recordResults = FALSE;
+        if (![soapResults isEqualToString:@""])
+            errEncounter = TRUE;
+        soapResults = nil;
+    }
+    if( [elementName isEqualToString:@"FriendGetListResult"])
+	{
+		recordResults = FALSE;
+        soapResults = nil;
+        if (errEncounter == TRUE)
+        {
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
+            UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
+                                                        message:@"Getting friend list is failure." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            
+            [mes show];
+            }else{
+                UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"تحذير"
+                                                            message:@"فشل في الوصول الي قائمة الأصدقاء" delegate:self cancelButtonTitle:@"موافق" otherButtonTitles: nil];
+                
+                [mes show];
+            }
+            return;
+        }
+
+	}
+    
+    if ([elementName isEqualToString:@"FriendListResult"])
+    {
+        if (myFriend.isPending == TRUE)
+            [[Setting sharedInstance].arrayPendingFriends addObject:myFriend];
+        else
+            [[Setting sharedInstance].arrayRealFriends addObject:myFriend];
+        myFriend = nil;
+        recordResults = FALSE;
+        soapResults = nil;
+    }
+    if ([elementName isEqualToString:@"FriendID"]){
+        recordResults = FALSE;
+        myFriend.friendID = soapResults;
+        soapResults = nil;
+    }
+    if ([elementName isEqualToString:@"FriendName"]){
+        recordResults = FALSE;
+        myFriend.friendName = soapResults;
+        soapResults = nil;
+    }
+    if ([elementName isEqualToString:@"IsPendingRequest"]){
+        recordResults = FALSE;
+        if ([soapResults isEqualToString:@"true"])
+            myFriend.isPending = TRUE;
+        else
+            myFriend.isPending = FALSE;
+        soapResults = nil;
+    }
 }
 @end

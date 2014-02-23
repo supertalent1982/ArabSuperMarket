@@ -13,6 +13,7 @@
 #import "Setting.h"
 #import "ProductObject.h"
 #import "ProductViewController.h"
+#import "MBProgressHUD.h"
 @interface CompanyViewController ()
 
 @end
@@ -47,12 +48,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    
-}
--(void)viewWillAppear:(BOOL)animated{
-    errEncounter  = FALSE;
-	// Do any additional setup after loading the view.
     self.btnCancel.hidden = YES;
     self.searchBar.hidden = YES;
     self.searchBar.placeholder=@"search in offers";
@@ -75,14 +70,77 @@
     else if (IS_IPHONE_5) {
         tmpFrame.size.height = 392;
     }
+    
+    self.btnCurrentOffers.userInteractionEnabled = NO;
+    self.btnExpiredOffers.userInteractionEnabled = NO;
+    
     [tablesView setFrame:tmpFrame];
     [curOfferSection setFrame:CGRectMake(curOfferSection.frame.origin.x, 0, curOfferSection.frame.size.width, curOfferSection.frame.size.height)];
+    [self.btnCurrentOffers setFrame:CGRectMake(curOfferSection.frame.origin.x, 0, curOfferSection.frame.size.width, curOfferSection.frame.size.height)];
     [currentTable setFrame:CGRectMake(currentTable.frame.origin.x, curOfferSection.frame.size.height + 5, currentTable.frame.size.width, tmpFrame.size.height / 2 - curOfferSection.frame.size.height - 10)];
     
+    NSLog(@"Current Offer table = %f, %f, %f, %f", currentTable.frame.origin.x, currentTable.frame.origin.y, currentTable.frame.size.width, currentTable.frame.size.height);
+    
     [expOfferSection setFrame:CGRectMake(expOfferSection.frame.origin.x, tmpFrame.size.height / 2, expOfferSection.frame.size.width, expOfferSection.frame.size.height)];
+    [self.btnExpiredOffers setFrame:CGRectMake(expOfferSection.frame.origin.x, tmpFrame.size.height / 2, expOfferSection.frame.size.width, expOfferSection.frame.size.height)];
     [expireTable setFrame:CGRectMake(expireTable.frame.origin.x, expOfferSection.frame.origin.y + expOfferSection.frame.size.height + 5, expireTable.frame.size.width, tmpFrame.size.height - expOfferSection.frame.origin.y - expOfferSection.frame.size.height - 10)];
     
+    NSLog(@"Expired Offer table = %f, %f, %f, %f", expireTable.frame.origin.x, expireTable.frame.origin.y, expireTable.frame.size.width, expireTable.frame.size.height);
+    NSString *ver = [[UIDevice currentDevice] systemVersion];
+    float ver_float = [ver floatValue];
     
+    if (ver_float >= 7.0){
+        if (IS_IPHONE_5){
+            [expireTable setFrame:CGRectMake(expireTable.frame.origin.x, expireTable.frame.origin.y, expireTable.frame.size.width, expireTable.frame.size.height + 23)];
+        }
+        else
+        {
+            [expireTable setFrame:CGRectMake(expireTable.frame.origin.x, expireTable.frame.origin.y, expireTable.frame.size.width, expireTable.frame.size.height + 20)];
+        }
+
+    }
+    
+}
+-(void)viewWillAppear:(BOOL)animated{
+    errEncounter  = FALSE;
+	// Do any additional setup after loading the view.
+    if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
+        [self.btnAbout setBackgroundImage:[UIImage imageNamed:@"btn_about_market.png"] forState:UIControlStateNormal];
+        [self.btnAbout setBackgroundImage:[UIImage imageNamed:@"btn_about_market.png"] forState:UIControlStateHighlighted];
+        [self.btnAbout setBackgroundImage:[UIImage imageNamed:@"btn_about_market.png"] forState:UIControlStateSelected];
+        
+        [self.btnCancel setBackgroundImage:[UIImage imageNamed:@"btn_nav_cancel.png"] forState:UIControlStateNormal];
+        [self.btnCancel setBackgroundImage:[UIImage imageNamed:@"btn_nav_cancel.png"] forState:UIControlStateHighlighted];
+        [self.btnCancel setBackgroundImage:[UIImage imageNamed:@"btn_nav_cancel.png"] forState:UIControlStateSelected];
+        
+        [self.btnCurrentOffers setBackgroundImage:[UIImage imageNamed:@"table_sec_currentoffer.png"] forState:UIControlStateNormal];
+        [self.btnCurrentOffers setBackgroundImage:[UIImage imageNamed:@"table_sec_currentoffer.png"] forState:UIControlStateHighlighted];
+        [self.btnCurrentOffers setBackgroundImage:[UIImage imageNamed:@"table_sec_currentoffer.png"] forState:UIControlStateSelected];
+        
+        [self.btnExpiredOffers setBackgroundImage:[UIImage imageNamed:@"table_expiredoffer.png"] forState:UIControlStateNormal];
+        [self.btnExpiredOffers setBackgroundImage:[UIImage imageNamed:@"table_expiredoffer.png"] forState:UIControlStateHighlighted];
+        [self.btnExpiredOffers setBackgroundImage:[UIImage imageNamed:@"table_expiredoffer.png"] forState:UIControlStateSelected];
+        
+        
+    }
+    else{
+        [self.btnAbout setBackgroundImage:[UIImage imageNamed:@"arab_about_market.png"] forState:UIControlStateNormal];
+        [self.btnAbout setBackgroundImage:[UIImage imageNamed:@"arab_about_market.png"] forState:UIControlStateHighlighted];
+        [self.btnAbout setBackgroundImage:[UIImage imageNamed:@"arab_about_market.png"] forState:UIControlStateSelected];
+        
+        [self.btnCancel setBackgroundImage:[UIImage imageNamed:@"arab_nav_cancel.png"] forState:UIControlStateNormal];
+        [self.btnCancel setBackgroundImage:[UIImage imageNamed:@"arab_nav_cancel.png"] forState:UIControlStateHighlighted];
+        [self.btnCancel setBackgroundImage:[UIImage imageNamed:@"arab_nav_cancel.png"] forState:UIControlStateSelected];
+        
+        [self.btnCurrentOffers setBackgroundImage:[UIImage imageNamed:@"arabtable_sec_currentoffer.png"] forState:UIControlStateNormal];
+        [self.btnCurrentOffers setBackgroundImage:[UIImage imageNamed:@"arabtable_sec_currentoffer.png"] forState:UIControlStateHighlighted];
+        [self.btnCurrentOffers setBackgroundImage:[UIImage imageNamed:@"arabtable_sec_currentoffer.png"] forState:UIControlStateSelected];
+        
+        [self.btnExpiredOffers setBackgroundImage:[UIImage imageNamed:@"arabtable_expiredoffer.png"] forState:UIControlStateNormal];
+        [self.btnExpiredOffers setBackgroundImage:[UIImage imageNamed:@"arabtable_expiredoffer.png"] forState:UIControlStateHighlighted];
+        [self.btnExpiredOffers setBackgroundImage:[UIImage imageNamed:@"arabtable_expiredoffer.png"] forState:UIControlStateSelected];
+        
+    }
     
     currentofferArray = [[NSMutableArray alloc]init];
     currentArray = [[NSMutableArray alloc]init];
@@ -173,8 +231,10 @@
                         [currentArray addObject:obj];
                     }
                     else{
+                        if ([[Setting sharedInstance] checkAndDelete:endDate withOfferID:obj.offerID] == TRUE){
                         [expiredofferArray addObject:obj];
                         [expiredArray addObject:obj];
+                        }
                     }
                 }
                 
@@ -213,8 +273,10 @@
                             [currentArray addObject:obj1];
                         }
                         else{
-                            [expiredofferArray addObject:obj1];
-                            [expiredArray addObject:obj1];
+                            if ([[Setting sharedInstance] checkAndDelete:endDate withOfferID:obj1.offerID] == TRUE){
+                                [expiredofferArray addObject:obj1];
+                                [expiredArray addObject:obj1];
+                            }
                         }
                     }
                     
@@ -224,6 +286,11 @@
             sqlite3_finalize(statement);
         }
         sqlite3_close(projectDB);
+        [self sortOffers:currentofferArray];
+        [self sortOffers:currentArray];
+        [self sortOffers:expiredofferArray];
+        [self sortOffers:expiredArray];
+        
         [currentTable reloadData];
         [expireTable reloadData];
     }
@@ -259,6 +326,10 @@
         [theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
         [theRequest setHTTPMethod:@"POST"];
         [theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
+        if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+            [[MBProgressHUD showHUDAddedTo:self.view animated:YES] setLabelText:@"Loading..."];
+        else
+            [[MBProgressHUD showHUDAddedTo:self.view animated:YES] setLabelText:@"تحميل..."];
         
         NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
         if( theConnection )
@@ -272,28 +343,98 @@
     }
     
 }
+- (void)sortOffers:(NSMutableArray*)arrList{
+    if (arrList.count > 1){
+    for (int i = 0; i < arrList.count - 1; i++) {
+        OfferObject *obj = [arrList objectAtIndex:i];
+        OfferObject *replaceObj = obj;
+        int repIndex = i;
+        BOOL flag = FALSE;
+        NSString *endTimeStr1 = [obj.offerEndDate stringByReplacingOccurrencesOfString:@"T" withString:@" "];
+        NSDateFormatter *df = [[NSDateFormatter alloc]init];
+        [df setDateFormat:@"yyyy-MM-dd hh:mm:ss"];
+        NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        [df setLocale:locale];
+        NSTimeZone *tz = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+        [df setTimeZone:tz];
+        NSDate *Date1 = [df dateFromString:endTimeStr1];
+        for (int j = i + 1; j < arrList.count; j++) {
+            OfferObject *obj1 = [arrList objectAtIndex:j];
+            NSString *endTimeStr2 = [obj1.offerEndDate stringByReplacingOccurrencesOfString:@"T" withString:@" "];
+            NSDateFormatter *df2 = [[NSDateFormatter alloc]init];
+            [df2 setDateFormat:@"yyyy-MM-dd hh:mm:ss"];
+            NSLocale *locale2 = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+            [df2 setLocale:locale2];
+            NSTimeZone *tz2 = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+            [df2 setTimeZone:tz2];
+            NSDate *Date2 = [df2 dateFromString:endTimeStr2];
 
+            
+            if ([Date1 compare:Date2] == NSOrderedAscending){
+                replaceObj = obj1;
+                repIndex = j;
+                flag = TRUE;
+            }
+        }
+        if (flag == TRUE){
+            [arrList replaceObjectAtIndex:i withObject:replaceObj];
+            [arrList replaceObjectAtIndex:repIndex withObject:obj];
+        }
+    }
+    }
+}
 -(UITableViewCell *)tableView:(UITableView *)_tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     UITableViewCell *cell;
+    
+    self.btnCurrentOffers.userInteractionEnabled = YES;
+    self.btnExpiredOffers.userInteractionEnabled = YES;
+    CGRect tmpRect;
     if (_tableView == currentTable) {
         cell = (UITableViewCell *)[_tableView dequeueReusableCellWithIdentifier:@"CurrentCell"];
         if (cell == Nil)
             cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"CurrentCell"];
-        
+        ;
         UILabel *lb_title = (UILabel*)[cell viewWithTag:101];
+        UILabel *lb_prodText = (UILabel*)[cell viewWithTag:113];
+        UILabel *lb_products = (UILabel*)[cell viewWithTag:102];
         OfferObject *obj = [currentArray objectAtIndex:indexPath.row];
         if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+        {
             lb_title.text = obj.offerTitleEn;
-        else if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
+            lb_title.textAlignment = NSTextAlignmentLeft;
+            lb_prodText.text = @"Product(s)";
+            tmpRect = lb_prodText.frame;
+            tmpRect.origin.x = 225;
+            lb_prodText.frame = tmpRect;
+            
+            tmpRect = lb_products.frame;
+            tmpRect.origin.x = 180;
+            lb_products.frame = tmpRect;
+            lb_products.textAlignment = NSTextAlignmentRight;
+            
+        }else if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
+        {
             lb_title.text = obj.offerTitleAr;
+            lb_title.textAlignment = NSTextAlignmentRight;
+            lb_prodText.text = @"منتج";
+            tmpRect = lb_prodText.frame;
+            tmpRect.origin.x = 15;
+            lb_prodText.frame = tmpRect;
+            tmpRect = lb_products.frame;
+            tmpRect.origin.x = 40;
+            lb_products.frame = tmpRect;
+            lb_products.textAlignment = NSTextAlignmentLeft;
+        }
         
-        UILabel *lb_products = (UILabel*)[cell viewWithTag:102];
-        if ([obj.offerProducts isEqualToString:@""])
+        if ([obj.offerProducts isEqualToString:@""]){
             lb_products.text = @"0";
-        else
+            
+        }
+        else{
             lb_products.text = obj.offerProducts;
-        
+            
+        }
     }
     else if (_tableView == expireTable){
         cell = (UITableViewCell *)[_tableView dequeueReusableCellWithIdentifier:@"ExpireCell"];
@@ -301,18 +442,43 @@
             cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"ExpireCell"];
         
         UILabel *lb_title = (UILabel*)[cell viewWithTag:103];
+        UILabel *lb_prodText = (UILabel*)[cell viewWithTag:114];
+        UILabel *lb_products = (UILabel*)[cell viewWithTag:104];
         OfferObject *obj = [expiredArray objectAtIndex:indexPath.row];
         if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+        {
             lb_title.text = obj.offerTitleEn;
-        else if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
+            lb_title.textAlignment = NSTextAlignmentLeft;
+            lb_prodText.text = @"Product(s)";
+            tmpRect = lb_prodText.frame;
+            tmpRect.origin.x = 225;
+            lb_prodText.frame = tmpRect;
+            
+            tmpRect = lb_products.frame;
+            tmpRect.origin.x = 180;
+            lb_products.frame = tmpRect;
+            lb_products.textAlignment = NSTextAlignmentRight;
+        }else if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
+        {
             lb_title.text = obj.offerTitleAr;
+            lb_title.textAlignment = NSTextAlignmentRight;
+            lb_prodText.text = @"منتج";
+            tmpRect = lb_prodText.frame;
+            tmpRect.origin.x = 15;
+            lb_prodText.frame = tmpRect;
+            
+            tmpRect = lb_products.frame;
+            tmpRect.origin.x = 40;
+            lb_products.frame = tmpRect;
+            lb_products.textAlignment = NSTextAlignmentLeft;
+        }
         
-        UILabel *lb_products = (UILabel*)[cell viewWithTag:104];
         if ([obj.offerProducts isEqualToString:@""])
             lb_products.text = @"0";
         else
             lb_products.text = obj.offerProducts;
     }
+    [cell setBackgroundColor:[UIColor clearColor]];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.backgroundView =  [[UIImageView alloc] initWithImage:[ [UIImage imageNamed:@"offertable_cellbg.png"] stretchableImageWithLeftCapWidth:0.0 topCapHeight:5.0] ];
     return cell;
@@ -354,6 +520,54 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)onCurrentOffers:(id)sender {
+    NSDate *date = [[NSDate alloc]init];
+    NSDateFormatter *df = [[NSDateFormatter alloc]init];
+    [df setDateFormat:@"yyyy-MM-dd"];
+    NSString *dateStr = [df stringFromDate:date];
+    NSLog(@"date = %@", dateStr);
+    [df setDateFormat:@"hh:mm:ss"];
+    NSString *timeStr = [df stringFromDate:date];
+    NSString *reqUpdateTimeStr = [NSString stringWithFormat:@"%@T%@", dateStr, timeStr];
+    NSString *soapMessage = [NSString stringWithFormat:
+                             @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                             "<soap:Body>\n"
+                             "<GetCompanyOffers xmlns=\"http://tempuri.org/\">\n"
+                             "<CompanyID>%@</CompanyID>\n"
+                             "<LastUpdateTime>%@</LastUpdateTime>\n"
+                             "<CustomerID>%@</CustomerID>\n"
+                             "</GetCompanyOffers>\n"
+                             "</soap:Body>\n"
+                             "</soap:Envelope>\n", selCompany.companyID, @"2013-07-15T00:00:00", [Setting sharedInstance].customer.customerID];
+    NSLog(@"soapMessage = %@\n", soapMessage);
+    
+    
+    NSURL *url = [NSURL URLWithString:@"http://q8supermarket.com/Services/MobileService.asmx?op=GetCompanyOffers"];
+    NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
+    NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
+    
+    [theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [theRequest addValue: @"http://tempuri.org/GetCompanyOffers" forHTTPHeaderField:@"SOAPAction"];
+    [theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
+    [theRequest setHTTPMethod:@"POST"];
+    [theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
+    if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+        [[MBProgressHUD showHUDAddedTo:self.view animated:YES] setLabelText:@"Loading..."];
+    else
+        [[MBProgressHUD showHUDAddedTo:self.view animated:YES] setLabelText:@"تحميل..."];
+    
+    NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+    if( theConnection )
+    {
+        webData = [[NSMutableData alloc]init];
+    }
+    else
+    {
+        NSLog(@"theConnection is NULL");
+    }
+}
+
 - (IBAction)onBtnBack:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
 }
@@ -364,6 +578,10 @@
     self.btnShare.hidden = YES;
     self.btnCancel.hidden = NO;
     self.searchBar.hidden = NO;
+    if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+        self.searchBar.placeholder = @"search in offers";
+    else
+        self.searchBar.placeholder = @"ابحث في العروض";
     [self.searchBar becomeFirstResponder];
 }
 
@@ -374,6 +592,8 @@
     FriendViewController *c = [mainstoryboard instantiateViewControllerWithIdentifier:@"FriendManageView"];
     UINavigationController *n = [[UINavigationController alloc] initWithRootViewController:c];
     c.navigationController.navigationBarHidden = YES;
+    c.prevView = self;
+    c.viewName = @"none";
     [self.revealSideViewController pushViewController:n onDirection:PPRevealSideDirectionRight withOffset:158 animated:TRUE];
     PP_RELEASE(c);
     PP_RELEASE(n);
@@ -384,6 +604,54 @@
     AboutViewController *VC = [mainstoryboard instantiateViewControllerWithIdentifier:@"AboutView"];
     VC.selCompany = selCompany;
     [self.navigationController pushViewController:VC animated:YES];
+}
+
+- (IBAction)onExpiredOffers:(id)sender {
+    NSDate *date = [[NSDate alloc]init];
+    NSDateFormatter *df = [[NSDateFormatter alloc]init];
+    [df setDateFormat:@"yyyy-MM-dd"];
+    NSString *dateStr = [df stringFromDate:date];
+    NSLog(@"date = %@", dateStr);
+    [df setDateFormat:@"hh:mm:ss"];
+    NSString *timeStr = [df stringFromDate:date];
+    NSString *reqUpdateTimeStr = [NSString stringWithFormat:@"%@T%@", dateStr, timeStr];
+    NSString *soapMessage = [NSString stringWithFormat:
+                             @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                             "<soap:Body>\n"
+                             "<GetCompanyOffers xmlns=\"http://tempuri.org/\">\n"
+                             "<CompanyID>%@</CompanyID>\n"
+                             "<LastUpdateTime>%@</LastUpdateTime>\n"
+                             "<CustomerID>%@</CustomerID>\n"
+                             "</GetCompanyOffers>\n"
+                             "</soap:Body>\n"
+                             "</soap:Envelope>\n", selCompany.companyID, @"2013-07-15T00:00:00", [Setting sharedInstance].customer.customerID];
+    NSLog(@"soapMessage = %@\n", soapMessage);
+    
+    
+    NSURL *url = [NSURL URLWithString:@"http://q8supermarket.com/Services/MobileService.asmx?op=GetCompanyOffers"];
+    NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
+    NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
+    
+    [theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [theRequest addValue: @"http://tempuri.org/GetCompanyOffers" forHTTPHeaderField:@"SOAPAction"];
+    [theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
+    [theRequest setHTTPMethod:@"POST"];
+    [theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
+    if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+        [[MBProgressHUD showHUDAddedTo:self.view animated:YES] setLabelText:@"Loading..."];
+    else
+        [[MBProgressHUD showHUDAddedTo:self.view animated:YES] setLabelText:@"تحميل..."];
+    
+    NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+    if( theConnection )
+    {
+        webData = [[NSMutableData alloc]init];
+    }
+    else
+    {
+        NSLog(@"theConnection is NULL");
+    }
 }
 
 - (IBAction)onBtnCancel:(id)sender {
@@ -447,14 +715,14 @@
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
 	NSLog(@"ERROR with theConenction");
-    
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
 }
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
 	NSLog(@"DONE. Received Bytes: %d", [webData length]);
 	NSString *theXML = [[NSString alloc] initWithBytes: [webData mutableBytes] length:[webData length] encoding:NSUTF8StringEncoding];
 	NSLog(@"response XML = %@\n", theXML);
-    
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
     xmlParser = Nil;
 	xmlParser = [[NSXMLParser alloc] initWithData: webData];
 	[xmlParser setDelegate: self];
@@ -613,14 +881,26 @@ bool errEncounter = FALSE;
         soapResults = nil;
         if (errEncounter == TRUE)
         {
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"]){
+                UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"تحذير"
+                                                            message:@" لا يمكن الوصول الي بيانات الشركة من خلال السيرفر" delegate:self cancelButtonTitle:@"موافق" otherButtonTitles: nil];
+                
+                [mes show];
+            }else{
             UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
                                                         message:@"The company data can't be fetched from server." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
             
             [mes show];
+            }
             [self.navigationController popViewControllerAnimated:YES];
             return;
         }
         [self saveOfferInfo];
+        [self sortOffers:currentofferArray];
+        [self sortOffers:currentArray];
+        [self sortOffers:expiredofferArray];
+        [self sortOffers:expiredArray];
+        
         [currentTable reloadData];
         [expireTable reloadData];
       //  [self showCompanyLogo];
@@ -646,8 +926,10 @@ bool errEncounter = FALSE;
                 [currentArray addObject:offerObj];
             }
             else{
-                [expiredofferArray addObject:offerObj];
-                [expiredArray addObject:offerObj];
+                if ([[Setting sharedInstance] checkAndDelete:endDate withOfferID:offerObj.offerID] == TRUE){
+                    [expiredofferArray addObject:offerObj];
+                    [expiredArray addObject:offerObj];
+                }
             }
         }
         soapResults = nil;
@@ -726,6 +1008,18 @@ bool errEncounter = FALSE;
     
     if (sqlite3_open(dbpath, &projectDB) == SQLITE_OK)
     {
+        NSString *delStr = @"DELETE FROM Offers";
+        const char *query_stmt_del = [delStr UTF8String];
+        if (sqlite3_prepare_v2(projectDB, query_stmt_del, -1, &statement, NULL) == SQLITE_OK)
+        {
+            if (sqlite3_step(statement) == SQLITE_DONE)
+            {
+                NSLog(@"Offer init");
+                
+            }
+            sqlite3_finalize(statement);
+        }
+        
         for (int i = 0; i < currentofferArray.count; i++) {
             OfferObject *obj = [currentofferArray objectAtIndex:i];
             NSString *querySQL = [NSString stringWithFormat: @"INSERT INTO Offers (ID, CompanyID, TitleAr, TitleEn, DescAr, DescEn, Photo, StartDate, EndDate, IsActive, BranchList, lastUpdateTime, totalProducts) VALUES (\"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\")", obj.offerID, obj.offerCompanyID, obj.offerTitleAr, obj.offerTitleEn, obj.offerDescAr, obj.offerDescEn, obj.offerPhotoURL, obj.offerStartDate, obj.offerEndDate, obj.offerIsActive, obj.offerBranchList, obj.offerlastUpdateTime, obj.offerProducts];

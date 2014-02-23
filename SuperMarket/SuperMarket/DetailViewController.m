@@ -58,15 +58,31 @@
         NSString *pro = @"%";
         int percents = (int)(([obj.prodOrgPrice floatValue] - [obj.prodCurPrice floatValue]) / [obj.prodOrgPrice floatValue] * 100);
         lb_percent.text = [pro stringByAppendingString:[NSString stringWithFormat:@"%d", percents]];
-        
+        NSLog(@"%f", badgeView.frame.origin.x);
+        CGRect tmpRect;
         if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
             lb_productName.text = obj.prodTitleEn;
             lb_prodDescription.text = obj.prodDescEn;
             
+            lb_productName.textAlignment = NSTextAlignmentLeft;
+            lb_prodDescription.textAlignment = NSTextAlignmentLeft;
+            self.lb_date.textAlignment = NSTextAlignmentLeft;
+            
+            tmpRect = badgeView.frame;
+            tmpRect.origin.x = 223;
+            badgeView.frame = tmpRect;
         }
         else if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"]){
             lb_productName.text = obj.prodTitleAr;
             lb_prodDescription.text = obj.prodDescAr;
+            lb_productName.textAlignment = NSTextAlignmentRight;
+            lb_prodDescription.textAlignment = NSTextAlignmentRight;
+            self.lb_date.textAlignment = NSTextAlignmentRight;
+            
+            tmpRect = badgeView.frame;
+            tmpRect.origin.x = 20;
+            badgeView.frame = tmpRect;
+            
         }
         NSString *startTimeStr = [obj.prodStartDate stringByReplacingOccurrencesOfString:@"T" withString:@" "];
         
@@ -91,43 +107,65 @@
         NSDate *prodEndDate = [df1 dateFromString:endTimeStr];
         [df1 setDateFormat:@"MMM dd"];
         endTimeStr = [df1 stringFromDate:prodEndDate];
-        self.lb_date.text = [NSString stringWithFormat:@"From %@ To %@, or until stocks", startTimeStr, endTimeStr];
+        if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+            self.lb_date.text = [NSString stringWithFormat:@"From %@ To %@, or until stocks", startTimeStr, endTimeStr];
+        else
+            self.lb_date.text = [NSString stringWithFormat:@"من %@ الي %@, أو حتي نفاد الكمية", startTimeStr, endTimeStr];
         
         if (![obj.prodCurPrice isEqualToString:@""]){
-            lb_Price.text = [NSString stringWithFormat:@"Price: %@ KD", obj.prodCurPrice];
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+                lb_Price.text = [NSString stringWithFormat:@"Price: %@ KD", obj.prodCurPrice];
+            else
+                lb_Price.text = [NSString stringWithFormat:@"السعر: %@ KD", obj.prodCurPrice];
         }
         img_line.hidden = YES;
         lb_orgPrice.hidden = YES;
         if (![obj.prodOrgPrice isEqualToString:@""]){
-            lb_orgPrice.text = [NSString stringWithFormat:@"Instead of: %@ KD", obj.prodOrgPrice];
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+                lb_orgPrice.text = [NSString stringWithFormat:@"Instead of: %@ KD", obj.prodOrgPrice];
+            else
+                lb_orgPrice.text = [NSString stringWithFormat:@"بدلا من: %@ KD", obj.prodOrgPrice];
             img_line.hidden = NO;
             lb_orgPrice.hidden = NO;
         }
-        
-        
+        NSString *imageStr;
         if ([obj.prodFavoriteProducts isEqualToString:@""]){
-            [btn_favorite setBackgroundImage:[UIImage imageNamed:@"btn_unsel_favorite.png"] forState:UIControlStateNormal];
-            [btn_favorite setBackgroundImage:[UIImage imageNamed:@"btn_unsel_favorite.png"] forState:UIControlStateHighlighted];
-            [btn_favorite setBackgroundImage:[UIImage imageNamed:@"btn_unsel_favorite.png"] forState:UIControlStateSelected];
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
+                imageStr = @"arab_unsel_favorite.png";
+            else
+                imageStr = @"btn_unsel_favorite.png";
+        }
+        else{
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
+                imageStr = @"arab_sel_favorite.png";
+            else
+                imageStr = @"btn_sel_favorite.png";
+        }
+        [btn_favorite setBackgroundImage:[UIImage imageNamed:imageStr] forState:UIControlStateNormal];
+        [btn_favorite setBackgroundImage:[UIImage imageNamed:imageStr] forState:UIControlStateHighlighted];
+        [btn_favorite setBackgroundImage:[UIImage imageNamed:imageStr] forState:UIControlStateSelected];
+        
+        NSDate *today = [[NSDate alloc]init];
+        if ([today compare:prodEndDate] != NSOrderedAscending){
+            btn_purchase.userInteractionEnabled = NO;
+            btn_purchase.alpha = 0.5;
+        }
+        if ([obj.prodPurchasedProducts isEqualToString:@""]){
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
+                imageStr = @"arab_unsel_purchase.png";
+            else
+                imageStr = @"btn_unsel_purchase.png";
+        }
+        else{
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
+                imageStr = @"arab_sel_purchase.png";
+            else
+                imageStr = @"btn_sel_purchase.png";
             
         }
-        else{
-            [btn_favorite setBackgroundImage:[UIImage imageNamed:@"btn_sel_favorite.png"] forState:UIControlStateNormal];
-            [btn_favorite setBackgroundImage:[UIImage imageNamed:@"btn_sel_favorite.png"] forState:UIControlStateHighlighted];
-            [btn_favorite setBackgroundImage:[UIImage imageNamed:@"btn_sel_favorite.png"] forState:UIControlStateSelected];
-        }
-        
-        
-        if ([obj.prodPurchasedProducts isEqualToString:@""]){
-            [btn_purchase setBackgroundImage:[UIImage imageNamed:@"btn_unsel_purchase.png"] forState:UIControlStateNormal];
-            [btn_purchase setBackgroundImage:[UIImage imageNamed:@"btn_unsel_purchase.png"] forState:UIControlStateHighlighted];
-            [btn_purchase setBackgroundImage:[UIImage imageNamed:@"btn_unsel_purchase.png"] forState:UIControlStateSelected];
-        }
-        else{
-            [btn_purchase setBackgroundImage:[UIImage imageNamed:@"btn_sel_purchase.png"] forState:UIControlStateNormal];
-            [btn_purchase setBackgroundImage:[UIImage imageNamed:@"btn_sel_purchase.png"] forState:UIControlStateHighlighted];
-            [btn_purchase setBackgroundImage:[UIImage imageNamed:@"btn_sel_purchase.png"] forState:UIControlStateSelected];
-        }
+        [btn_purchase setBackgroundImage:[UIImage imageNamed:imageStr] forState:UIControlStateNormal];
+        [btn_purchase setBackgroundImage:[UIImage imageNamed:imageStr] forState:UIControlStateHighlighted];
+        [btn_purchase setBackgroundImage:[UIImage imageNamed:imageStr] forState:UIControlStateSelected];
     }
 }
 - (void)didReceiveMemoryWarning
@@ -153,9 +191,15 @@
             [[Setting sharedInstance].myPurchaseList addObject:catObj.obj];
             [[Setting sharedInstance] addPurchaseProduct:[Setting sharedInstance].customer.customerID withProdID:catObj.obj.prodID withDate:catObj.obj.prodAddPurchaseDate withCompany:catObj.obj.prodCompanyID];
             [[Setting sharedInstance] sendPurchaseRequest:catObj.obj];
-            [btn_purchase setBackgroundImage:[UIImage imageNamed:@"btn_sel_purchase.png"] forState:UIControlStateNormal];
-            [btn_purchase setBackgroundImage:[UIImage imageNamed:@"btn_sel_purchase.png"] forState:UIControlStateHighlighted];
-            [btn_purchase setBackgroundImage:[UIImage imageNamed:@"btn_sel_purchase.png"] forState:UIControlStateSelected];
+            NSString *imageStr;
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
+                imageStr = @"arab_sel_purchase.png";
+            else
+                imageStr = @"btn_sel_purchase.png";
+
+            [btn_purchase setBackgroundImage:[UIImage imageNamed:imageStr] forState:UIControlStateNormal];
+            [btn_purchase setBackgroundImage:[UIImage imageNamed:imageStr] forState:UIControlStateHighlighted];
+            [btn_purchase setBackgroundImage:[UIImage imageNamed:imageStr] forState:UIControlStateSelected];
             
         }
         else{
@@ -170,18 +214,31 @@
                     break;
                 }
             }
-            [btn_purchase setBackgroundImage:[UIImage imageNamed:@"btn_unsel_purchase.png"] forState:UIControlStateNormal];
-            [btn_purchase setBackgroundImage:[UIImage imageNamed:@"btn_unsel_purchase.png"] forState:UIControlStateHighlighted];
-            [btn_purchase setBackgroundImage:[UIImage imageNamed:@"btn_unsel_purchase.png"] forState:UIControlStateSelected];
+            NSString *imageStr;
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
+                imageStr = @"arab_unsel_purchase.png";
+            else
+                imageStr = @"btn_unsel_purchase.png";
+            
+            [btn_purchase setBackgroundImage:[UIImage imageNamed:imageStr] forState:UIControlStateNormal];
+            [btn_purchase setBackgroundImage:[UIImage imageNamed:imageStr] forState:UIControlStateHighlighted];
+            [btn_purchase setBackgroundImage:[UIImage imageNamed:imageStr] forState:UIControlStateSelected];
             
         }
     }
     }
     else{
+        if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"]){
+            UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"تحذير"
+                                                        message:@" الرجاء تسجيل الدخول لإضافة/حذف المشتريات" delegate:self cancelButtonTitle:@"موافق" otherButtonTitles: nil];
+            
+            [mes show];
+        }else{
         UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
                                                     message:@"You must login to add/remove purchase product." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
         
         [mes show];
+        }
     }
 }
 
@@ -207,9 +264,15 @@
             [[Setting sharedInstance].myFavoriteList addObject:catObj.obj];
             [[Setting sharedInstance] addFavoriteProduct:[Setting sharedInstance].customer.customerID withProdID:catObj.obj.prodID withDate:catObj.obj.prodAddDate withCompany:catObj.obj.prodCompanyID];
             [[Setting sharedInstance] sendFavoriteRequest:catObj.obj];
-            [btn_favorite setBackgroundImage:[UIImage imageNamed:@"btn_sel_favorite.png"] forState:UIControlStateNormal];
-            [btn_favorite setBackgroundImage:[UIImage imageNamed:@"btn_sel_favorite.png"] forState:UIControlStateHighlighted];
-            [btn_favorite setBackgroundImage:[UIImage imageNamed:@"btn_sel_favorite.png"] forState:UIControlStateSelected];
+            NSString *imageStr;
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
+                imageStr = @"arab_sel_favorite.png";
+            else
+                imageStr = @"btn_sel_favorite.png";
+
+            [btn_favorite setBackgroundImage:[UIImage imageNamed:imageStr] forState:UIControlStateNormal];
+            [btn_favorite setBackgroundImage:[UIImage imageNamed:imageStr] forState:UIControlStateHighlighted];
+            [btn_favorite setBackgroundImage:[UIImage imageNamed:imageStr] forState:UIControlStateSelected];
         }
         else{
             catObj.obj.prodFavoriteProducts = @"";
@@ -223,18 +286,31 @@
                     break;
                 }
             }
-
-            [btn_favorite setBackgroundImage:[UIImage imageNamed:@"btn_unsel_favorite.png"] forState:UIControlStateNormal];
-            [btn_favorite setBackgroundImage:[UIImage imageNamed:@"btn_unsel_favorite.png"] forState:UIControlStateHighlighted];
-            [btn_favorite setBackgroundImage:[UIImage imageNamed:@"btn_unsel_favorite.png"] forState:UIControlStateSelected];
+            NSString *imageStr;
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
+                imageStr = @"arab_unsel_favorite.png";
+            else
+                imageStr = @"btn_unsel_favorite.png";
+            
+            [btn_favorite setBackgroundImage:[UIImage imageNamed:imageStr] forState:UIControlStateNormal];
+            [btn_favorite setBackgroundImage:[UIImage imageNamed:imageStr] forState:UIControlStateHighlighted];
+            [btn_favorite setBackgroundImage:[UIImage imageNamed:imageStr] forState:UIControlStateSelected];
+            
         }
     }
     }
     else{
-        UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
-                                                    message:@"You must login to add/remove purchase product." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+        if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"]){
+            UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"تحذير"
+                                                        message:@" الرجاء تسجيل الدخول لإضافة/حذف المفضله" delegate:self cancelButtonTitle:@"موافق" otherButtonTitles: nil];
+            
+            [mes show];
+        }else{
+            UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
+                                                    message:@"You must login to add/remove favorite product." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
         
         [mes show];
+        }
     }
 }
 @end

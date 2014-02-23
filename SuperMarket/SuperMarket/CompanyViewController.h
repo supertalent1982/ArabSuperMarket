@@ -15,11 +15,16 @@
     sqlite3 *projectDB;
     NSString *databasePath;
 }
+@property (weak, nonatomic) IBOutlet UIButton *btnAbout;
+- (IBAction)onCurrentOffers:(id)sender;
 - (IBAction)onBtnBack:(id)sender;
 - (IBAction)onBtnSearch:(id)sender;
 - (IBAction)onBtnShare:(id)sender;
 - (IBAction)onBtnAbout:(id)sender;
+- (IBAction)onExpiredOffers:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *btnExpiredOffers;
 - (IBAction)onBtnCancel:(id)sender;
+@property (weak, nonatomic) IBOutlet UIButton *btnCurrentOffers;
 
 @property (weak, nonatomic) IBOutlet UIView *tablesView;
 @property (weak, nonatomic) IBOutlet UIImageView *expOfferSection;

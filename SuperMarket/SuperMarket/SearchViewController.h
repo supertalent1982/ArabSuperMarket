@@ -9,14 +9,18 @@
 #import <UIKit/UIKit.h>
 #import "ProductObject.h"
 #import <sqlite3.h>
-@interface SearchViewController : UIViewController<UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate>{
+@interface SearchViewController : UIViewController<UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UITabBarControllerDelegate>{
     sqlite3 *projectDB;
     NSString *databasePath;
 }
+@property (weak, nonatomic) IBOutlet UIButton *btnDone;
+@property (weak, nonatomic) IBOutlet UIButton *btnCan;
 - (IBAction)onDone:(id)sender;
 - (IBAction)onBtnSearch:(id)sender;
 @property (weak, nonatomic) IBOutlet UILabel *lb_pickerTitle;
-
+- (IBAction)onCancelButton:(id)sender;
+@property (nonatomic, strong) NSMutableArray *selectedStatus;
+@property (weak, nonatomic) IBOutlet UIButton *bnSearch;
 @property (weak, nonatomic) IBOutlet UIPickerView *selectPicker;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;

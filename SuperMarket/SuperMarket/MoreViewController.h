@@ -14,5 +14,6 @@
 - (IBAction)onBtnLogout:(id)sender;
 - (IBAction)onBtnList:(id)sender;
 @property (weak, nonatomic) IBOutlet UIButton *btnLogout;
+@property (weak, nonatomic) IBOutlet UILabel *lb_title;
 
 @end

@@ -17,4 +17,6 @@
 @property (nonatomic, strong) NSString *itemSubID;
 @property (nonatomic, strong) NSString *measureUnit;
 @property (nonatomic, strong) NSString *measureQuantity;
+@property (nonatomic, strong) NSString *isDone;
+@property (nonatomic, assign) int selectedItems;
 @end

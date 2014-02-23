@@ -32,6 +32,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     responseType = @"";
+    
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSError *error;
     NSString *dbPath = [self getDBPath];
@@ -40,7 +41,8 @@
     
     if(!success) {
         
-        
+        [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"isLogin"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
         NSString *defaultDBPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Q8SuperMarketDB.db"];
         
         success = [fileManager copyItemAtPath:defaultDBPath toPath:dbPath error:&error];
@@ -473,7 +475,8 @@
     
     [Setting sharedInstance].tabBarController = tabVC;
     [[Setting sharedInstance] customizeTabBar];
-    [self.navigationController pushViewController:tabVC animated:YES];
+    [self.navigationController pushViewController:[Setting sharedInstance].tabBarController animated:YES];
+    [[Setting sharedInstance].tabBarController setSelectedIndex:4];
 }
 
 - (IBAction)onBtnEnglish:(id)sender {
@@ -486,7 +489,7 @@
     
     [Setting sharedInstance].tabBarController = tabVC;
     [[Setting sharedInstance] customizeTabBar];
-    [self.navigationController pushViewController:tabVC animated:YES];
+    [self.navigationController pushViewController:[Setting sharedInstance].tabBarController animated:YES];
 }
 
 -(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response

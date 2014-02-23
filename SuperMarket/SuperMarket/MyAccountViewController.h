@@ -8,10 +8,22 @@
 
 #import <UIKit/UIKit.h>
 #import <sqlite3.h>
-@interface MyAccountViewController : UIViewController<UITextFieldDelegate>{
+#import "OAuth.h"
+#import "OAuth+UserDefaults.h"
+#import "OAuthConsumerCredentials.h"
+#import "TwitterDialog.h"
+@interface MyAccountViewController : UIViewController<TwitterDialogDelegate, TwitterLoginDialogDelegate,UITextFieldDelegate>{
     sqlite3 *projectDB;
     NSString *databasePath;
+    OAuth *oAuth;
 }
+@property (weak, nonatomic) IBOutlet UIButton *btnForgot;
+@property (weak, nonatomic) IBOutlet UILabel *lb_title;
+@property (weak, nonatomic) IBOutlet UIButton *btnRegister;
+@property (weak, nonatomic) IBOutlet UIButton *btnGmail;
+@property (weak, nonatomic) IBOutlet UIButton *btnLogin;
+@property (weak, nonatomic) IBOutlet UIButton *btnTwitter;
+@property (weak, nonatomic) IBOutlet UIButton *btnFacebook;
 
 - (IBAction)onBtnList:(id)sender;
 - (IBAction)onForgot:(id)sender;
@@ -27,4 +39,5 @@
 @property(nonatomic, retain) NSMutableString *soapResults;
 @property(nonatomic, retain) NSMutableData *webData;
 @property(nonatomic, assign) 	BOOL recordResults;
+
 @end

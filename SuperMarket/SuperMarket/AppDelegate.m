@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-
+#import "Setting.h"
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -15,6 +15,17 @@
     // Override point for customization after application launch.
     self.window = PP_AUTORELEASE([[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]]);
     
+    /*
+    
+    NSString *ver = [[UIDevice currentDevice] systemVersion];
+    float ver_float = [ver floatValue];
+    
+    if (ver_float >= 7.0){
+        if (IS_IPHONE_5)
+            [self.window setFrame:CGRectMake(0, 20, 320, 548)];
+        else if (IS_IPHONE_4)
+            [self.window setFrame:CGRectMake(0, 20, 320, 460)];
+    }*/
     //MainViewController *main = [[MainViewController alloc] initWithNibName:@"MainViewController" bundle:nil];
     UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     UIViewController *rootview = [mainstoryboard instantiateViewControllerWithIdentifier:@"FirstView"];
@@ -29,10 +40,28 @@
     PP_RELEASE(nav);
     
     self.window.backgroundColor = [UIColor whiteColor];
-    [self.window makeKeyAndVisible];
+
+     [self.window makeKeyAndVisible];
+    
+    // Let the device know we want to receive push notifications
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+         (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+        
+    
     return YES;
 }
-							
+- (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
+{
+    NSString* deviceTokenStr = [[[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString: @"<>"]] stringByReplacingOccurrencesOfString: @" " withString: @""];
+    NSLog(@"My token is: %@", deviceTokenStr);
+    [Setting sharedInstance].deviceTokenString = deviceTokenStr;
+
+}
+
+- (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
+{
+	NSLog(@"Failed to get token, error: %@", error);
+}
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

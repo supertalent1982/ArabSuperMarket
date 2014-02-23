@@ -26,6 +26,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *img_line;
 @property (nonatomic, strong) NSMutableArray *ProductList;
 @property (nonatomic, assign) int indexRow;
+@property (nonatomic, assign) int viewIndex;
 - (IBAction)onPurchase:(id)sender;
 
 - (IBAction)onClose:(id)sender;

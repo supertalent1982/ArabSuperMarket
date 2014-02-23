@@ -10,6 +10,12 @@
 #import "PPRevealSideViewController.h"
 #import "FriendViewController.h"
 #import "Setting.h"
+#import "ForgotPasswordViewController.h"
+#import <FacebookSDK/FBLoginView.h>
+#import <FacebookSDK/FBRequest.h>
+#import <FacebookSDK/FBSession.h>
+#import "OAuth.h"
+#import "MBProgressHUD.h"
 @interface MyAccountViewController ()
 
 @end
@@ -51,6 +57,53 @@
     txtPassword.text = @"";
     soapResults = Nil;
     recordResults = FALSE;
+    self.btnGmail.hidden = YES;
+    if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
+        self.lb_title.text = @"My Account";
+        self.txtUserName.placeholder = @"Username";
+        self.txtPassword.placeholder = @"Password";
+        [self.btnForgot setTitle:@"Forgot password?" forState:UIControlStateNormal];
+
+        [self.btnLogin setBackgroundImage:[UIImage imageNamed:@"btn_login.png"] forState:UIControlStateNormal];
+        [self.btnLogin setBackgroundImage:[UIImage imageNamed:@"btn_login.png"] forState:UIControlStateHighlighted];
+        [self.btnLogin setBackgroundImage:[UIImage imageNamed:@"btn_login.png"] forState:UIControlStateSelected];
+        
+        [self.btnRegister setBackgroundImage:[UIImage imageNamed:@"btn_register.png"] forState:UIControlStateNormal];
+        [self.btnRegister setBackgroundImage:[UIImage imageNamed:@"btn_register.png"] forState:UIControlStateHighlighted];
+        [self.btnRegister setBackgroundImage:[UIImage imageNamed:@"btn_register.png"] forState:UIControlStateSelected];
+        
+        [self.btnFacebook setBackgroundImage:[UIImage imageNamed:@"btn_fb_login.png"] forState:UIControlStateNormal];
+        [self.btnFacebook setBackgroundImage:[UIImage imageNamed:@"btn_fb_login.png"] forState:UIControlStateHighlighted];
+        [self.btnFacebook setBackgroundImage:[UIImage imageNamed:@"btn_fb_login.png"] forState:UIControlStateSelected];
+        
+        [self.btnTwitter setBackgroundImage:[UIImage imageNamed:@"btn_twitter_login.png"] forState:UIControlStateNormal];
+        [self.btnTwitter setBackgroundImage:[UIImage imageNamed:@"btn_twitter_login.png"] forState:UIControlStateHighlighted];
+        [self.btnTwitter setBackgroundImage:[UIImage imageNamed:@"btn_twitter_login.png"] forState:UIControlStateSelected];
+        
+        
+    }
+    else{
+        self.lb_title.text = @"حسابي";
+        self.txtUserName.placeholder = @"اسم المستخدم";
+        self.txtPassword.placeholder = @"كلمة المرور";
+        [self.btnForgot setTitle:@"نسيت كلمة المرور؟" forState:UIControlStateNormal];
+        [self.btnLogin setBackgroundImage:[UIImage imageNamed:@"arab_login.png"] forState:UIControlStateNormal];
+        [self.btnLogin setBackgroundImage:[UIImage imageNamed:@"arab_login.png"] forState:UIControlStateHighlighted];
+        [self.btnLogin setBackgroundImage:[UIImage imageNamed:@"arab_login.png"] forState:UIControlStateSelected];
+        
+        [self.btnRegister setBackgroundImage:[UIImage imageNamed:@"arab_register.png"] forState:UIControlStateNormal];
+        [self.btnRegister setBackgroundImage:[UIImage imageNamed:@"arab_register.png"] forState:UIControlStateHighlighted];
+        [self.btnRegister setBackgroundImage:[UIImage imageNamed:@"arab_register.png"] forState:UIControlStateSelected];
+        
+        [self.btnFacebook setBackgroundImage:[UIImage imageNamed:@"arab_fb_login.png"] forState:UIControlStateNormal];
+        [self.btnFacebook setBackgroundImage:[UIImage imageNamed:@"arab_fb_login.png"] forState:UIControlStateHighlighted];
+        [self.btnFacebook setBackgroundImage:[UIImage imageNamed:@"arab_fb_login.png"] forState:UIControlStateSelected];
+        
+        [self.btnTwitter setBackgroundImage:[UIImage imageNamed:@"arab_twitter_login.png"] forState:UIControlStateNormal];
+        [self.btnTwitter setBackgroundImage:[UIImage imageNamed:@"arab_twitter_login.png"] forState:UIControlStateHighlighted];
+        [self.btnTwitter setBackgroundImage:[UIImage imageNamed:@"arab_twitter_login.png"] forState:UIControlStateSelected];
+        
+    }
 }
 - (void)didReceiveMemoryWarning
 {
@@ -65,6 +118,8 @@
     FriendViewController *c = [mainstoryboard instantiateViewControllerWithIdentifier:@"FriendManageView"];
     UINavigationController *n = [[UINavigationController alloc] initWithRootViewController:c];
     c.navigationController.navigationBarHidden = YES;
+    c.prevView = self;
+    c.viewName = @"none";
     [self.revealSideViewController pushViewController:n onDirection:PPRevealSideDirectionRight withOffset:158 animated:TRUE];
     PP_RELEASE(c);
     PP_RELEASE(n);
@@ -74,6 +129,9 @@
     return YES;
 }
 - (IBAction)onForgot:(id)sender {
+    UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    ForgotPasswordViewController *VC = [mainstoryboard instantiateViewControllerWithIdentifier:@"ForgotPasswordView"];
+    [self.navigationController pushViewController:VC animated:YES];
 }
 
 - (IBAction)onBtnBack:(id)sender {
@@ -83,11 +141,216 @@
 }
 
 - (IBAction)onBtnFacebook:(id)sender {
+    [[FBSession activeSession] closeAndClearTokenInformation];
+    [[FBSession activeSession] close];
+    [FBSession setActiveSession:nil];
+    
+    FBSession *session1 = [FBSession activeSession];
+    if (FBSession.activeSession.state != FBSessionStateCreatedTokenLoaded) {
+        session1 = [[FBSession alloc] init];
+        // Set the active session
+        [FBSession setActiveSession:session1];
+    }
+    
+    NSArray *permissions =
+    [NSArray arrayWithObjects:@"basic_info", @"email", @"user_photos", @"friends_photos", nil];
+    if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+        [ [ MBProgressHUD showHUDAddedTo : self.view animated : YES ] setLabelText : @"Loading..." ] ;
+    else
+        [ [ MBProgressHUD showHUDAddedTo : self.view animated : YES ] setLabelText : @"تحميل..." ] ;
+    
+    [FBSession openActiveSessionWithReadPermissions:permissions
+                                       allowLoginUI:YES
+                                  completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+                                      // Respond to session state changes
+                                      if ([session isOpen]) {
+                                          
+                                          
+                                          
+                                          [Setting sharedInstance].customer.AccessToken = session.accessToken;
+
+                                          
+                                          
+                                          [FBRequestConnection startForMeWithCompletionHandler:
+                                           ^(FBRequestConnection *connection, id result, NSError *error)
+                                           {
+                                               NSMutableDictionary *userInfo = [[NSMutableDictionary alloc]init];
+                                               userInfo = (NSMutableDictionary*)result;
+                                               NSString *username = [userInfo objectForKey:@"username"];
+                                               //    [self.loadingIndicator stopAnimating];
+                                               int myLang = 0;
+                                               if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+                                               {
+                                                   myLang = 1;
+                                               }
+                                               else if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"]){
+                                                   myLang = 2;
+                                               }
+                                               [Setting sharedInstance].customer.Username = username;
+                                               [Setting sharedInstance].customer.UserType = @"1";
+                                               [Setting sharedInstance].customer.fullName = [userInfo objectForKey:@"name"];
+                                               [Setting sharedInstance].customer.Email = [userInfo objectForKey:@"email"];
+                                               
+                                               NSString *soapMessage = [NSString stringWithFormat:
+                                                                        @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                                                                        "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                                                                        "<soap:Body>\n"
+                                                                        "<CustomerLogin xmlns=\"http://tempuri.org/\">\n"
+                                                                        "<Username>%@</Username>\n"
+                                                                        "<Password>0</Password>\n"
+                                                                        "<Language>%d</Language>\n"
+                                                                        "</CustomerLogin>\n"
+                                                                        "</soap:Body>\n"
+                                                                        "</soap:Envelope>\n", [Setting sharedInstance].customer.Username, myLang];
+                                               NSLog(@"soapMessage = %@\n", soapMessage);
+                                               
+                                               NSURL *url = [NSURL URLWithString:@"http://q8supermarket.com/Services/MobileService.asmx?op=CustomerLogin"];
+                                               NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
+                                               NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
+                                               
+                                               [theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+                                               [theRequest addValue: @"http://tempuri.org/CustomerLogin" forHTTPHeaderField:@"SOAPAction"];
+                                               [theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
+                                               [theRequest setHTTPMethod:@"POST"];
+                                               [theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
+                                               
+                                               NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+                                               if( theConnection )
+                                               {
+                                                   webData = [[NSMutableData alloc]init];
+                                               }
+                                               else
+                                               {
+                                                   NSLog(@"theConnection is NULL");
+                                               }
+                                               
+                                             /*  [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                               
+                                               [[NSUserDefaults standardUserDefaults] setObject:[Setting sharedInstance].customer.Username forKey:@"Username"];
+                                               [[NSUserDefaults standardUserDefaults] setObject:[Setting sharedInstance].customer.UserType forKey:@"UserType"];
+                                               [[NSUserDefaults standardUserDefaults] setObject:[Setting sharedInstance].customer.AccessToken forKey:@"AccessToken"];
+                                               [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:@"isLogin"];
+                                               
+                                               [[NSUserDefaults standardUserDefaults] synchronize];*/
+                                               
+                                           }];
+                                          
+                                          
+                                          return;
+                                          
+                                      }
+                                      else{
+                                          [MBProgressHUD hideHUDForView:self.view animated:YES];
+                                      }
+                                      
+                                  }];
+    
+    
+
 }
 
 - (IBAction)onBtnTwitter:(id)sender {
+    if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+        [ [ MBProgressHUD showHUDAddedTo : self.view animated : YES ] setLabelText : @"Loading..." ] ;
+    else
+        [ [ MBProgressHUD showHUDAddedTo : self.view animated : YES ] setLabelText : @"تحميل..." ] ;
+    
+    oAuth = [[OAuth alloc] initWithConsumerKey:OAUTH_CONSUMER_KEY andConsumerSecret:OAUTH_CONSUMER_SECRET];
+    
+   // [oAuth forget];
+    
+    NSHTTPCookie *cookie;
+    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    for (cookie in [storage cookies])
+    {
+        NSString* domainName = [cookie domain];
+        NSRange domainRange = [domainName rangeOfString:@"twitter"];
+        if(domainRange.length > 0)
+        {
+            [storage deleteCookie:cookie];
+        }
+    }
+    
+    TwitterDialog *td = [[TwitterDialog alloc] init];
+    td.twitterOAuth = oAuth;
+    td.delegate = self;
+    td.logindelegate = self;
+    
+    [td show];
+}
+#pragma mark Twitter Delegates
+- (void)twitterDidLogin {
+    
+    
+    NSString *username = [oAuth valueForKey:@"screen_name"];
+    NSString *token = [oAuth valueForKey:@"oauth_token"];
+    NSString *secret = [oAuth valueForKey:@"oauth_token_secret"];
+    
+    [Setting sharedInstance].customer.AccessToken = token;
+    
+    int myLang = 0;
+    if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+    {
+        myLang = 1;
+    }
+    else if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"]){
+        myLang = 2;
+    }
+    [Setting sharedInstance].customer.Username = username;
+    [Setting sharedInstance].customer.UserType = @"2";
+    [Setting sharedInstance].customer.fullName = @"0";
+    [Setting sharedInstance].customer.Email = [NSString stringWithFormat:@"%@@gmail.com", username];
+    
+    
+    NSString *soapMessage = [NSString stringWithFormat:
+                             @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                             "<soap:Body>\n"
+                             "<CustomerLogin xmlns=\"http://tempuri.org/\">\n"
+                             "<Username>%@</Username>\n"
+                             "<Password>0</Password>\n"
+                             "<Language>%d</Language>\n"
+                             "</CustomerLogin>\n"
+                             "</soap:Body>\n"
+                             "</soap:Envelope>\n", [Setting sharedInstance].customer.Username, myLang];
+    NSLog(@"soapMessage = %@\n", soapMessage);
+    
+    NSURL *url = [NSURL URLWithString:@"http://q8supermarket.com/Services/MobileService.asmx?op=CustomerLogin"];
+    NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
+    NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
+    
+    [theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [theRequest addValue: @"http://tempuri.org/CustomerLogin" forHTTPHeaderField:@"SOAPAction"];
+    [theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
+    [theRequest setHTTPMethod:@"POST"];
+    [theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+    if( theConnection )
+    {
+        webData = [[NSMutableData alloc]init];
+    }
+    else
+    {
+        NSLog(@"theConnection is NULL");
+    }
+   
+   
+   
 }
 
+-(void)twitterDidNotLogin:(BOOL)cancelled {
+    if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:@"There was a unknown error authenticating with Twitter." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+    [alert show];
+    }
+    else{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"تحذير" message:@"حطأ غير معلوم في تأكيد البيانات مع تويتر" delegate:nil cancelButtonTitle:@"موافق" otherButtonTitles:nil];
+        [alert show];
+        
+    }
+    [ MBProgressHUD hideHUDForView : self.view animated : YES ] ;
+}
 - (IBAction)onBtnRegister:(id)sender {
     UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     MyAccountViewController *VC = [mainstoryboard instantiateViewControllerWithIdentifier:@"RegisterView"];
@@ -95,19 +358,34 @@
 }
 
 - (IBAction)onBtnLogin:(id)sender {
+    [txtUserName resignFirstResponder];
+    [txtPassword resignFirstResponder];
     if ([txtUserName.text isEqualToString:@""])
     {
-        UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
-                                                    message:@"Please enter your username." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-        
-        [mes show];
+        if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
+            UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
+                                                        message:@"Please enter your username." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            
+            [mes show];
+        }
+        else{
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"تحذير" message:@" الرجاء ادخال اسمك المستخدم" delegate:nil cancelButtonTitle:@"موافق" otherButtonTitles:nil];
+            [alert show];
+        }
         return;
     }
     else if ([txtPassword.text isEqualToString:@""]){
-        UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
-                                                    message:@"Please enter your password." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
         
-        [mes show];
+        if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
+            UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
+                                                        message:@"Please enter your password." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            
+            [mes show];
+        }
+        else{
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"تحذير" message:@" الرجاء ادخال كلمة المرور" delegate:nil cancelButtonTitle:@"موافق" otherButtonTitles:nil];
+            [alert show];
+        }
         return;
     }
     int myLang = 0;
@@ -180,6 +458,8 @@
 -(void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *) namespaceURI qualifiedName:(NSString *)qName
    attributes: (NSDictionary *)attributeDict
 {
+    
+   
 	if( [elementName isEqualToString:@"CustomerID"])
 	{
         if(!soapResults)
@@ -307,10 +587,7 @@
         recordResults = FALSE;
         if (![soapResults isEqualToString:@""]) {
             NSLog(@"error");
-            UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
-                                                        message:@"Login failure." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-            
-            [mes show];
+ 
         }
         soapResults = nil;
     }
@@ -324,6 +601,7 @@
         soapResults = nil;
         
 	}
+    
     if( [elementName isEqualToString:@"Name"])
 	{
 		recordResults = FALSE;
@@ -378,8 +656,126 @@
 
             //[self.navigationController popViewControllerAnimated:YES];
         }
+        else if (![[Setting sharedInstance].customer.UserType isEqualToString:@"0"]){
+            int myLang = 0;
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+            {
+                myLang = 1;
+            }
+            else if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"]){
+                myLang = 2;
+            }
+            NSString *soapMessage = [NSString stringWithFormat:
+                                     @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                                     "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                                     "<soap:Body>\n"
+                                     "<CustomerRegisterNew xmlns=\"http://tempuri.org/\">\n"
+                                     "<Name>%@</Name>\n"
+                                     "<Email>%@</Email>\n"
+                                     "<MobileNumber></MobileNumber>\n"
+                          //           "<MobileID>e19871093ae0910</MobileID>\n"
+                                     "<MobileID>0</MobileID>\n"
+                                     "<CityID>0</CityID>\n"
+                                     "<AreaID>0</AreaID>\n"
+                                     "<Address>0</Address>\n"
+                                     "<Username>%@</Username>\n"
+                                     "<Password>0</Password>\n"
+                                     "<Language>%d</Language>\n"
+                                     "<MobileType>2</MobileType>\n"
+                                     "<UserType>%@</UserType>\n"
+                                     "<AccessToken>%@</AccessToken>\n"
+                                     "</CustomerRegisterNew>\n"
+                                     "</soap:Body>\n"
+                                     "</soap:Envelope>\n", [Setting sharedInstance].customer.fullName, [Setting sharedInstance].customer.Email, [Setting sharedInstance].customer.Username, myLang, [Setting sharedInstance].customer.UserType, [Setting sharedInstance].customer.AccessToken];
+            NSLog(@"soapMessage = %@\n", soapMessage);
+            
+            NSURL *url = [NSURL URLWithString:@"http://q8supermarket.com/Services/MobileService.asmx?op=CustomerRegisterNew"];
+            NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
+            NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
+            
+            [theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+            [theRequest addValue: @"http://tempuri.org/CustomerRegisterNew" forHTTPHeaderField:@"SOAPAction"];
+            [theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
+            [theRequest setHTTPMethod:@"POST"];
+            [theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
+            
+            NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+            if( theConnection )
+            {
+                webData = [[NSMutableData alloc]init];
+            }
+            else
+            {
+                NSLog(@"theConnection is NULL");
+            }
+
+        }
+        else{
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
+            UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
+                                                        message:@"Login failure." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            
+            [mes show];
+            }
+            else{
+                UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"تحذير"
+                                                            message:@"  فشل في تسجيل الدخول" delegate:self cancelButtonTitle:@"موافق" otherButtonTitles: nil];
+                
+                [mes show];
+            }
+        }
         soapResults = nil;
 	}
+    if ([elementName isEqualToString:@"CustomerRegisterNewResult"]){
+        recordResults = FALSE;
+        if (![[Setting sharedInstance].customer.customerID isEqualToString:@"0"]){
+            int myLang = 0;
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+            {
+                myLang = 1;
+            }
+            else if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"]){
+                myLang = 2;
+            }
+            NSString *soapMessage = [NSString stringWithFormat:
+                                     @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                                     "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                                     "<soap:Body>\n"
+                                     "<CustomerLogin xmlns=\"http://tempuri.org/\">\n"
+                                     "<Username>%@</Username>\n"
+                                     "<Password>0</Password>\n"
+                                     "<Language>%d</Language>\n"
+                                     "</CustomerLogin>\n"
+                                     "</soap:Body>\n"
+                                     "</soap:Envelope>\n", [Setting sharedInstance].customer.Username, myLang];
+            NSLog(@"soapMessage = %@\n", soapMessage);
+            
+            NSURL *url = [NSURL URLWithString:@"http://q8supermarket.com/Services/MobileService.asmx?op=CustomerLogin"];
+            NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
+            NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
+            
+            [theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+            [theRequest addValue: @"http://tempuri.org/CustomerLogin" forHTTPHeaderField:@"SOAPAction"];
+            [theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
+            [theRequest setHTTPMethod:@"POST"];
+            [theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
+            
+            NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+            if( theConnection )
+            {
+                webData = [[NSMutableData alloc]init];
+            }
+            else
+            {
+                NSLog(@"theConnection is NULL");
+            }
+        }
+        else{
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+        }
+        
+    }
     if( [elementName isEqualToString:@"Email"])
 	{
 		recordResults = FALSE;
@@ -456,6 +852,7 @@
 	{
 		recordResults = FALSE;
         if (![soapResults isEqualToString:@""]) {
+            
             [Setting sharedInstance].customer.UserType = soapResults;
         }
         soapResults = nil;
@@ -464,6 +861,7 @@
 	{
 		recordResults = FALSE;
         if (![soapResults isEqualToString:@""]) {
+            
             [Setting sharedInstance].customer.AccessToken = soapResults;
         }
         soapResults = nil;
@@ -472,6 +870,21 @@
 	{
 		recordResults = FALSE;
         soapResults = nil;
+        [[NSUserDefaults standardUserDefaults] setObject:[Setting sharedInstance].customer.customerID forKey:@"customerID"];
+        [[NSUserDefaults standardUserDefaults] setObject:[Setting sharedInstance].customer.fullName forKey:@"FullName"];
+        [[NSUserDefaults standardUserDefaults] setObject:[Setting sharedInstance].customer.Email forKey:@"Email"];
+        [[NSUserDefaults standardUserDefaults] setObject:[Setting sharedInstance].customer.Mobile forKey:@"Mobile"];
+        [[NSUserDefaults standardUserDefaults] setObject:[Setting sharedInstance].customer.MobileID forKey:@"MobileID"];
+        [[NSUserDefaults standardUserDefaults] setObject:[Setting sharedInstance].customer.StateID forKey:@"StateID"];
+        [[NSUserDefaults standardUserDefaults] setObject:[Setting sharedInstance].customer.AreaID forKey:@"AreaID"];
+        [[NSUserDefaults standardUserDefaults] setObject:[Setting sharedInstance].customer.Address forKey:@"Address"];
+        [[NSUserDefaults standardUserDefaults] setObject:[Setting sharedInstance].customer.Username forKey:@"Username"];
+        [[NSUserDefaults standardUserDefaults] setObject:[Setting sharedInstance].customer.Password forKey:@"Password"];
+        [[NSUserDefaults standardUserDefaults] setObject:[Setting sharedInstance].customer.UserType forKey:@"UserType"];
+        [[NSUserDefaults standardUserDefaults] setObject:[Setting sharedInstance].customer.AccessToken forKey:@"AccessToken"];
+        [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:@"isLogin"];
+        
+        [[NSUserDefaults standardUserDefaults] synchronize];
         [self.navigationController popViewControllerAnimated:YES];
 	}
 

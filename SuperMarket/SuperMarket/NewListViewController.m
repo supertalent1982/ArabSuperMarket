@@ -11,6 +11,7 @@
 #import "FriendViewController.h"
 #import "Setting.h"
 #import "MyListItem.h"
+#import "MBProgressHUD.h"
 @interface NewListViewController ()
 
 @end
@@ -30,6 +31,14 @@
 @synthesize selItem;
 @synthesize btn_done;
 @synthesize mainNum;
+@synthesize arrayCheckedFriends;
+@synthesize xmlParser;
+@synthesize webData;
+@synthesize recordResults;
+@synthesize soapResults;
+@synthesize errEncounter;
+@synthesize friendIDs;
+@synthesize subcatName;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -42,9 +51,26 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    NSString *docsDir;
+    NSArray *dirPaths;
+    NSString *ver = [[UIDevice currentDevice] systemVersion];
+    float ver_float = [ver floatValue];
     
-}
-- (void)viewWillAppear:(BOOL)animated{
+    if (ver_float >= 7.0){
+        if (IS_IPHONE_5){
+        [addlistTable setFrame:CGRectMake(13, 100, 293, 413)];
+        }
+    }
+    // Get the documents directory
+    dirPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    
+    docsDir = [dirPaths objectAtIndex:0];
+    
+    // Build the path to the database file
+    databasePath = [[NSString alloc] initWithString: [docsDir stringByAppendingPathComponent: @"Q8SuperMarketDB.db"]];
+    
+
+    [self.tListName setValue:[UIColor colorWithRed:255.0 green:255.0 blue:255.0 alpha:1.0] forKeyPath:@"_placeholderLabel.textColor"];
     mainNum = 0;
     self.tListName.text = @"";
 	// Do any additional setup after loading the view.
@@ -64,6 +90,7 @@
         item.itemSubID = obj.subCatID;
         item.measureQuantity = @"";
         item.measureUnit = @"";
+        item.selectedItems = 0;
         if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]) {
             item.itemName = obj.subCatEn;
         }
@@ -75,6 +102,7 @@
         MainCategory *obj = [[Setting sharedInstance].MainCategories objectAtIndex:i];
         MyListItem *item = [[MyListItem alloc]init];
         item.isMainCategory = TRUE;
+        item.selectedItems = 0;
         item.isSelected = FALSE;
         item.isOpened = FALSE;
         item.itemID = obj.mainCatID;
@@ -93,8 +121,85 @@
     for (int i = 1; i < 101; i++)
         [arrayQuantity addObject:[NSString stringWithFormat:@"%d", i]];
     arrayMeasure = [[NSMutableArray alloc]init];
+    arrayCheckedFriends = [[NSMutableArray alloc]init];
     btn_done.alpha = 0.5;
     btn_done.userInteractionEnabled = NO;
+    [[Setting sharedInstance].arrayPendingFriends removeAllObjects];
+    [[Setting sharedInstance].arrayRealFriends removeAllObjects];
+    [[Setting sharedInstance] getFriendsFromOnline];
+
+
+}
+- (void)viewWillAppear:(BOOL)animated{
+    
+    NSLog(@"new list table = %f, %f, %f, %f", addlistTable.frame.origin.x, addlistTable.frame.origin.y, addlistTable.frame.size.width, addlistTable.frame.size.height);
+    [measurePicker setBackgroundColor:[UIColor whiteColor]];
+    CGRect tmpRect;
+    if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
+        self.lb_header.text = @"Add New List";
+        self.tListName.placeholder = @"Add list name...";
+        [self.btn_done setBackgroundImage:[UIImage imageNamed:@"btn_done_mylist.png"] forState:UIControlStateNormal];
+        [self.btn_done setBackgroundImage:[UIImage imageNamed:@"btn_done_mylist.png"] forState:UIControlStateSelected];
+        [self.btn_done setBackgroundImage:[UIImage imageNamed:@"btn_done_mylist.png"] forState:UIControlStateHighlighted];
+
+        [self.btn_add setBackgroundImage:[UIImage imageNamed:@"btn_add_measure.png"] forState:UIControlStateNormal];
+        [self.btn_add setBackgroundImage:[UIImage imageNamed:@"btn_add_measure.png"] forState:UIControlStateSelected];
+        [self.btn_add setBackgroundImage:[UIImage imageNamed:@"btn_add_measure.png"] forState:UIControlStateHighlighted];
+        
+        [self.btn_cancel setBackgroundImage:[UIImage imageNamed:@"btn_cancel_measure.png"] forState:UIControlStateNormal];
+        [self.btn_cancel setBackgroundImage:[UIImage imageNamed:@"btn_cancel_measure.png"] forState:UIControlStateSelected];
+        [self.btn_cancel setBackgroundImage:[UIImage imageNamed:@"btn_cancel_measure.png"] forState:UIControlStateHighlighted];
+        
+        [self.btn_can setBackgroundImage:[UIImage imageNamed:@"btn_cancel_friend.png"] forState:UIControlStateNormal];
+        [self.btn_can setBackgroundImage:[UIImage imageNamed:@"btn_cancel_friend.png"] forState:UIControlStateSelected];
+        [self.btn_can setBackgroundImage:[UIImage imageNamed:@"btn_cancel_friend.png"] forState:UIControlStateHighlighted];
+        [self.btn_send setBackgroundImage:[UIImage imageNamed:@"btn_send_friend.png"] forState:UIControlStateNormal];
+        [self.btn_send setBackgroundImage:[UIImage imageNamed:@"btn_send_friend.png"] forState:UIControlStateSelected];
+        [self.btn_send setBackgroundImage:[UIImage imageNamed:@"btn_send_friend.png"] forState:UIControlStateHighlighted];
+        
+        tmpRect = self.btn_can.frame;
+        tmpRect.origin.x = 160;
+        self.btn_can.frame = tmpRect;
+
+        tmpRect = self.btn_send.frame;
+        tmpRect.origin.x = 34;
+        self.btn_send.frame = tmpRect;
+
+        [self.img_header setImage:[UIImage imageNamed:@"send_to_friend.png"]];
+        
+    }
+    else{
+        self.lb_header.text = @"   إضافة قائمة جديدة";
+        self.tListName.placeholder = @"إضافة اسم القائمة...";
+        [self.btn_done setBackgroundImage:[UIImage imageNamed:@"arab_done_mylist.png"] forState:UIControlStateNormal];
+        [self.btn_done setBackgroundImage:[UIImage imageNamed:@"arab_done_mylist.png"] forState:UIControlStateSelected];
+        [self.btn_done setBackgroundImage:[UIImage imageNamed:@"arab_done_mylist.png"] forState:UIControlStateHighlighted];
+        
+        [self.btn_add setBackgroundImage:[UIImage imageNamed:@"arab_add_measure.png"] forState:UIControlStateNormal];
+        [self.btn_add setBackgroundImage:[UIImage imageNamed:@"arab_add_measure.png"] forState:UIControlStateSelected];
+        [self.btn_add setBackgroundImage:[UIImage imageNamed:@"arab_add_measure.png"] forState:UIControlStateHighlighted];
+        
+        [self.btn_cancel setBackgroundImage:[UIImage imageNamed:@"arab_cancel_measure.png"] forState:UIControlStateNormal];
+        [self.btn_cancel setBackgroundImage:[UIImage imageNamed:@"arab_cancel_measure.png"] forState:UIControlStateSelected];
+        [self.btn_cancel setBackgroundImage:[UIImage imageNamed:@"arab_cancel_measure.png"] forState:UIControlStateHighlighted];
+        [self.btn_can setBackgroundImage:[UIImage imageNamed:@"arab_cancel_friend.png"] forState:UIControlStateNormal];
+        [self.btn_can setBackgroundImage:[UIImage imageNamed:@"arab_cancel_friend.png"] forState:UIControlStateSelected];
+        [self.btn_can setBackgroundImage:[UIImage imageNamed:@"arab_cancel_friend.png"] forState:UIControlStateHighlighted];
+        [self.btn_send setBackgroundImage:[UIImage imageNamed:@"arab_send_friend.png"] forState:UIControlStateNormal];
+        [self.btn_send setBackgroundImage:[UIImage imageNamed:@"arab_send_friend.png"] forState:UIControlStateSelected];
+        [self.btn_send setBackgroundImage:[UIImage imageNamed:@"arab_send_friend.png"] forState:UIControlStateHighlighted];
+        
+        tmpRect = self.btn_can.frame;
+        tmpRect.origin.x = 34;
+        self.btn_can.frame = tmpRect;
+        
+        tmpRect = self.btn_send.frame;
+        tmpRect.origin.x = 160;
+        self.btn_send.frame = tmpRect;
+
+        
+        [self.img_header setImage:[UIImage imageNamed:@"arabsend_to_friend.png"]];
+    }
 }
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
@@ -136,21 +241,51 @@
 
 - (IBAction)onBtnDone:(id)sender {
     if ([[Setting sharedInstance].customer.customerID isEqualToString:@"0"]) {
-        UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
-                                                    message:@"You must login to save your list." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-        
-        [mes show];
+        if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]) {
+            UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
+                                                        message:@"You must login to save your list." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            
+            [mes show];
+        }else{
+            UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"تحذير"
+                                                        message:@" يجب عليك تسجيل الدخول لحفظ القائمة" delegate:self cancelButtonTitle:@"موافق" otherButtonTitles: nil];
+            
+            [mes show];
+
+        }
     }
     else{
         if ([self.tListName.text isEqualToString:@""]) {
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
             UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
                                                         message:@"Please enter your list name." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
             
-            [mes show];
+                [mes show];
+            }else{
+                UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"تحذير"
+                                                            message:@" الرجاء تسمية القائمة" delegate:self cancelButtonTitle:@"موافق" otherButtonTitles: nil];
+                
+                [mes show];
+            }
             return;
         }
-    [self.view bringSubviewToFront:toFriendView];
-    toFriendView.hidden = NO;
+   
+        
+        [arrayCheckedFriends removeAllObjects];
+        for (int i = 0; i < [Setting sharedInstance].arrayRealFriends.count; i++) {
+            NSString *strChecked = @"no";
+            [arrayCheckedFriends addObject:strChecked];
+        }
+        /*   if ([[Setting sharedInstance].customer.UserType isEqualToString:@"0"])
+        {*/
+            [self.view bringSubviewToFront:toFriendView];
+            [friendTable reloadData];
+            toFriendView.hidden = NO;
+/*        }
+        else{
+            toFriendView.hidden = YES;
+            [self onBtnCancel:Nil];
+        }*/
     }
 }
 
@@ -158,12 +293,15 @@
 }
 
 - (IBAction)onBtnList:(id)sender {
+    [self.tListName resignFirstResponder];
     UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     
     // Session is open
     FriendViewController *c = [mainstoryboard instantiateViewControllerWithIdentifier:@"FriendManageView"];
     UINavigationController *n = [[UINavigationController alloc] initWithRootViewController:c];
     c.navigationController.navigationBarHidden = YES;
+    c.prevView = self;
+    c.viewName = @"none";
     [self.revealSideViewController pushViewController:n onDirection:PPRevealSideDirectionRight withOffset:158 animated:TRUE];
     PP_RELEASE(c);
     PP_RELEASE(n);
@@ -173,22 +311,37 @@
     return YES;
 }
 - (IBAction)onAddMeasure:(id)sender {
+    
     if ([[Setting sharedInstance].customer.customerID isEqualToString:@"0"]){
-        UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
-                                                    message:@"You must login to add your list." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
-        
-        [mes show];
+        if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
+            UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
+                                                        message:@"You must login to add your list." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            
+            [mes show];
+        }else{
+            UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"تحذير"
+                                                        message:@" يجب عليك تسجيل الدخول لحفظ القائمة" delegate:self cancelButtonTitle:@"موافق" otherButtonTitles: nil];
+            
+            [mes show];
+        }
     }else{
         MyListItem *item = [arrayMyList objectAtIndex:selItem];
         item.isSelected = TRUE;
         item.measureQuantity = [arrayQuantity objectAtIndex:selQuantyIndex];
         item.measureUnit = [[Setting sharedInstance] getMeasureID:[arrayMeasure objectAtIndex:selMeasureIndex]];
-    
+        for (int i = 0; i < arrayMyList.count; i++) {
+            MyListItem *item1 = [arrayMyList objectAtIndex:i];
+            if (item1.isMainCategory == TRUE && [item1.itemID isEqualToString:item.itemID])
+            {
+                item1.selectedItems++;
+                [arrayMyList replaceObjectAtIndex:i withObject:item1];
+            }
+        }
         [UIView beginAnimations:@"AdResize" context:nil];
         [UIView setAnimationDuration:0.7];
     
         CGRect newFrame = CGRectMake(selectionView.frame.origin.x, self.view.frame.size.height, selectionView.frame.size.width, selectionView.frame.size.height);
-    
+        
         selectionView.frame = newFrame;
         [UIView commitAnimations];
     btn_done.alpha = 1.0;
@@ -208,14 +361,25 @@
 }
 
 - (IBAction)onBtnPlus:(id)sender {
-    NSIndexPath *indexPath = [addlistTable indexPathForCell:(UITableViewCell *)[[sender superview]superview]];
+    [self.tListName resignFirstResponder];
+    NSIndexPath *indexPath;
+   if (IS_IPHONE_4)
+       indexPath = [addlistTable indexPathForCell:(UITableViewCell *)[[sender superview]superview]];
+    else if (IS_IPHONE_5)
+        indexPath = [addlistTable indexPathForCell:(UITableViewCell *)[[[sender superview]superview]superview]];
+    
     MyListItem *item = [arrayMyList objectAtIndex:indexPath.row];
     if (item.isSelected == TRUE){
         item.isSelected = FALSE;
         int selItems = 0;
         for (int i = 0; i < arrayMyList.count; i++) {
-            MyListItem *item = [arrayMyList objectAtIndex:i];
-            if (item.isSelected == TRUE)
+            MyListItem *item1 = [arrayMyList objectAtIndex:i];
+            if (item1.isMainCategory == TRUE && [item1.itemID isEqualToString:item.itemID])
+            {
+                item1.selectedItems--;
+                [arrayMyList replaceObjectAtIndex:i withObject:item1];
+            }
+            if (item1.isSelected == TRUE)
                 selItems++;
         }
         if (selItems == 0) {
@@ -229,6 +393,8 @@
         selMeasureIndex = 0;
         selQuantyIndex = 0;
         selItem = indexPath.row;
+
+        subcatName.text = item.itemName;
         for (int i = 0; i < arraySubCategories.count; i++) {
             SubCategory *obj = [[Setting sharedInstance].SubCategories objectAtIndex:i];
             if ([obj.subCatID isEqualToString:item.itemSubID]) {
@@ -256,12 +422,357 @@
 }
 
 - (IBAction)onBtnSend:(id)sender {
+    const char *dbpath = [databasePath UTF8String];
+    sqlite3_stmt    *statement;
+    NSDate *addDate = [[NSDate alloc]init];
+    NSDateFormatter *df1 = [[NSDateFormatter alloc]init];
+    [df1 setDateFormat:@"dd/MM/yyyy"];
+    NSLocale *locale1 = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    [df1 setLocale:locale1];
+    NSTimeZone *tz1 = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+    [df1 setTimeZone:tz1];
+    NSString *orderDate = [df1 stringFromDate:addDate];
+    NSString *receiversName = @"";
+    friendIDs = @"";
+  
+    int sendNum = 0;
+    for (int i = 0; i < arrayCheckedFriends.count; i++){
+        NSString *checked = [arrayCheckedFriends objectAtIndex:i];
+        if ([checked isEqualToString:@"yes"])
+        {
+            FriendObject *obj = [[Setting sharedInstance].arrayRealFriends objectAtIndex:i];
+            receiversName = [receiversName stringByAppendingString:[NSString stringWithFormat:@"%@, ",obj.friendName]];
+            friendIDs = [friendIDs stringByAppendingString:[NSString stringWithFormat:@"%@,", obj.friendID]];
+            sendNum++;
+        }
+    }
+    if (sendNum == 0){
+        if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
+        UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
+                                                    message:@"Please select your friends to send this list." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            [mes show];
+        }else{
+            UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"تحذير"
+                                                        message:@"الرجاء اختيار صديق لارسال القائمة " delegate:self cancelButtonTitle:@"موافق" otherButtonTitles: nil];
+            [mes show];
+            
+        }
+        return;
+
+    }
+    NSString *requestStringForItems = @"";
+    
+    receiversName = [receiversName substringToIndex:receiversName.length - 2];
+    friendIDs = [friendIDs substringToIndex:friendIDs.length - 1];
+    
+    NSLog(@"receiversName = %@", receiversName);
+    if (sqlite3_open(dbpath, &projectDB) == SQLITE_OK)
+    {
+        NSString *queryString = [NSString stringWithFormat: @"INSERT INTO MyList (Title, OrderDate, CustomerID, ReceiversList) VALUES (\"%@\", \"%@\", \"%@\", \"%@, me\")", self.tListName.text, orderDate, [Setting sharedInstance].customer.customerID, receiversName];
+        const char *query_stmt_del = [queryString UTF8String];
+        if (sqlite3_prepare_v2(projectDB, query_stmt_del, -1, &statement, NULL) == SQLITE_OK)
+        {
+            if (sqlite3_step(statement) == SQLITE_DONE)
+            {
+                NSLog(@"mylist success, when send");
+                
+            }
+            sqlite3_finalize(statement);
+        }
+        queryString = [NSString stringWithFormat: @"SELECT * FROM MyList"];
+        const char *query_stmt = [queryString UTF8String];
+        NSString *listID;
+        if (sqlite3_prepare_v2(projectDB, query_stmt, -1, &statement, NULL) == SQLITE_OK)
+        {
+            while (sqlite3_step(statement) == SQLITE_ROW) {
+                
+                listID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+            }
+        }
+        for (int i = 0; i < arraySubCategories.count; i++) {
+            MyListItem *item = [arraySubCategories objectAtIndex:i];
+            if (item.isSelected == TRUE){
+                BOOL isDone = FALSE;
+                
+                queryString = [NSString stringWithFormat: @"INSERT INTO MyListItems (ListID, MainCatID, SubCatID, MeasureID, Quantity, IsDone) VALUES (\"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%d\")", listID, item.itemID, item.itemSubID, item.measureUnit, item.measureQuantity, isDone];
+                
+                query_stmt = [queryString UTF8String];
+                
+                if (sqlite3_prepare_v2(projectDB, query_stmt, -1, &statement, NULL) == SQLITE_OK)
+                {
+                    if (sqlite3_step(statement) == SQLITE_DONE)
+                    {
+                        NSLog(@"mylistitem success");
+                        
+                    }
+                    sqlite3_finalize(statement);
+                }
+                requestStringForItems = [requestStringForItems stringByAppendingString:@"<MyListWebItem>\n"];
+                requestStringForItems = [requestStringForItems stringByAppendingString:[NSString stringWithFormat:@"<MainCategoryID>%@</MainCategoryID>\n", item.itemID]];
+                requestStringForItems = [requestStringForItems stringByAppendingString:[NSString stringWithFormat:@"<SubCategoryID>%@</SubCategoryID>\n", item.itemSubID]];
+                requestStringForItems = [requestStringForItems stringByAppendingString:[NSString stringWithFormat:@"<MeasureUnitID>%@</MeasureUnitID>\n", item.measureUnit]];
+                requestStringForItems = [requestStringForItems stringByAppendingString:[NSString stringWithFormat:@"<Quantity>%@</Quantity>\n", item.measureQuantity]];
+                requestStringForItems = [requestStringForItems stringByAppendingString:@"</MyListWebItem>\n"];
+            }
+        }
+        sqlite3_close(projectDB);
+    }
+    NSString *myLang;
+    if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+    {
+        myLang = @"1";
+    }
+    else {
+        myLang = @"2";
+    }
+
+    NSString *soapMessage = [NSString stringWithFormat:
+                             @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                             "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                             "<soap:Body>\n"
+                             "<MyListCreateNew xmlns=\"http://tempuri.org/\">\n"
+                             "<CustomerID>%d</CustomerID>\n"
+                             "<ListTitle>%@</ListTitle>\n"
+                             "<Language>%d</Language>\n"
+                             "<ListItems>\n%@</ListItems>\n"
+                             "</MyListCreateNew>\n"
+                             "</soap:Body>\n"
+                             "</soap:Envelope>\n", [[Setting sharedInstance].customer.customerID  intValue], self.tListName.text, [myLang intValue], requestStringForItems];
+    NSLog(@"soapMessage = %@\n", soapMessage);
+    
+    NSURL *url = [NSURL URLWithString:@"http://q8supermarket.com/Services/MobileService.asmx?op=MyListCreateNew"];
+    NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
+    NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
+    
+    [theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+    [theRequest addValue: @"http://tempuri.org/MyListCreateNew" forHTTPHeaderField:@"SOAPAction"];
+    [theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
+    [theRequest setHTTPMethod:@"POST"];
+    [theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
+    if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+        [[MBProgressHUD showHUDAddedTo:self.view animated:YES] setLabelText:@"Waiting..."];
+    else
+        [[MBProgressHUD showHUDAddedTo:self.view animated:YES] setLabelText:@"الرجاي الانتظار..."];
+    
+    NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+    if( theConnection )
+    {
+        webData = [[NSMutableData alloc]init];
+    }
+    else
+    {
+        NSLog(@"theConnection is NULL");
+    }
+
+    
+}
+-(void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+{
+	[webData setLength: 0];
+}
+-(void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+{
+	[webData appendData:data];
+}
+-(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
+	NSLog(@"ERROR with theConenction");
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    toFriendView.hidden = YES;
+    [self.navigationController popViewControllerAnimated:YES];
+}
+-(void)connectionDidFinishLoading:(NSURLConnection *)connection
+{
+	NSLog(@"DONE. Received Bytes: %d", [webData length]);
+	NSString *theXML = [[NSString alloc] initWithBytes: [webData mutableBytes] length:[webData length] encoding:NSUTF8StringEncoding];
+	NSLog(@"response XML = %@\n", theXML);
+    
+    xmlParser = Nil;
+	xmlParser = [[NSXMLParser alloc] initWithData: webData];
+	[xmlParser setDelegate: self];
+	[xmlParser setShouldResolveExternalEntities: YES];
+	[xmlParser parse];
+	[MBProgressHUD hideHUDForView:self.view animated:YES];
+    toFriendView.hidden = YES;
+   
+}
+-(void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *) namespaceURI qualifiedName:(NSString *)qName
+   attributes: (NSDictionary *)attributeDict
+{
+    
+    if ([elementName isEqualToString:@"ErrMessage"]){
+        if(!soapResults)
+        {
+            soapResults = [[NSMutableString alloc] init];
+        }
+        recordResults = TRUE;
+    }
+    if ([elementName isEqualToString:@"NewListID"]){
+        if(!soapResults)
+        {
+            soapResults = [[NSMutableString alloc] init];
+        }
+        recordResults = TRUE;
+    }
+    
+}
+-(void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string
+{
+    if( recordResults )
+	{
+		[soapResults appendString: string];
+	}
 }
 
+-(void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName
+{
+    
+    if ([elementName isEqualToString:@"ErrMessage"]){
+        recordResults = FALSE;
+        if (![soapResults isEqualToString:@""]) {
+            NSLog(@"error");
+            [Setting sharedInstance].errString = soapResults;
+            UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
+                                                        message:[Setting sharedInstance].errString delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            [mes show];
+        }
+        
+        soapResults = nil;
+    }
+    if ([elementName isEqualToString:@"NewListID"])
+    {
+        NSString *onlineListID = soapResults;
+        NSLog(@"online list id = %@\n", onlineListID);
+        recordResults = FALSE;
+        soapResults = Nil;
+        
+        if ([onlineListID class] != [NSNull class]){
+            
+            NSString *myLang;
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+                myLang = @"1";
+            else
+                myLang = @"2";
+            NSString *soapMessage = [NSString stringWithFormat:
+                                     @"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                                     "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                                     "<soap:Body>\n"
+                                     "<MyListSendToFriends xmlns=\"http://tempuri.org/\">\n"
+                                     "<ListID>%d</ListID>\n"
+                                     "<Language>%d</Language>\n"
+                                     "<FriendIDs>%@</FriendIDs>\n"
+                                     "<SenderCustomerID>%@</SenderCustomerID>\n"
+                                     "</MyListSendToFriends>\n"
+                                     "</soap:Body>\n"
+                                     "</soap:Envelope>\n", [onlineListID intValue], [myLang intValue], friendIDs, [Setting sharedInstance].customer.customerID];
+            
+            NSLog(@"soapMessage = %@\n", soapMessage);
+            
+            NSURL *url = [NSURL URLWithString:@"http://q8supermarket.com/Services/MobileService.asmx?op=MyListSendToFriends"];
+            NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:url];
+            NSString *msgLength = [NSString stringWithFormat:@"%d", [soapMessage length]];
+            
+            [theRequest addValue: @"text/xml; charset=utf-8" forHTTPHeaderField:@"Content-Type"];
+            [theRequest addValue: @"http://tempuri.org/MyListSendToFriends" forHTTPHeaderField:@"SOAPAction"];
+            [theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
+            [theRequest setHTTPMethod:@"POST"];
+            [theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+                [[MBProgressHUD showHUDAddedTo:self.view animated:YES] setLabelText:@"Waiting..."];
+            else
+                [[MBProgressHUD showHUDAddedTo:self.view animated:YES] setLabelText:@"الرجاي الانتظار..."];
+            
+            NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
+            if( theConnection )
+            {
+                webData = [[NSMutableData alloc]init];
+            }
+            else
+            {
+                NSLog(@"theConnection is NULL");
+            }
+
+        }
+        
+    }
+    if ([elementName isEqualToString:@"MyListSendToFriendsResult"]){
+        recordResults = FALSE;
+        soapResults = Nil;
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
 - (IBAction)onBtnCancel:(id)sender {
+    const char *dbpath = [databasePath UTF8String];
+    sqlite3_stmt    *statement;
+    NSDate *addDate = [[NSDate alloc]init];
+    NSDateFormatter *df1 = [[NSDateFormatter alloc]init];
+    [df1 setDateFormat:@"dd/MM/yyyy"];
+    NSLocale *locale1 = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    [df1 setLocale:locale1];
+    NSTimeZone *tz1 = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+    [df1 setTimeZone:tz1];
+    NSString *orderDate = [df1 stringFromDate:addDate];
+    
+    if (sqlite3_open(dbpath, &projectDB) == SQLITE_OK)
+    {
+        NSString *queryString = [NSString stringWithFormat: @"INSERT INTO MyList (Title, OrderDate, CustomerID, ReceiversList) VALUES (\"%@\", \"%@\", \"%@\", \"me\")", self.tListName.text, orderDate, [Setting sharedInstance].customer.customerID];
+        const char *query_stmt_del = [queryString UTF8String];
+        if (sqlite3_prepare_v2(projectDB, query_stmt_del, -1, &statement, NULL) == SQLITE_OK)
+        {
+            if (sqlite3_step(statement) == SQLITE_DONE)
+            {
+                NSLog(@"When cancel, list save success");
+                
+            }
+            sqlite3_finalize(statement);
+        }
+        queryString = [NSString stringWithFormat: @"SELECT * FROM MyList"];
+        const char *query_stmt = [queryString UTF8String];
+        NSString *listID;
+        if (sqlite3_prepare_v2(projectDB, query_stmt, -1, &statement, NULL) == SQLITE_OK)
+        {
+            while (sqlite3_step(statement) == SQLITE_ROW) {
+                
+                listID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
+            }
+        }
+        for (int i = 0; i < arraySubCategories.count; i++) {
+            MyListItem *item = [arraySubCategories objectAtIndex:i];
+            if (item.isSelected == TRUE){
+                BOOL isDone = FALSE;
+                
+                queryString = [NSString stringWithFormat: @"INSERT INTO MyListItems (ListID, MainCatID, SubCatID, MeasureID, Quantity, IsDone) VALUES (\"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%d\")", listID, item.itemID, item.itemSubID, item.measureUnit, item.measureQuantity, isDone];
+                
+                query_stmt = [queryString UTF8String];
+
+                if (sqlite3_prepare_v2(projectDB, query_stmt, -1, &statement, NULL) == SQLITE_OK)
+                {
+                    if (sqlite3_step(statement) == SQLITE_DONE)
+                    {
+                        NSLog(@"When cancel, listitem save success");
+                        
+                    }
+                    sqlite3_finalize(statement);
+                }
+            }
+        }
+        sqlite3_close(projectDB);
+    }
     toFriendView.hidden = YES;
+    [self.navigationController popViewControllerAnimated:YES];
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [self.tListName resignFirstResponder];
+    if (tableView == friendTable){
+        NSString *str = [arrayCheckedFriends objectAtIndex:indexPath.row];
+        if ([str isEqualToString:@"no"])
+            str = @"yes";
+        else
+            str = @"no";
+        [arrayCheckedFriends replaceObjectAtIndex:indexPath.row withObject:str];
+        
+    }
+    else {
     MyListItem *item = [arrayMyList objectAtIndex:indexPath.row];
     if (item.isMainCategory == TRUE) {
         if (item.isOpened == TRUE) {
@@ -285,6 +796,61 @@
             [arrayMyList insertObjects:subArray atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(indexPath.row + 1, subArray.count)]];
         }
     }
+    else{
+        MyListItem *item = [arrayMyList objectAtIndex:indexPath.row];
+        if (item.isSelected == TRUE){
+            item.isSelected = FALSE;
+            int selItems = 0;
+            for (int i = 0; i < arrayMyList.count; i++) {
+                MyListItem *item1 = [arrayMyList objectAtIndex:i];
+                if (item1.isMainCategory == TRUE && [item1.itemID isEqualToString:item.itemID])
+                {
+                    item1.selectedItems--;
+                    [arrayMyList replaceObjectAtIndex:i withObject:item1];
+                }
+                if (item1.isSelected == TRUE)
+                    selItems++;
+            }
+            if (selItems == 0) {
+                btn_done.alpha = 0.5;
+                btn_done.userInteractionEnabled = NO;
+            }
+            [addlistTable reloadData];
+        }
+        else{
+            [arrayMeasure removeAllObjects];
+            selMeasureIndex = 0;
+            selQuantyIndex = 0;
+            selItem = indexPath.row;
+            subcatName.text = item.itemName;
+            for (int i = 0; i < arraySubCategories.count; i++) {
+                SubCategory *obj = [[Setting sharedInstance].SubCategories objectAtIndex:i];
+                if ([obj.subCatID isEqualToString:item.itemSubID]) {
+                    NSString *str = obj.subCatMeasures;
+                    NSArray *measures = [str componentsSeparatedByString:@","];
+                    for (int j = 0; j < measures.count; j++) {
+                        NSString *unitStr = [measures objectAtIndex:j];
+                        if (![[[Setting sharedInstance] getMeasure:unitStr] isEqualToString:@"Unknown"])
+                            [arrayMeasure addObject:[[Setting sharedInstance] getMeasure:unitStr]];
+                    }
+                }
+            }
+            [measurePicker reloadAllComponents];
+            selectionView.hidden = NO;
+            [self.view bringSubviewToFront:selectionView];
+            [UIView beginAnimations:@"AdResize" context:nil];
+            [UIView setAnimationDuration:0.7];
+            
+            CGRect newFrame = CGRectMake(selectionView.frame.origin.x, self.view.frame.size.height - selectionView.frame.size.height, selectionView.frame.size.width, selectionView.frame.size.height);
+            
+            selectionView.frame = newFrame;
+            [UIView commitAnimations];
+        }
+
+    }
+    
+    mainNum = 0;
+    }
     [tableView reloadData];
 }
 -(UITableViewCell *)tableView:(UITableView *)_tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -294,6 +860,30 @@
         cell = (UITableViewCell *)[_tableView dequeueReusableCellWithIdentifier:@"FriendCell"];
         if (cell == Nil)
             cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"FriendCell"];
+        FriendObject *obj = [[Setting sharedInstance].arrayRealFriends objectAtIndex:indexPath.row];
+        UILabel *lb_friendName = (UILabel*)[cell viewWithTag:101];
+        lb_friendName.text = obj.friendName;
+        UIImageView *imgCheck = (UIImageView*)[cell viewWithTag:102];
+        NSString *strChecked = [arrayCheckedFriends objectAtIndex:indexPath.row];
+        if ([strChecked isEqualToString:@"no"])
+            imgCheck.hidden = YES;
+        else if ([strChecked isEqualToString:@"yes"])
+            imgCheck.hidden = NO;
+        CGRect tmpRect;
+        tmpRect = imgCheck.frame;
+        NSLog(@"%f, %f", self.btn_send.frame.origin.x, self.btn_can.frame.origin.x);
+        if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"]){
+            lb_friendName.textAlignment = NSTextAlignmentRight;
+            tmpRect.origin.x = 20;
+            imgCheck.frame = tmpRect;
+        }
+        else
+        {
+            lb_friendName.textAlignment = NSTextAlignmentLeft;
+            tmpRect.origin.x = 230;
+            imgCheck.frame = tmpRect;
+            
+        }
     }
     else if (_tableView == addlistTable){
         
@@ -314,6 +904,7 @@
             }
             lb_itemName = (UILabel*)[cell viewWithTag:101];
             lb_itemName.text = item.itemName;
+            
             UIImageView *imgArrow1 = (UIImageView*)[cell viewWithTag:103];
             UIImageView *imgArrow2 = (UIImageView*)[cell viewWithTag:105];
             if (item.isOpened == TRUE) {
@@ -323,6 +914,54 @@
             else{
                 imgArrow1.hidden = NO;
                 imgArrow2.hidden = YES;
+            }
+            UILabel *lbNum = (UILabel*)[cell viewWithTag:150];
+            lbNum.textColor = [UIColor redColor];
+            if (item.selectedItems > 0)
+                lbNum.text = [NSString stringWithFormat:@"%d", item.selectedItems];
+            else
+                lbNum.text = @"";
+            NSLog(@"%f, %f, %f, %f", lb_itemName.frame.origin.x, imgArrow1.frame.origin.x, imgArrow2.frame.origin.x, lbNum.frame.origin.x);
+            CGRect tmpRect;
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+            {
+                lb_itemName.textAlignment = NSTextAlignmentLeft;
+                tmpRect = lb_itemName.frame;
+                tmpRect.origin.x = 20;
+                lb_itemName.frame = tmpRect;
+                
+                tmpRect = lbNum.frame;
+                tmpRect.origin.x = 220;
+                lbNum.frame = tmpRect;
+                
+                tmpRect = imgArrow1.frame;
+                tmpRect.origin.x = 261;
+                imgArrow1.frame = tmpRect;
+                [imgArrow1 setImage:[UIImage imageNamed:@"mylist_arrow.png"]];
+                
+                tmpRect = imgArrow2.frame;
+                tmpRect.origin.x = 254;
+                imgArrow2.frame = tmpRect;
+                
+            }
+            else{
+                lb_itemName.textAlignment = NSTextAlignmentRight;
+                tmpRect = lb_itemName.frame;
+                tmpRect.origin.x = 50;
+                lb_itemName.frame = tmpRect;
+                
+                tmpRect = lbNum.frame;
+                tmpRect.origin.x = 40;
+                lbNum.frame = tmpRect;
+                
+                tmpRect = imgArrow1.frame;
+                tmpRect.origin.x = 17;
+                imgArrow1.frame = tmpRect;
+                [imgArrow1 setImage:[UIImage imageNamed:@"mylist_arrow_r.png"]];
+                
+                tmpRect = imgArrow2.frame;
+                tmpRect.origin.x = 10;
+                imgArrow2.frame = tmpRect;
             }
         }
         else{
@@ -337,6 +976,31 @@
             }
             else
                 [selButton setBackgroundImage:[UIImage imageNamed:@"btn_plus.png"] forState:UIControlStateNormal];
+            
+            NSLog(@"%f, %f", lb_itemName.frame.origin.x, selButton.frame.origin.x);
+            CGRect tmpRect;
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+            {
+                lb_itemName.textAlignment = NSTextAlignmentLeft;
+                tmpRect = lb_itemName.frame;
+                tmpRect.origin.x = 20;
+                lb_itemName.frame = tmpRect;
+                
+                tmpRect = selButton.frame;
+                tmpRect.origin.x = 220;
+                selButton.frame = tmpRect;
+            }
+            else{
+                lb_itemName.textAlignment = NSTextAlignmentRight;
+                tmpRect = lb_itemName.frame;
+                tmpRect.origin.x = 50;
+                lb_itemName.frame = tmpRect;
+
+                tmpRect = selButton.frame;
+                tmpRect.origin.x = 20;
+                selButton.frame = tmpRect;
+
+            }
         }
         
     }
@@ -348,9 +1012,11 @@
     return 1;
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    
-    return arrayMyList.count;
-    
+    if (tableView == friendTable)
+        return [Setting sharedInstance].arrayRealFriends.count;
+    if (tableView == addlistTable)
+        return arrayMyList.count;
+    return 0;
 }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return 33;

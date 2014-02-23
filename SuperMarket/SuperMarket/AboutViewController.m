@@ -31,6 +31,57 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    CGRect tmpFrame;
+    
+    if (IS_IPHONE_4)
+    {
+        tmpFrame = view_info.frame;
+        tmpFrame.origin.y += 20;
+        [view_info setFrame:tmpFrame];
+    }
+    
+    tmpFrame = self.lb_company_summary.frame;
+    if (IS_IPHONE_4)
+    {
+        tmpFrame.origin.y = lb_aboutus.frame.origin.y + 30;
+        tmpFrame.size.height = view_info.frame.origin.y - tmpFrame.origin.y - 10;
+    }
+    else if (IS_IPHONE_5){
+        tmpFrame.origin.y = lb_aboutus.frame.origin.y + 50;
+        tmpFrame.size.height = view_info.frame.origin.y - tmpFrame.origin.y - 20;
+    }
+    if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]) {
+        lb_aboutus.text = @"About Us";
+        self.lb_company_summary.textAlignment = NSTextAlignmentLeft;
+    }
+    else{
+        lb_aboutus.text = @"من نحن";
+        self.lb_company_summary.textAlignment = NSTextAlignmentRight;
+    }
+    [self.lb_company_summary setFrame:tmpFrame];
+    NSString *ver = [[UIDevice currentDevice] systemVersion];
+    float ver_float = [ver floatValue];
+    
+    if (ver_float >= 7.0){
+        if (IS_IPHONE_5)
+        {[self.lb_company_summary setFrame:CGRectMake(8, 120, 304, 112)];
+        [self.view_info setFrame:CGRectMake(0, 252, 320, 247)];
+        }else{
+            [self.lb_company_summary setFrame:CGRectMake(8, 120, 304, 67)];
+            [self.view_info setFrame:CGRectMake(0, 192, 320, 247)];
+        }
+    }
+    else {
+        if (IS_IPHONE_5)
+        {
+            [self.lb_company_summary setFrame:CGRectMake(8, 120, 304, 112)];
+            [self.view_info setFrame:CGRectMake(0, 302, 320, 247)];
+        }
+        else{
+            [self.lb_company_summary setFrame:CGRectMake(8, 100, 304, 67)];
+            [self.view_info setFrame:CGRectMake(0, 222, 320, 247)];
+        }
+    }
    
 }
 - (void)viewWillAppear:(BOOL)animated{
@@ -91,25 +142,116 @@
      
      }
      */
-    CGRect tmpFrame = self.lb_company_summary.frame;
-    tmpFrame.origin.y = lb_aboutus.frame.origin.y + 40;
-    tmpFrame.size.height = view_info.frame.origin.y - tmpFrame.origin.y - 65;
-    NSLog(@"%f, %f, %f", view_info.frame.origin.y, tmpFrame.origin.y, tmpFrame.size.height);
-    [self.lb_company_summary setFrame:tmpFrame];
+    CGRect tmpRect;
     if([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
         self.lb_company_summary.text = selCompany.companyDescEn;
         self.lb_address.text = selCompany.companyAddressEn;
+        self.lb_address.textAlignment = NSTextAlignmentLeft;
+        self.lb_telephone.textAlignment = NSTextAlignmentLeft;
+        self.lb_fax.textAlignment = NSTextAlignmentLeft;
+        self.lb_email.textAlignment = NSTextAlignmentLeft;
+        self.lbBranch.textAlignment = NSTextAlignmentLeft;
+        tmpRect = self.lbTel.frame;
+        tmpRect.origin.x = 25;
+        self.lbTel.frame = tmpRect;
+        self.lbTel.text = @"Tel :";
+        
+        tmpRect = self.lbFax.frame;
+        tmpRect.origin.x = 25;
+        self.lbFax.frame = tmpRect;
+        self.lbFax.text = @"Fax :";
+        
+        tmpRect = self.lbEmail.frame;
+        tmpRect.origin.x = 25;
+        self.lbEmail.frame = tmpRect;
+        self.lbEmail.text = @"EMail :";
+        
+        tmpRect = self.lbAddress.frame;
+        tmpRect.origin.x = 25;
+        self.lbAddress.frame = tmpRect;
+        self.lbAddress.text = @"Address";
+        
+        tmpRect = self.lbBranch.frame;
+        tmpRect.origin.x = 25;
+        self.lbBranch.frame = tmpRect;
+        self.lbBranch.text = @"Branches";
+        
+        tmpRect = self.img_branches.frame;
+        tmpRect.origin.x = 225;
+        self.img_branches.frame = tmpRect;
+        
+        tmpRect = self.lb_telephone.frame;
+        tmpRect.origin.x = 70;
+        self.lb_telephone.frame = tmpRect;
+        
+        tmpRect = self.lb_fax.frame;
+        tmpRect.origin.x = 70;
+        self.lb_fax.frame = tmpRect;
+        
+        tmpRect = self.lb_email.frame;
+        tmpRect.origin.x = 70;
+        self.lb_email.frame = tmpRect;
         
     }
     if([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"]){
         self.lb_company_summary.text = selCompany.companyDescAr;
         self.lb_address.text = selCompany.companyAddressAr;
+        self.lb_address.textAlignment = NSTextAlignmentRight;
+        self.lb_telephone.textAlignment = NSTextAlignmentRight;
+        self.lb_fax.textAlignment = NSTextAlignmentRight;
+        self.lb_email.textAlignment = NSTextAlignmentRight;
+        self.lbBranch.textAlignment = NSTextAlignmentRight;
+        tmpRect = self.lbTel.frame;
+        tmpRect.origin.x = 260;
+        self.lbTel.frame = tmpRect;
+        self.lbTel.text = @"الهاتف :";
         
+        tmpRect = self.lbFax.frame;
+        tmpRect.origin.x = 260;
+        self.lbFax.frame = tmpRect;
+        self.lbFax.text = @"الفاكس :";
+        
+        tmpRect = self.lbEmail.frame;
+        tmpRect.origin.x = 210;
+        tmpRect.size.width = 130;
+        self.lbEmail.frame = tmpRect;
+        self.lbEmail.text = @"البريد الالكتروني :";
+        
+        tmpRect = self.lbAddress.frame;
+        tmpRect.origin.x = 255;
+        self.lbAddress.frame = tmpRect;
+        self.lbAddress.text = @"العنوان";
+        
+        tmpRect = self.lbBranch.frame;
+        tmpRect.origin.x = 220;
+        self.lbBranch.frame = tmpRect;
+        self.lbBranch.text = @"الفروع";
+        
+        tmpRect = self.img_branches.frame;
+        tmpRect.origin.x = 25;
+        self.img_branches.frame = tmpRect;
+        
+        tmpRect = self.lb_telephone.frame;
+        tmpRect.origin.x = 15;
+        self.lb_telephone.frame = tmpRect;
+        
+        tmpRect = self.lb_fax.frame;
+        tmpRect.origin.x = 15;
+        self.lb_fax.frame = tmpRect;
+        
+        tmpRect = self.lb_email.frame;
+        tmpRect.origin.x = 15;
+        tmpRect.size.width = 190;
+        self.lb_email.frame = tmpRect;
     }
     self.lb_email.text = selCompany.companyEmail;
     self.lb_telephone.text = selCompany.companyPhone;
     self.lb_fax.text = selCompany.companyFax;
     [img_companyLogo setImageURL:[NSURL URLWithString:selCompany.companyAboutUsLogo]];
+    NSLog(@"view info text = %f, %f, %f, %f", view_info.frame.origin.x, view_info.frame.origin.y, view_info.frame.size.width, view_info.frame.size.height);
+    
+    NSLog(@"Summary text = %f, %f, %f, %f", self.lb_company_summary.frame.origin.x, self.lb_company_summary.frame.origin.y, self.lb_company_summary.frame.size.width, self.lb_company_summary.frame.size.height);
+
 }
 - (void)didReceiveMemoryWarning
 {
@@ -124,10 +266,137 @@
     [self.navigationController pushViewController:VC animated:YES];
 }
 
+- (IBAction)btnEMail:(id)sender {
+    if([MFMailComposeViewController canSendMail]){
+        
+        MFMailComposeViewController *mail=[[MFMailComposeViewController alloc]init];
+        mail.mailComposeDelegate=self;
+        NSArray *array = [[NSArray alloc]initWithObjects:selCompany.companyEmail, nil];
+        [mail setToRecipients:array];
+        [self presentViewController:mail animated:YES completion:nil];
+    }
+    else
+    {
+        NSLog(@"Message cannot be sent");
+    }
+}
+
+- (IBAction)OnBtnTelNum:(id)sender {
+    NSString *phoneNum = selCompany.companyPhone;
+    phoneNum = [phoneNum stringByReplacingOccurrencesOfString:@"|" withString:@"-"];
+    phoneNum = [phoneNum stringByReplacingOccurrencesOfString:@" " withString:@""];
+    NSArray *arrayNum = [phoneNum componentsSeparatedByString:@"-"];
+    if (arrayNum.count > 0)
+    {
+     NSString *firstPhone = [arrayNum objectAtIndex:0];
+        NSLog(@"phone = %@", firstPhone);
+        NSString *phoneNumber = [@"tel://" stringByAppendingString:firstPhone];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:phoneNumber]];
+    }
+}
+
 - (IBAction)onBtnBack:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (IBAction)onBtnShare:(id)sender {
+    NSMutableArray *arrayShareContent = [[NSMutableArray alloc]init];
+    if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
+        [arrayShareContent addObject:[NSString stringWithFormat:@"Company Name : %@\n", selCompany.companyNameEn]];
+        [arrayShareContent addObject:[NSString stringWithFormat:@"Company Description : %@\n", selCompany.companyDescEn]];
+        [arrayShareContent addObject:[NSString stringWithFormat:@"Tel : %@\n", selCompany.companyPhone]];
+        [arrayShareContent addObject:[NSString stringWithFormat:@"Fax : %@\n", selCompany.companyFax]];
+        [arrayShareContent addObject:[NSString stringWithFormat:@"E-Mail : %@\n", selCompany.companyEmail]];
+        [arrayShareContent addObject:[NSString stringWithFormat:@"Address : %@\n", selCompany.companyAddressEn]];
+    }
+    else{
+        [arrayShareContent addObject:[NSString stringWithFormat:@"Company Name : %@\n", selCompany.companyNameAr]];
+        [arrayShareContent addObject:[NSString stringWithFormat:@"Company Description : %@\n", selCompany.companyDescAr]];
+        [arrayShareContent addObject:[NSString stringWithFormat:@"Tel : %@\n", selCompany.companyPhone]];
+        [arrayShareContent addObject:[NSString stringWithFormat:@"Fax : %@\n", selCompany.companyFax]];
+        [arrayShareContent addObject:[NSString stringWithFormat:@"E-Mail : %@\n", selCompany.companyEmail]];
+        [arrayShareContent addObject:[NSString stringWithFormat:@"Address : %@\n", selCompany.companyAddressAr]];
+    }
+    self.activityViewController.excludedActivityTypes = @[UIActivityTypePostToWeibo, UIActivityTypeAssignToContact ];
+    self.activityViewController = [[UIActivityViewController alloc]
+                                   
+                                   initWithActivityItems:arrayShareContent applicationActivities:nil];
+    
+    [self presentViewController:self.activityViewController animated:YES completion:nil];
 }
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error
+{
+    
+    // Notifies users about errors associated with the interface
+    switch (result)
+    {
+        case MFMailComposeResultCancelled:
+        {
+            
+            NSLog(@"cancelled");
+        }
+            break;
+        case MFMailComposeResultSaved:
+        {
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"]){
+            UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"تحذير"
+                                                        message:@" تم حفظ ارسال البريد" delegate:self cancelButtonTitle:@"موافق" otherButtonTitles: nil];
+            
+            [mes show];
+            }
+            else{
+                UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
+                                                            message:@"Sending Email is saved." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+                
+                [mes show];
+            }
+        }
+            break;
+        case MFMailComposeResultSent:
+        {
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"]){
+                UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"تحذير"
+                                                            message:@" تم ارسال البريد" delegate:self cancelButtonTitle:@"موافق" otherButtonTitles: nil];
+                
+                [mes show];
+            }else{
+            UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
+                                                        message:@"The Email is sent." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            
+                [mes show];
+            }
+        }            break;
+        case MFMailComposeResultFailed:
+        {
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"]){
+                UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"تحذير"
+                                                            message:@" فشل في ارسال البريد" delegate:self cancelButtonTitle:@"موافق" otherButtonTitles: nil];
+                
+                [mes show];
+            }else{
+            UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
+                                                        message:@"Sending email is failed." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            
+            [mes show];
+            }
+        }            break;
+        default:
+        {
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"]){
+                UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"تحذير"
+                                                            message:@"لم يتم ارسال البريد" delegate:self cancelButtonTitle:@"موافق" otherButtonTitles: nil];
+                
+                [mes show];
+            }else{
+            UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
+                                                        message:@"The email is not sent." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            
+            [mes show];
+            }
+        }            break;
+    }
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 @end

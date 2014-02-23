@@ -46,6 +46,7 @@
 @synthesize recordResults;
 @synthesize soapResults;
 @synthesize selIndex;
+@synthesize selectedStatus;
 @synthesize lb_pickerTitle;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -59,32 +60,107 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [Setting sharedInstance].tabBarController.delegate = self;
 	// Do any additional setup after loading the view.
+    search_list = [[NSMutableArray alloc]init];
+    if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+    {
+        [search_list addObject:@"Select All"];
+        [search_list addObject:@"Select Supermarket"];
+        [search_list addObject:@"Select Main-Category"];
+        [search_list addObject:@"Select Sub-Category"];
+        [search_list addObject:@"Price start from"];
+        [search_list addObject:@"Price to"];
+        [search_list addObject:@"Select City"];
+    }else{
+        [search_list addObject:@"Select All"];
+        [search_list addObject:@"اختر السوبرماركت"];
+        [search_list addObject:@"اختر القسم الرئيسي"];
+        [search_list addObject:@"اختر القسم الفرعي"];
+        [search_list addObject:@"السعر يبدأ من"];
+        [search_list addObject:@"السعر الي"];
+        [search_list addObject:@"اختر المدينة"];
+    }
+    selectedStatus = [[NSMutableArray alloc]init];
+    for (int i = 0; i < search_list.count - 1; i++){
+        NSString *isSelected = @"none";
+        [selectedStatus addObject:isSelected];
+    }
 
     
+    
+}
+- (void)viewWillDisappear:(BOOL)animated{
+    CGRect tmpRect = selectView.frame;
+    tmpRect.size.height -= 30;
+    tmpRect.origin.y = self.view.frame.size.height;
+    [selectView setFrame:tmpRect];
 }
 - (void)viewWillAppear:(BOOL)animated{
-    search_list = [[NSMutableArray alloc]init];
-    [search_list addObject:@"Select All"];
-    [search_list addObject:@"Select Supermarket"];
-    [search_list addObject:@"Select Main-Category"];
-    [search_list addObject:@"Select Sub-Category"];
-    [search_list addObject:@"Price start from"];
-    [search_list addObject:@"Price to"];
-    [search_list addObject:@"Select City"];
-    dataList = [[NSMutableArray alloc]init];
-    lb_header.text = @"Search";
-    searchBar.placeholder = @"Search...";
+       dataList = [[NSMutableArray alloc]init];
+    if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]) {
+        [self.bnSearch setBackgroundImage:[UIImage imageNamed:@"btn_search.png"] forState:UIControlStateNormal];
+        [self.bnSearch setBackgroundImage:[UIImage imageNamed:@"btn_search.png"] forState:UIControlStateHighlighted];
+        [self.bnSearch setBackgroundImage:[UIImage imageNamed:@"btn_search.png"] forState:UIControlStateSelected];
+        
+        [self.btnCan setBackgroundImage:[UIImage imageNamed:@"btn_cancel_measure.png"] forState:UIControlStateNormal];
+        [self.btnCan setBackgroundImage:[UIImage imageNamed:@"btn_cancel_measure.png"] forState:UIControlStateHighlighted];
+        [self.btnCan setBackgroundImage:[UIImage imageNamed:@"btn_cancel_measure.png"] forState:UIControlStateSelected];
+        
+        [self.btnDone setBackgroundImage:[UIImage imageNamed:@"btn_done_mylist.png"] forState:UIControlStateNormal];
+        [self.btnDone setBackgroundImage:[UIImage imageNamed:@"btn_done_mylist.png"] forState:UIControlStateHighlighted];
+        [self.btnDone setBackgroundImage:[UIImage imageNamed:@"btn_done_mylist.png"] forState:UIControlStateSelected];
+    }
+    else{
+        [self.bnSearch setBackgroundImage:[UIImage imageNamed:@"arab_search.png"] forState:UIControlStateNormal];
+        [self.bnSearch setBackgroundImage:[UIImage imageNamed:@"arab_search.png"] forState:UIControlStateHighlighted];
+        [self.bnSearch setBackgroundImage:[UIImage imageNamed:@"arab_search.png"] forState:UIControlStateSelected];
+        
+        [self.btnCan setBackgroundImage:[UIImage imageNamed:@"arab_cancel_measure.png"] forState:UIControlStateNormal];
+        [self.btnCan setBackgroundImage:[UIImage imageNamed:@"arab_cancel_measure.png"] forState:UIControlStateHighlighted];
+        [self.btnCan setBackgroundImage:[UIImage imageNamed:@"arab_cancel_measure.png"] forState:UIControlStateSelected];
+        
+        [self.btnDone setBackgroundImage:[UIImage imageNamed:@"arab_done_mylist.png"] forState:UIControlStateNormal];
+        [self.btnDone setBackgroundImage:[UIImage imageNamed:@"arab_done_mylist.png"] forState:UIControlStateHighlighted];
+        [self.btnDone setBackgroundImage:[UIImage imageNamed:@"arab_done_mylist.png"] forState:UIControlStateSelected];
+    }
+    if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
+        lb_header.text = @"Search";
+        searchBar.placeholder = @"Search...";
+    }
+    else{
+        lb_header.text = @"بحث";
+        searchBar.placeholder = @"بحث...";
+    }
     selectView.hidden = YES;
+    [selectPicker setBackgroundColor:[UIColor whiteColor]];
     CGRect tmpRect = selectView.frame;
+    tmpRect.size.height += 30;
     tmpRect.origin.y = self.view.frame.size.height;
     [selectView setFrame:tmpRect];
     selectType = -1;
-
+    tmpRect = self.bnSearch.frame;
+    if (IS_IPHONE_4) {
+        tmpRect.origin.y = 360;
+        [self.bnSearch setFrame:tmpRect];
+        tmpRect = tableView.frame;
+        tmpRect.size.height = 350 - tmpRect.origin.y;
+        [tableView setFrame:tmpRect];
+    }
+    else if (IS_IPHONE_5){
+        tmpRect.origin.y = 448;
+        [self.bnSearch setFrame:tmpRect];
+        tmpRect = tableView.frame;
+        tmpRect.size.height = 438 - tmpRect.origin.y;
+        [tableView setFrame:tmpRect];
+    }
+    UIImageView *bgTable = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"searchtablebg.png"]];
     
+    tableView.backgroundColor = [UIColor clearColor];
+    tableView.backgroundView = bgTable;
+    tableView.separatorColor = [UIColor clearColor];
     supermarketID = @"0";
     mainCatID = @"0";
-    subCatID = @"0";
     cityID = @"";
     priceFrom = @"-1";
     priceTo = @"-1";
@@ -97,8 +173,29 @@
     soapResults = Nil;
     recordResults = FALSE;
     selIndex = -1;
+    if ([[Setting sharedInstance].searchSubCatID isEqualToString:@""])
+    {
+        subCatID = @"0";
+         [Setting sharedInstance].searchIndex = 1;
+    }
+    else
+    {
+        [Setting sharedInstance].searchIndex = 3;
+        UIStoryboard *mainstoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        SearchResultViewController *vc = [mainstoryboard instantiateViewControllerWithIdentifier:@"SearchResultView"];
+        [self.navigationController pushViewController:vc animated:YES];
+      /*
+        subCatID = [Setting sharedInstance].searchSubCatID;
+        [self onBtnSearch:Nil];
+        [search_list replaceObjectAtIndex:3 withObject:[[Setting sharedInstance] getSubCategoryName:subCatID]];
+        [tableView reloadData];*/
+        
+    }
    
+   
+    
 }
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -110,17 +207,37 @@
     {
         UITextField *txtAlert = [actionSheet textFieldAtIndex:0];
         if([txtAlert.text length]==0) {
+            
+            if (selectType == 3)
+                priceFrom = @"-1";
+            else if (selectType == 4)
+                priceTo = @"-1";
+
+            [selectedStatus replaceObjectAtIndex:selectType withObject:@"none"];
             selectType = -1;
-            return ;
+
         }
         else{
             if (selectType == 3)
                 priceFrom = txtAlert.text;
             else if (selectType == 4)
                 priceTo = txtAlert.text;
+            
+            [selectedStatus replaceObjectAtIndex:selectType withObject:txtAlert.text];
             selectType = -1;
         }
     }
+/*    else{
+        
+            if (selectType == 3)
+                priceFrom = @"-1";
+            else if (selectType == 4)
+                priceTo = @"-1";
+            [selectedStatus replaceObjectAtIndex:selectType withObject:@"none"];
+            selectType = -1;
+        
+    }*/
+    [tableView reloadData];
 }
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
@@ -139,32 +256,68 @@
 -(NSString*)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component{
     return [dataList objectAtIndex:row];
 }
-- (IBAction)onDone:(id)sender {
+- (IBAction)onCancelButton:(id)sender {
+    if (selectType == 0)
+        supermarketID = @"0";
+    else if (selectType == 1)
+        mainCatID = @"0";
+    else if (selectType == 2)
+        subCatID = @"0";
+    else if (selectType == 5)
+        cityID = @"";
 
+    [selectedStatus replaceObjectAtIndex:selectType withObject:@"none"];
+    [tableView reloadData];
+    [UIView beginAnimations:@"AdResize" context:nil];
+    [UIView setAnimationDuration:0.7];
+    
+    CGRect newFrame = CGRectMake(selectView.frame.origin.x, self.view.frame.size.height, selectView.frame.size.width, selectView.frame.size.height);
+    
+    selectView.frame = newFrame;
+    [UIView commitAnimations];
+    selectType = -1;
+    selIndex = -1;
+}
+- (IBAction)onDone:(id)sender {
+    
     if (selIndex == -1)
         selIndex = 0;
     if (selIndex != -1)
     {
+        NSString *str = [selectedStatus objectAtIndex:selectType];
         if (selectType == 0){
             CompanyObject *obj = [[Setting sharedInstance].arrayCompany objectAtIndex:selIndex];
             supermarketID = obj.companyID;
+            str = [[Setting sharedInstance] getCompanyName:supermarketID];
             
         }
         else if (selectType == 1)
         {
             MainCategory *obj = [[Setting sharedInstance].MainCategories objectAtIndex:selIndex];
             mainCatID = obj.mainCatID;
+            str = [[Setting sharedInstance] getMainCategoryName:mainCatID];
         }
         else if (selectType == 2)
         {
-            SubCategory *obj = [[Setting sharedInstance].SubCategories objectAtIndex:selIndex];
-            subCatID = obj.subCatID;
+            str = [dataList objectAtIndex:selIndex];
+            for (int i = 0; i < [Setting sharedInstance].SubCategories.count; i++) {
+                SubCategory *obj = [[Setting sharedInstance].SubCategories objectAtIndex:i];
+                if ([[[Setting sharedInstance] getSubCategoryName:obj.subCatID] isEqualToString:str])
+                {
+                    subCatID = obj.subCatID;
+                    break;
+                }
+            }
+
         }
         else if (selectType == 5)
         {
             State *obj = [[Setting sharedInstance].Cities objectAtIndex:selIndex];
             cityID = obj.stateID;
+            str = [[Setting sharedInstance] getCityName:cityID];
         }
+        [selectedStatus replaceObjectAtIndex:selectType withObject:str];
+        [tableView reloadData];
     }
 
     [UIView beginAnimations:@"AdResize" context:nil];
@@ -261,13 +414,50 @@
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"SearchItemCell"];
     
     UILabel *lb_item = (UILabel*)[cell viewWithTag:101];
-    NSString *strItem = [search_list objectAtIndex:indexPath.row];
-    if (indexPath.row == 0){
+    NSString *strItem;
+    if (selectedStatus.count > 0) {
+        NSString *selectedString = [selectedStatus objectAtIndex:indexPath.row];
+        if ([selectedString isEqualToString:@"none"]) {
+            strItem = [search_list objectAtIndex:indexPath.row + 1];
+        }
+        else
+            strItem = selectedString;
+
+    }
+
+    else{
+        strItem = [search_list objectAtIndex:indexPath.row + 1];
+    }
+/*    if (indexPath.row == 0){
         UIButton *btnArrow = (UIButton*)[cell viewWithTag:102];
         btnArrow.hidden = YES;
-    }
+    }*/
     lb_item.text = strItem;
-
+    if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+        lb_item.textAlignment = NSTextAlignmentLeft;
+    else
+        lb_item.textAlignment = NSTextAlignmentRight;
+    
+    UIButton *btArrow = (UIButton*)[cell viewWithTag:102];
+    CGRect tmpRect;
+    if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]) {
+        tmpRect = btArrow.frame;
+        tmpRect.origin.x = 278;
+        btArrow.frame = tmpRect;
+        [btArrow setBackgroundImage:[UIImage imageNamed:@"btn_arrow.png"] forState:UIControlStateNormal];
+        [btArrow setBackgroundImage:[UIImage imageNamed:@"btn_arrow.png"] forState:UIControlStateHighlighted];
+        [btArrow setBackgroundImage:[UIImage imageNamed:@"btn_arrow.png"] forState:UIControlStateSelected];
+        NSLog(@"%f", tmpRect.origin.x);
+    }
+    else
+    {
+        tmpRect = btArrow.frame;
+        tmpRect.origin.x = 10;
+        btArrow.frame = tmpRect;
+        [btArrow setBackgroundImage:[UIImage imageNamed:@"btn_arrow_r.png"] forState:UIControlStateNormal];
+        [btArrow setBackgroundImage:[UIImage imageNamed:@"btn_arrow_r.png"] forState:UIControlStateHighlighted];
+        [btArrow setBackgroundImage:[UIImage imageNamed:@"btn_arrow_r.png"] forState:UIControlStateSelected];
+    }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     return cell;
@@ -277,15 +467,18 @@
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
-    return search_list.count;
+    return search_list.count - 1;
     
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return tableView.frame.size.height / 6;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [searchBar resignFirstResponder];
     searchText = searchBar.text;
     selectView.hidden = NO;
     int index = -1;
-    switch (indexPath.row) {
+    switch (indexPath.row + 1) {
         case 0:
         {
             supermarketID = @"0";
@@ -309,9 +502,12 @@
         case 1:
         {
             selectType = 0;
-            lb_pickerTitle.text = @"Select SuperMarket";
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+                lb_pickerTitle.text = @"Select SuperMarket";
+            else
+                lb_pickerTitle.text = @"اختر السوبرماركت";
             [dataList removeAllObjects];
-
+            
             for (int i = 0; i < [Setting sharedInstance].arrayCompany.count; i++) {
                 CompanyObject *obj = [[Setting sharedInstance].arrayCompany objectAtIndex:i];
                 if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
@@ -325,7 +521,7 @@
             
             if (index != -1) {
                 [selectPicker selectRow:index inComponent:0 animated:YES];
-                lb_pickerTitle.text = [dataList objectAtIndex:index];
+            //    lb_pickerTitle.text = [dataList objectAtIndex:index];
             }
             else
             {
@@ -344,7 +540,11 @@
         {
             selectType = 1;
             [dataList removeAllObjects];
-            lb_pickerTitle.text = @"Select MainCategory";
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+                lb_pickerTitle.text = @"Select MainCategory";
+            else
+                lb_pickerTitle.text = @"اختر القسم الرئيسي";
+            
             for (int i = 0; i < [Setting sharedInstance].MainCategories.count; i++) {
                 MainCategory *obj = [[Setting sharedInstance].MainCategories objectAtIndex:i];
                 if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
@@ -358,7 +558,7 @@
             
             if (index != -1) {
                 [selectPicker selectRow:index inComponent:0 animated:YES];
-                lb_pickerTitle.text = [dataList objectAtIndex:index];
+              //  lb_pickerTitle.text = [dataList objectAtIndex:index];
             }
             else
             {
@@ -376,22 +576,42 @@
         case 3:
         {
             selectType = 2;
-            lb_pickerTitle.text = @"Select SubCategory";
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+                lb_pickerTitle.text = @"Select SubCategory";
+            else
+                lb_pickerTitle.text = @"اختر القسم الفرعي";
+            
             [dataList removeAllObjects];
-            for (int i = 0; i < [Setting sharedInstance].SubCategories.count; i++) {
-                SubCategory *obj = [[Setting sharedInstance].SubCategories objectAtIndex:i];
-                if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
-                    [dataList addObject:obj.subCatEn];
-                else if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
-                    [dataList addObject:obj.subCatAr];
-                if ([obj.subCatID isEqualToString:subCatID] && ![subCatID isEqualToString:@"0"])
-                    index = i;
+            if ([mainCatID isEqualToString:@"0"]){
+                for (int i = 0; i < [Setting sharedInstance].SubCategories.count; i++) {
+                    SubCategory *obj = [[Setting sharedInstance].SubCategories objectAtIndex:i];
+                    
+                    if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+                        [dataList addObject:obj.subCatEn];
+                    else if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
+                        [dataList addObject:obj.subCatAr];
+                    if ([obj.subCatID isEqualToString:subCatID] && ![subCatID isEqualToString:@"0"])
+                        index = i;
+                }
+            }
+            else{
+                for (int i = 0; i < [Setting sharedInstance].SubCategories.count; i++) {
+                    SubCategory *obj = [[Setting sharedInstance].SubCategories objectAtIndex:i];
+                    if ([obj.mainCatID isEqualToString:mainCatID]) {
+                        if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+                            [dataList addObject:obj.subCatEn];
+                        else if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
+                            [dataList addObject:obj.subCatAr];
+                        if ([obj.subCatID isEqualToString:subCatID] && ![subCatID isEqualToString:@"0"])
+                            index = i;
+                    }
+                }
             }
             [selectPicker reloadAllComponents];
             
             if (index != -1) {
                 [selectPicker selectRow:index inComponent:0 animated:YES];
-                lb_pickerTitle.text = [dataList objectAtIndex:index];
+            //    lb_pickerTitle.text = [dataList objectAtIndex:index];
             }
             else
             {
@@ -409,14 +629,28 @@
         case 4:
         {
             selectType = 3;
-            UIAlertView *customAlertView = [[UIAlertView alloc]initWithTitle:@"Please enter price from:"
+            
+            UIAlertView *customAlertView;
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
+                customAlertView = [[UIAlertView alloc]initWithTitle:@"Please enter price from:"
                                                                      message:@""
                                                                     delegate:self
                                                            cancelButtonTitle:@"OK"
                                                            otherButtonTitles:@"Cancel",nil];
+            }
+            else
+            {
+                customAlertView = [[UIAlertView alloc]initWithTitle:@"ادخل السعر ابتداء من:"
+                                                            message:@""
+                                                           delegate:self
+                                                  cancelButtonTitle:@"موافق"
+                                                  otherButtonTitles:@"الغاء",nil];
+            }
             customAlertView.alertViewStyle = UIAlertViewStylePlainTextInput;
+             UITextField *txtField = [customAlertView textFieldAtIndex:0];
+            txtField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
             if (![priceFrom isEqualToString:@"-1"]){
-                UITextField *txtField = [customAlertView textFieldAtIndex:0];
+               
                 txtField.text = priceFrom;
             }
             [customAlertView show];
@@ -426,14 +660,27 @@
         case 5:
         {
             selectType = 4;
-            UIAlertView *customAlertView = [[UIAlertView alloc]initWithTitle:@"Please enter price to:"
-                                                                     message:@""
-                                                                    delegate:self
-                                                           cancelButtonTitle:@"OK"
-                                                           otherButtonTitles:@"Cancel",nil];
+            UIAlertView *customAlertView;
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
+                customAlertView = [[UIAlertView alloc]initWithTitle:@"Please enter price to:"
+                                                            message:@""
+                                                           delegate:self
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:@"Cancel",nil];
+            }
+            else
+            {
+
+                customAlertView = [[UIAlertView alloc]initWithTitle:@"الرجاء ادخال اعلي سعر:"
+                                                            message:@""
+                                                           delegate:self
+                                                  cancelButtonTitle:@"موافق"
+                                                  otherButtonTitles:@"الغاء",nil];
+            }
             customAlertView.alertViewStyle = UIAlertViewStylePlainTextInput;
+            UITextField *txtField = [customAlertView textFieldAtIndex:0];
+            txtField.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
             if (![priceTo isEqualToString:@"-1"]){
-                UITextField *txtField = [customAlertView textFieldAtIndex:0];
                 txtField.text = priceTo;
             }
             [customAlertView show];
@@ -442,7 +689,11 @@
         case 6:
         {
             selectType = 5;
-            lb_pickerTitle.text = @"Select City";
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+                lb_pickerTitle.text = @"Select City";
+            else
+                lb_pickerTitle.text = @"اختر المدينة";
+            
             [dataList removeAllObjects];
             for (int i = 0; i < [Setting sharedInstance].Cities.count; i++) {
                 State *obj = [[Setting sharedInstance].Cities objectAtIndex:i];
@@ -457,7 +708,7 @@
             
             if (index != -1) {
                 [selectPicker selectRow:index inComponent:0 animated:YES];
-                lb_pickerTitle.text = [dataList objectAtIndex:index];
+             //   lb_pickerTitle.text = [dataList objectAtIndex:index];
             }
             else
             {
@@ -652,6 +903,12 @@
 {
     if ([elementName isEqualToString:@"ErrMessage"]){
         recordResults = FALSE;
+        if (![soapResults isEqualToString:@""]){
+            [Setting sharedInstance].errString = soapResults;
+            UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
+                                                        message:[Setting sharedInstance].errString delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+            [mes show];
+        }
         soapResults = nil;
     }
     if( [elementName isEqualToString:@"SearchProductsResponse"])
@@ -663,12 +920,21 @@
         SearchResultViewController *vc = [mainstoryboard instantiateViewControllerWithIdentifier:@"SearchResultView"];
         vc.arrayProductsWithCategory = productArray;
         [self saveProductsInfo];
+        [Setting sharedInstance].searchIndex = 1;
         [self.navigationController pushViewController:vc animated:YES];
 	}
     if( [elementName isEqualToString:@"SearchResult"])
 	{
 		recordResults = FALSE;
-        [searchResultArray addObject:productObj];
+        NSDateFormatter *df = [[NSDateFormatter alloc]init];
+        [df setDateFormat:@"yyyy-MM-dd hh:mm:ss"];
+        NSLocale *locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        [df setLocale:locale];
+        NSTimeZone *tz = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+        [df setTimeZone:tz];
+        NSDate *endDate = [df dateFromString:productObj.prodEndDate];
+//        if ([[Setting sharedInstance] checkAndDelete:endDate withOfferID:productObj.OfferID] == TRUE)
+            [searchResultArray addObject:productObj];
         soapResults = nil;
         productObj = nil;
 	}
@@ -818,7 +1084,7 @@
                 sqlite3_finalize(statement);
             }
             if (flag == FALSE) {
-                querySQL = [NSString stringWithFormat: @"INSERT INTO Products (ID, OfferID, Quantity, MainCatID, MeasureID, SubCatID, OrgPrice, Price, Photo, DescAr, DescEn, StartDate, EndDate, BranchList, VisitsCount, TitleAr, TitleEn, IsActive, lastUpdateTime) VALUES (\"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\")", obj.prodID, obj.OfferID, obj.prodQuantity, obj.prodMainCatID, obj.prodMeasureID, obj.prodSubCatID, obj.prodOrgPrice, obj.prodCurPrice, obj.prodPhotoURL, obj.prodDescAr, obj.prodDescEn, obj.prodStartDate, obj.prodEndDate, obj.prodBranchList, obj.prodVisitsCount, obj.prodTitleAr, obj.prodTitleEn, obj.prodIsActive, obj.prodlastUpdateTime];
+                querySQL = [NSString stringWithFormat: @"INSERT INTO Products (ID, OfferID, CompanyID, Quantity, MainCatID, MeasureID, SubCatID, OrgPrice, Price, Photo, DescAr, DescEn, StartDate, EndDate, BranchList, VisitsCount, TitleAr, TitleEn, IsActive, lastUpdateTime) VALUES (\"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\")", obj.prodID, obj.OfferID, obj.prodCompanyID, obj.prodQuantity, obj.prodMainCatID, obj.prodMeasureID, obj.prodSubCatID, obj.prodOrgPrice, obj.prodCurPrice, obj.prodPhotoURL, obj.prodDescAr, obj.prodDescEn, obj.prodStartDate, obj.prodEndDate, obj.prodBranchList, obj.prodVisitsCount, obj.prodTitleAr, obj.prodTitleEn, obj.prodIsActive, obj.prodlastUpdateTime];
             
                 query_stmt1 = [querySQL UTF8String];
             
@@ -901,5 +1167,6 @@
     }
  
 }
+
 
 @end

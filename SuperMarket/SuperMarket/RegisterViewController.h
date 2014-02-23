@@ -8,10 +8,24 @@
 
 #import <UIKit/UIKit.h>
 #import <sqlite3.h>
+
 @interface RegisterViewController : UIViewController<UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate>{
     sqlite3 *projectDB;
     NSString *databasePath;
 }
+@property (weak, nonatomic) IBOutlet UIButton *btnDone;
+@property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
+@property (weak, nonatomic) IBOutlet UIView *tCityView;
+@property (weak, nonatomic) IBOutlet UIView *tUserView;
+@property (weak, nonatomic) IBOutlet UIView *tPasswordView;
+@property (weak, nonatomic) IBOutlet UIView *tConfirmView;
+
+@property (weak, nonatomic) IBOutlet UIView *tEmailView;
+
+@property (weak, nonatomic) IBOutlet UIButton *btn_city;
+
+@property (weak, nonatomic) IBOutlet UIView *tMobileNoView;
+@property (weak, nonatomic) IBOutlet UIView *tNameView;
 @property (weak, nonatomic) IBOutlet UILabel *lb_title;
 @property (weak, nonatomic) IBOutlet UIButton *btn_Register;
 @property (weak, nonatomic) IBOutlet UILabel *lb_pickerTitle;

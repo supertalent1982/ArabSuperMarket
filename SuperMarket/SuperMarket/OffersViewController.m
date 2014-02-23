@@ -43,7 +43,21 @@
 	// Do any additional setup after loading the view.
     [Setting sharedInstance].arrayCompany = [[NSMutableArray alloc]init];
     logoArray = [[NSMutableArray alloc] init];
-    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"isLogin"] == TRUE){
+        [Setting sharedInstance].customer = [[CustomerObject alloc]init];
+        [Setting sharedInstance].customer.customerID = [[NSUserDefaults standardUserDefaults] objectForKey:@"customerID"];
+        [Setting sharedInstance].customer.fullName = [[NSUserDefaults standardUserDefaults] objectForKey:@"FullName"];
+        [Setting sharedInstance].customer.Email = [[NSUserDefaults standardUserDefaults] objectForKey:@"Email"];
+        [Setting sharedInstance].customer.Mobile = [[NSUserDefaults standardUserDefaults] objectForKey:@"Mobile"];
+        [Setting sharedInstance].customer.MobileID = [[NSUserDefaults standardUserDefaults] objectForKey:@"MobileID"];
+        [Setting sharedInstance].customer.StateID = [[NSUserDefaults standardUserDefaults] objectForKey:@"StateID"];
+        [Setting sharedInstance].customer.AreaID = [[NSUserDefaults standardUserDefaults] objectForKey:@"AreaID"];
+        [Setting sharedInstance].customer.Address = [[NSUserDefaults standardUserDefaults] objectForKey:@"Address"];
+        [Setting sharedInstance].customer.Username = [[NSUserDefaults standardUserDefaults] objectForKey:@"Username"];
+        [Setting sharedInstance].customer.Password = [[NSUserDefaults standardUserDefaults] objectForKey:@"Password"];
+        [Setting sharedInstance].customer.UserType = [[NSUserDefaults standardUserDefaults] objectForKey:@"UserType"];
+        [Setting sharedInstance].customer.AccessToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"AccessToken"];
+    }
     NSString *docsDir;
     NSArray *dirPaths;
     
@@ -134,7 +148,8 @@
             }
             sqlite3_close(projectDB);
         }
-        [self showCompanyLogo];
+        if ([Setting sharedInstance].arrayCompany.count > 0)
+            [self showCompanyLogo];
     }
     
     if (flag == FALSE){
@@ -188,14 +203,38 @@
     [self.navigationController pushViewController:VC animated:YES];
 }
 -(void)showCompanyLogo{
+    for (int i = 0; i< [Setting sharedInstance].arrayCompany.count - 1; i++){
+        CompanyObject *obj = [[Setting sharedInstance].arrayCompany objectAtIndex:i];
+        for (int j = i + 1; j < [Setting sharedInstance].arrayCompany.count; j++){
+            CompanyObject *obj1 = [[Setting sharedInstance].arrayCompany objectAtIndex:j];
+            if ([obj.companyOverallSort integerValue] > [obj1.companyOverallSort integerValue])
+            {
+                [[Setting sharedInstance].arrayCompany removeObjectAtIndex:i];
+                [[Setting sharedInstance].arrayCompany insertObject:obj1 atIndex:i];
+                [[Setting sharedInstance].arrayCompany removeObjectAtIndex:j];
+                [[Setting sharedInstance].arrayCompany insertObject:obj atIndex:j];
+                obj = [[Setting sharedInstance].arrayCompany objectAtIndex:i];
+            }
+        }
+    }
     for (int i = 0; i< [Setting sharedInstance].arrayCompany.count; i++){
+        CompanyObject *aas = [[Setting sharedInstance].arrayCompany objectAtIndex:i];
+        NSLog(@"company sort : %d", [aas.companyOverallSort integerValue]);
         CGRect scrollFrame = scrollCompanies.frame;
         if (IS_IPHONE_5) {
             scrollFrame.origin.y = 190;
         }
         else if (IS_IPHONE_4)
         {
-            scrollFrame.origin.y = 130;
+            NSString *ver = [[UIDevice currentDevice] systemVersion];
+            float ver_float = [ver floatValue];
+            
+            if (ver_float >= 7.0){
+                scrollFrame.origin.y = 150;
+            }
+            else{
+                scrollFrame.origin.y = 130;
+            }
         }
         [scrollCompanies setFrame:scrollFrame];
         
@@ -219,22 +258,34 @@
         [companyLogoView addSubview:imgPin];
         
         UILabel *lb_pin = [[UILabel alloc]initWithFrame:CGRectMake(17, 22, 91, 21)];
-        if([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+        if([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
+            lb_pin.textAlignment = NSTextAlignmentLeft;
             lb_pin.text = [NSString stringWithFormat:@"%@ offers", compObj.companyNameEn];
+        }
         if([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
-            lb_pin.text = [NSString stringWithFormat:@"%@ offers", compObj.companyNameAr];
+        {
+            lb_pin.textAlignment = NSTextAlignmentRight;
+            lb_pin.text = [NSString stringWithFormat:@"%@ العروض", compObj.companyNameAr];
+        }
         [lb_pin setFont:[UIFont fontWithName:@"Helvetica Neue" size:10.0]];
         [lb_pin setTextColor:[UIColor whiteColor]];
         [lb_pin setBackgroundColor:[UIColor clearColor]];
         [companyLogoView addSubview:lb_pin];
         
         NSString *bottomStr;
-        if([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+        if([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
             bottomStr = compObj.companySloganEn;
+        }
         if([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
+        {
             bottomStr = compObj.companySloganAr;
-        
+        }
         UILabel *lb_bottom1 = [[UILabel alloc]initWithFrame:CGRectMake(21, 219, 260, 21)];
+        if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+            lb_bottom1.textAlignment = NSTextAlignmentLeft;
+        else
+            lb_bottom1.textAlignment = NSTextAlignmentRight;
+        
         lb_bottom1.text = bottomStr;
         [lb_bottom1 setFont:[UIFont fontWithName:@"Helvetica Neue" size:14.0]];
         [lb_bottom1 setTextColor:[UIColor whiteColor]];
@@ -243,7 +294,16 @@
         
         
         UILabel *lb_bottom2 = [[UILabel alloc] initWithFrame:CGRectMake(21, 235, 260, 21)];
-        lb_bottom2.text = @"Browse latest offers in supermarket";
+        if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+        {
+            lb_bottom2.textAlignment = NSTextAlignmentLeft;
+            lb_bottom2.text = @"Browse latest offers in supermarket";
+        }
+        else
+        {
+            lb_bottom2.textAlignment = NSTextAlignmentRight;
+            lb_bottom2.text = @"تفقد أحدث العروض الخاصة بالسوبرماركت";
+        }
         [lb_bottom2 setFont:[UIFont fontWithName:@"Helvetica Neue" size:10.0]];
         [lb_bottom2 setTextColor:[UIColor orangeColor]];
         [lb_bottom2 setBackgroundColor:[UIColor clearColor]];
@@ -497,10 +557,17 @@
         soapResults = nil;
         if (errEncounter == TRUE)
         {
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
             UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
                                                         message:@"The company data can't be fetched from server." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
             
             [mes show];
+            }else{
+                UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"تحذير"
+                                                            message:@"لا يمكن الوصول الي بيانات الشركة من خلال السيرفر" delegate:self cancelButtonTitle:@"موافق" otherButtonTitles: nil];
+                
+                [mes show];
+            }
             [self.navigationController popViewControllerAnimated:YES];
             return;
         }

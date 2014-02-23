@@ -17,6 +17,10 @@
     sqlite3 *projectDB;
     NSString *databasePath;
 }
+@property (weak, nonatomic) IBOutlet UILabel *lbDay;
+@property (weak, nonatomic) IBOutlet UILabel *lbTo;
+@property (weak, nonatomic) IBOutlet UILabel *lbFrom;
+- (IBAction)onBtnShareIcon:(id)sender;
 @property (weak, nonatomic) IBOutlet UITableView *table_Products;
 @property (weak, nonatomic) IBOutlet UILabel *lb_title;
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
@@ -26,7 +30,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *btnShare;
 @property (weak, nonatomic) IBOutlet UILabel *lb_OfferTitle;
 @property (weak, nonatomic) IBOutlet UILabel *lb_OfferDesc;
-
+@property (nonatomic, strong) UIActivityViewController *activityViewController;
 @property (weak, nonatomic) IBOutlet UILabel *lb_remainDays;
 
 @property (nonatomic, strong) NSDate *offerStartDate;

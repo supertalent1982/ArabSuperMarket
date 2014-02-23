@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "CustomerObject.h"
 #import "ProductObject.h"
+#import "FriendObject.h"
 @interface Setting : NSObject
 @property (strong, nonatomic) NSString *userEmail;
 @property (strong, nonatomic) NSString *password;
@@ -23,14 +24,26 @@
 @property (nonatomic, strong) NSMutableArray *myPurchaseList;
 @property (nonatomic, strong) NSMutableArray *arrayFavorite;
 @property (nonatomic, strong) NSMutableArray *arrayPurchase;
+@property (nonatomic, strong) NSMutableArray *arrayPendingFriends;
+@property (nonatomic, strong) NSMutableArray *arrayRealFriends;
+@property (nonatomic, strong) NSString *searchSubCatID;
 @property (nonatomic, strong) CustomerObject *customer;
+@property (nonatomic, strong) FriendObject *myFriend;
 @property(nonatomic, retain) NSXMLParser *xmlParser;
 @property(nonatomic, retain) NSMutableString *soapResults;
 @property(nonatomic, retain) NSMutableData *webData;
 @property(nonatomic, assign) 	BOOL recordResults;
+@property(nonatomic, assign) 	BOOL errEncounter;
+@property (nonatomic, strong) NSString *errString;
 @property (strong, nonatomic) UITabBarController *tabBarController;
+@property (strong, nonatomic) UITabBarController *ENtabBarController;
+@property (strong, nonatomic) UITabBarController *ARtabBarController;
+@property (nonatomic, assign) int searchIndex;
+@property (nonatomic, strong) NSString *deviceTokenString;
 + (Setting *)sharedInstance;
+-(BOOL)checkAndDelete:(NSDate*)endDate withOfferID:(NSString*)offerID;
 - (void)customizeTabBar;
+- (void)getFriendsFromOnline;
 - (NSString*)getMeasure:(NSString*)measureID;
 - (NSString*)getMainCategoryName:(NSString*)mainCatID;
 - (NSString*)getSubCategoryName:(NSString*)subCatID;

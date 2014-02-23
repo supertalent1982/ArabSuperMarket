@@ -10,6 +10,7 @@
 #import "FriendViewController.h"
 #import "DetailViewController.h"
 #import "PPRevealSideViewController.h"
+#import "MBProgressHUD.h"
 #import "Setting.h"
 @interface ProductViewController ()
 @property (nonatomic, assign) BOOL errEncounter;
@@ -53,17 +54,84 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
- 
+
     
  }
 -(void)viewWillAppear:(BOOL)animated{
+    CGRect tmpRect;
+    NSLog(@"%f, %f, %f", self.lbDay.frame.origin.x, self.lbDay.frame.size.width, lb_remainDays.frame.origin.x);
+    
     if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
         lb_OfferTitle.text = selOffer.offerTitleEn;
+        lb_OfferTitle.textAlignment = NSTextAlignmentLeft;
         lb_OfferDesc.text = selOffer.offerDescEn;
+        lb_OfferTitle.textAlignment = NSTextAlignmentLeft;
+        lb_OfferDesc.textAlignment = NSTextAlignmentLeft;
+        self.searchBar.placeholder = @"Search in products";
+        
+        self.lbDay.text = @"days remaining";
+        self.lbFrom.text = @"From:";
+        self.lbTo.text = @"To:";
+        
+        tmpRect = self.lbFrom.frame;
+        tmpRect.origin.x = 40;
+        self.lbFrom.frame = tmpRect;
+        
+        tmpRect = self.lbTo.frame;
+        tmpRect.origin.x = 169;
+        self.lbTo.frame = tmpRect;
+        
+        tmpRect = lb_startDate.frame;
+        tmpRect.origin.x = 81;
+        lb_startDate.frame = tmpRect;
+        
+        tmpRect = lb_endDate.frame;
+        tmpRect.origin.x = 194;
+        lb_endDate.frame = tmpRect;
+        
+        tmpRect = self.lbDay.frame;
+        tmpRect.origin.x = 183;
+        self.lbDay.frame = tmpRect;
+        
+        tmpRect = lb_remainDays.frame;
+        tmpRect.origin.x = 166;
+        lb_remainDays.frame = tmpRect;
+        
     }
     else if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"]){
         lb_OfferTitle.text = selOffer.offerTitleAr;
         lb_OfferDesc.text = selOffer.offerDescAr;
+        lb_OfferTitle.textAlignment = NSTextAlignmentRight;
+        lb_OfferDesc.textAlignment = NSTextAlignmentRight;
+        self.searchBar.placeholder = @"ابحث في المنتجات";
+        
+        self.lbDay.text = @"لايام المتبقية";
+        self.lbFrom.text = @"من :";
+        self.lbTo.text = @"الي :";
+        
+        tmpRect = self.lbFrom.frame;
+        tmpRect.origin.x = 240;
+        self.lbFrom.frame = tmpRect;
+        
+        tmpRect = self.lbTo.frame;
+        tmpRect.origin.x = 111;
+        self.lbTo.frame = tmpRect;
+        
+        tmpRect = lb_startDate.frame;
+        tmpRect.origin.x = 169;
+        lb_startDate.frame = tmpRect;
+        
+        tmpRect = lb_endDate.frame;
+        tmpRect.origin.x = 40;
+        lb_endDate.frame = tmpRect;
+        
+        tmpRect = self.lbDay.frame;
+        tmpRect.origin.x = 176;
+        self.lbDay.frame = tmpRect;
+        
+        tmpRect = lb_remainDays.frame;
+        tmpRect.origin.x = 216;
+        lb_remainDays.frame = tmpRect;
     }
     lb_title.text = self.companyName;
     NSString *startTimeStr = [selOffer.offerStartDate stringByReplacingOccurrencesOfString:@"T" withString:@" "];
@@ -92,7 +160,13 @@
     endTimeStr = [df1 stringFromDate:offerStopDate];
     lb_endDate.text = endTimeStr;
     NSDate *today = [[NSDate alloc]init];
-    
+    NSDateFormatter *df2 = [[NSDateFormatter alloc]init];
+    [df2 setDateFormat:@"YYYY/MM/dd"];
+    NSLocale *locale2 = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    [df2 setLocale:locale2];
+    NSTimeZone *tz2 = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+    [df2 setTimeZone:tz2];
+    NSString *strDay = [df2 stringFromDate:today];
     if ([today compare:offerStopDate] == NSOrderedAscending){
         NSCalendar *sysCalendar = [NSCalendar currentCalendar];
         // Get conversion to months, days, hours, minutes
@@ -100,6 +174,18 @@
         
         NSDateComponents *conversionInfo = [sysCalendar components:unitFlags fromDate:today  toDate:offerStopDate  options:0];
         int after_days = [conversionInfo day];
+        if (after_days == 0){
+   /*         NSDateFormatter *df2 = [[NSDateFormatter alloc]init];
+            [df2 setDateFormat:@"YYYY/MM/dd"];
+            NSLocale *locale2 = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+            [df2 setLocale:locale2];
+            NSTimeZone *tz2 = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
+            [df2 setTimeZone:tz2];
+            NSString *strDay = [df2 stringFromDate:today];
+            if (![strDay isEqualToString:endTimeStr])*/
+                after_days = 1;
+        }
+        
         lb_remainDays.text = [NSString stringWithFormat:@"%d", after_days];
         
         NSDateComponents *conversionInfo1 = [sysCalendar components:unitFlags fromDate:offerStartDate  toDate:offerStopDate  options:0];
@@ -122,7 +208,6 @@
     
     self.btnCancel.hidden = YES;
     self.searchBar.hidden = YES;
-    self.searchBar.placeholder=@"search in products";
     self.searchBar.backgroundColor=[UIColor clearColor];
     self.searchBar.backgroundImage = [UIImage new];
     
@@ -138,15 +223,31 @@
     [progressBar setProgressTintColor:[UIColor greenColor]];
     //   [progressBar setTrackImage:[UIImage imageNamed:@"progressbar.png"]];
     
-    CGRect tmpRect = progressBar.frame;
+    tmpRect = progressBar.frame;
     tmpRect.origin.y = progressBarBg.frame.origin.y + (progressBarBg.frame.size.height - tmpRect.size.height) / 2;
     [progressBar setFrame:tmpRect];
     table_Products.separatorStyle = UITableViewCellSeparatorStyleNone;
     table_Products.backgroundColor = [UIColor clearColor];
+
+    
+    NSLog(@"Product table = %f, %f, %f, %f", table_Products.frame.origin.x, table_Products.frame.origin.y, table_Products.frame.size.width, table_Products.frame.size.height);
+
     /*  [table_Products setBackgroundColor:[UIColor clearColor]];
      UIImageView *tempImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"product_back.png"]];
      [tempImageView setFrame:table_Products.frame];
+     
      table_Products.backgroundView = tempImageView;*/
+    NSString *ver = [[UIDevice currentDevice] systemVersion];
+    float ver_float = [ver floatValue];
+    if (ver_float >= 7.0)
+    {
+        if (IS_IPHONE_5){
+            CGRect tmpRect = table_Products.frame;
+            tmpRect.size.height = 331;
+            [table_Products setFrame:tmpRect];
+        }
+    }
+    
     [[Setting sharedInstance].myFavoriteList removeAllObjects];
     [[Setting sharedInstance].myPurchaseList removeAllObjects];
     [[Setting sharedInstance] loadFavoriteListFromLocalDB:[Setting sharedInstance].customer.customerID];
@@ -182,23 +283,24 @@
                 ProductObject *obj = [[ProductObject alloc]init];
                 obj.prodID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
                 obj.OfferID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)];
-                obj.prodQuantity = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
-                obj.prodMainCatID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
-                obj.prodMeasureID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 4)];
-                obj.prodSubCatID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 5)];
-                obj.prodOrgPrice = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 6)];
-                obj.prodCurPrice = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 7)];
-                obj.prodPhotoURL = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 8)];
-                obj.prodDescAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 9)];
-                obj.prodDescEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 10)];
-                obj.prodStartDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 11)];
-                obj.prodEndDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 12)];
-                obj.prodBranchList = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 13)];
-                obj.prodVisitsCount = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 14)];
-                obj.prodTitleAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 15)];
-                obj.prodTitleEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 16)];
-                obj.prodIsActive = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 17)];
-                obj.prodlastUpdateTime = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 18)];
+                obj.prodCompanyID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
+                obj.prodQuantity = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
+                obj.prodMainCatID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 4)];
+                obj.prodMeasureID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 5)];
+                obj.prodSubCatID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 6)];
+                obj.prodOrgPrice = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 7)];
+                obj.prodCurPrice = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 8)];
+                obj.prodPhotoURL = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 9)];
+                obj.prodDescAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 10)];
+                obj.prodDescEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 11)];
+                obj.prodStartDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 12)];
+                obj.prodEndDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 13)];
+                obj.prodBranchList = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 14)];
+                obj.prodVisitsCount = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 15)];
+                obj.prodTitleAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 16)];
+                obj.prodTitleEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 17)];
+                obj.prodIsActive = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 18)];
+                obj.prodlastUpdateTime = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 19)];
                 
                 [arrayProduct addObject:obj];
                 
@@ -207,25 +309,24 @@
                     ProductObject *obj1 = [[ProductObject alloc]init];
                     obj1.prodID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 0)];
                     obj1.OfferID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 1)];
-                    obj1.prodQuantity = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
-                    obj1.prodMainCatID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
-                    obj1.prodMeasureID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 4)];
-                    obj1.prodSubCatID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 5)];
-                    obj1.prodOrgPrice = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 6)];
-                    obj1.prodCurPrice = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 7)];
-                    obj1.prodPhotoURL = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 8)];
-                    obj1.prodDescAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 9)];
-                    obj1.prodDescEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 10)];
-                    obj1.prodStartDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 11)];
-                    obj1.prodEndDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 12)];
-                    obj1.prodBranchList = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 13)];
-                    obj1.prodVisitsCount = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 14)];
-                    obj1.prodTitleAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 15)];
-                    obj1.prodTitleEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 16)];
-                    obj1.prodIsActive = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 17)];
-                    obj1.prodlastUpdateTime = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 18)];
-                    
-                   
+                    obj1.prodCompanyID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 2)];
+                    obj1.prodQuantity = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 3)];
+                    obj1.prodMainCatID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 4)];
+                    obj1.prodMeasureID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 5)];
+                    obj1.prodSubCatID = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 6)];
+                    obj1.prodOrgPrice = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 7)];
+                    obj1.prodCurPrice = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 8)];
+                    obj1.prodPhotoURL = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 9)];
+                    obj1.prodDescAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 10)];
+                    obj1.prodDescEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 11)];
+                    obj1.prodStartDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 12)];
+                    obj1.prodEndDate = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 13)];
+                    obj1.prodBranchList = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 14)];
+                    obj1.prodVisitsCount = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 15)];
+                    obj1.prodTitleAr = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 16)];
+                    obj1.prodTitleEn = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 17)];
+                    obj1.prodIsActive = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 18)];
+                    obj1.prodlastUpdateTime = [[NSString alloc] initWithUTF8String:(const char *) sqlite3_column_text(statement, 19)];
                     [arrayProduct addObject:obj1];
                     
                     
@@ -264,6 +365,11 @@
         [theRequest addValue: msgLength forHTTPHeaderField:@"Content-Length"];
         [theRequest setHTTPMethod:@"POST"];
         [theRequest setHTTPBody: [soapMessage dataUsingEncoding:NSUTF8StringEncoding]];
+        if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+            [[MBProgressHUD showHUDAddedTo:self.view animated:YES] setLabelText:@"Loading..."];
+        else
+            [[MBProgressHUD showHUDAddedTo:self.view animated:YES] setLabelText:@"تحميل..."];
+        
         NSURLConnection *theConnection = [[NSURLConnection alloc] initWithRequest:theRequest delegate:self];
         if( theConnection )
         {
@@ -290,6 +396,19 @@
     self.btnback.hidden = YES;
     self.btnSearch.hidden = YES;
     self.btnShare.hidden = YES;
+    if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+    {
+        [self.btnCancel setBackgroundImage:[UIImage imageNamed:@"btn_nav_cancel.png"] forState:UIControlStateNormal];
+        [self.btnCancel setBackgroundImage:[UIImage imageNamed:@"btn_nav_cancel.png"] forState:UIControlStateHighlighted];
+        [self.btnCancel setBackgroundImage:[UIImage imageNamed:@"btn_nav_cancel.png"] forState:UIControlStateSelected];
+
+    }
+    else{
+        [self.btnCancel setBackgroundImage:[UIImage imageNamed:@"arab_nav_cancel.png"] forState:UIControlStateNormal];
+        [self.btnCancel setBackgroundImage:[UIImage imageNamed:@"arab_nav_cancel.png"] forState:UIControlStateHighlighted];
+        [self.btnCancel setBackgroundImage:[UIImage imageNamed:@"arab_nav_cancel.png"] forState:UIControlStateSelected];    
+
+    }
     self.btnCancel.hidden = NO;
     self.searchBar.hidden = NO;
     self.searchBar.text = @"";
@@ -303,6 +422,8 @@
     FriendViewController *c = [mainstoryboard instantiateViewControllerWithIdentifier:@"FriendManageView"];
     UINavigationController *n = [[UINavigationController alloc] initWithRootViewController:c];
     c.navigationController.navigationBarHidden = YES;
+    c.prevView = self;
+    c.viewName = @"none";
     [self.revealSideViewController pushViewController:n onDirection:PPRevealSideDirectionRight withOffset:158 animated:TRUE];
     PP_RELEASE(c);
     PP_RELEASE(n);
@@ -342,7 +463,14 @@
 
 - (IBAction)onBtnFavorite:(id)sender {
     if (![[Setting sharedInstance].customer.customerID isEqualToString:@"0"]){
-        NSIndexPath *indexPath = [table_Products indexPathForCell:(UITableViewCell *)[[sender superview]superview]];
+        NSIndexPath *indexPath;
+        NSString *ver = [[UIDevice currentDevice] systemVersion];
+        float ver_float = [ver floatValue];
+        if (ver_float < 7.0)
+            indexPath = [table_Products indexPathForCell:(UITableViewCell *)[[sender superview]superview]];
+        else
+            indexPath = [table_Products indexPathForCell:(UITableViewCell *)[[[sender superview]superview]superview]];
+        
         ProductsWithCategory *catObj = [arrayProductsWithCategory objectAtIndex:indexPath.row];
         if (catObj.isCategory == FALSE){
             if ([catObj.obj.prodFavoriteProducts isEqualToString:@""]){
@@ -357,6 +485,7 @@
                 catObj.obj.prodAddDate = [df1 stringFromDate:addDate];
                 [[Setting sharedInstance].myFavoriteList addObject:catObj.obj];
                 [[Setting sharedInstance] addFavoriteProduct:[Setting sharedInstance].customer.customerID withProdID:catObj.obj.prodID withDate:catObj.obj.prodAddDate withCompany:catObj.obj.prodCompanyID];
+                NSLog(@"prodCompanyID = %@", catObj.obj.prodCompanyID);
                 [[Setting sharedInstance] sendFavoriteRequest:catObj.obj];
             }
             else{
@@ -377,16 +506,31 @@
         [table_Products reloadData];
     }
     else{
+        if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
         UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
                                                     message:@"You must login to add/remove favorite product." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
         
         [mes show];
+        }
+        else
+        {
+            UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"تحذير"
+                                                        message:@"الرجاء تسجيل الدخول لإضافة/حذف المفضله" delegate:self cancelButtonTitle:@"موافق" otherButtonTitles: nil];
+            
+            [mes show];
+        }
     }
 }
 
 - (IBAction)onBtnPurchase:(id)sender {
     if (![[Setting sharedInstance].customer.customerID isEqualToString:@"0"]){
-        NSIndexPath *indexPath = [table_Products indexPathForCell:(UITableViewCell *)[[sender superview]superview]];
+        NSIndexPath *indexPath;
+        NSString *ver = [[UIDevice currentDevice] systemVersion];
+        float ver_float = [ver floatValue];
+        if (ver_float < 7.0)
+            indexPath = [table_Products indexPathForCell:(UITableViewCell *)[[sender superview]superview]];
+        else
+            indexPath = [table_Products indexPathForCell:(UITableViewCell *)[[[sender superview]superview]superview]];
         ProductsWithCategory *catObj = [arrayProductsWithCategory objectAtIndex:indexPath.row];
         
         if (catObj.isCategory == FALSE){
@@ -422,10 +566,18 @@
         [table_Products reloadData];
     }
     else{
+        if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
         UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
                                                     message:@"You must login to add/remove purchase product." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
         
         [mes show];
+        }
+        else{
+            UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"تحذير"
+                                                        message:@"الرجاء تسجيل الدخول لإضافة/حذف المشتريات" delegate:self cancelButtonTitle:@"موافق" otherButtonTitles: nil];
+            
+            [mes show];
+        }
     }
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -435,6 +587,7 @@
         DetailViewController *vc = [mainstoryboard instantiateViewControllerWithIdentifier:@"ProductDetailView"];
         vc.ProductList = arrayProductsWithCategory;
         vc.indexRow = indexPath.row;
+        vc.viewIndex = 1;
         [self presentViewController:vc animated:YES completion:Nil];
     }
 }
@@ -458,6 +611,10 @@
         UILabel *lb_mainCat = (UILabel*)[cell viewWithTag:201];
         NSString *mainCatName = [[Setting sharedInstance] getMainCategoryName:catObj.mainID];
         lb_mainCat.text = mainCatName;
+        if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+            lb_mainCat.textAlignment = NSTextAlignmentLeft;
+        else
+            lb_mainCat.textAlignment = NSTextAlignmentRight;
     }
     else {
         cell = (UITableViewCell *)[_tableView dequeueReusableCellWithIdentifier:@"ProductCell"];
@@ -477,18 +634,25 @@
             
         }
         UILabel *lb_percent = (UILabel*)[cell viewWithTag:112];
+        UILabel *lb_prod_title = (UILabel*)[cell viewWithTag:113];
+        UILabel *lb_date = (UILabel*)[cell viewWithTag:114];
+        
         NSString *pro = @"%";
         int percents = (int)(([obj.prodOrgPrice floatValue] - [obj.prodCurPrice floatValue]) / [obj.prodOrgPrice floatValue] * 100);
         lb_percent.text = [pro stringByAppendingString:[NSString stringWithFormat:@"%d", percents]];
-    UILabel *lb_prod_title = (UILabel*)[cell viewWithTag:113];
+    
     if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
         lb_prod_title.text = obj.prodTitleEn;
+        lb_prod_title.textAlignment = NSTextAlignmentLeft;
+        lb_date.textAlignment = NSTextAlignmentLeft;
     }
     else if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"]){
         lb_prod_title.text = obj.prodTitleAr;
+        lb_prod_title.textAlignment = NSTextAlignmentRight;
+        lb_date.textAlignment = NSTextAlignmentRight;
     }
     
-    UILabel *lb_date = (UILabel*)[cell viewWithTag:114];
+    
     NSString *startTimeStr = [obj.prodStartDate stringByReplacingOccurrencesOfString:@"T" withString:@" "];
     
     NSString *endTimeStr = [obj.prodEndDate stringByReplacingOccurrencesOfString:@"T" withString:@" "];
@@ -500,8 +664,14 @@
     NSTimeZone *tz = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
     [df setTimeZone:tz];
     NSDate *prodStartDate = [df dateFromString:startTimeStr];
-    [df setDateFormat:@"MMM dd"];
-    startTimeStr = [df stringFromDate:prodStartDate];
+        if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
+            [df setDateFormat:@"MMM dd"];
+            startTimeStr = [df stringFromDate:prodStartDate];
+        }
+        else{
+            [df setDateFormat:@"MM/dd"];
+            startTimeStr = [df stringFromDate:prodStartDate];
+        }
     
     NSDateFormatter *df1 = [[NSDateFormatter alloc]init];
     [df1 setDateFormat:@"yyyy-MM-dd hh:mm:ss"];
@@ -510,10 +680,21 @@
     NSTimeZone *tz1 = [NSTimeZone timeZoneWithAbbreviation:@"UTC"];
     [df1 setTimeZone:tz1];
     NSDate *prodEndDate = [df1 dateFromString:endTimeStr];
-    [df1 setDateFormat:@"MMM dd"];
-    endTimeStr = [df1 stringFromDate:prodEndDate];
-    lb_date.text = [NSString stringWithFormat:@"From %@ To %@, or until stocks", startTimeStr, endTimeStr];
-    
+        
+        if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"])
+        {
+            [df1 setDateFormat:@"MMM dd"];
+            endTimeStr = [df1 stringFromDate:prodEndDate];
+            lb_date.text = [NSString stringWithFormat:@"From %@ To %@, or until stocks", startTimeStr, endTimeStr];
+        }
+        else{
+            [df1 setDateFormat:@"MM/dd"];
+            endTimeStr = [df1 stringFromDate:prodEndDate];
+
+            lb_date.text = [NSString stringWithFormat:@"من %@ الي %@, أو حتي نفاد الكمية", startTimeStr, endTimeStr];
+        }
+        
+
     if (![obj.prodCurPrice isEqualToString:@""]){
         UILabel *lb_price = (UILabel*)[cell viewWithTag:115];
         lb_price.text = [NSString stringWithFormat:@"%@ KD", obj.prodCurPrice];
@@ -529,29 +710,47 @@
     }
     
     UIButton *btnFavor = (UIButton*)[cell viewWithTag:117];
-    if ([obj.prodFavoriteProducts isEqualToString:@""]){
-        [btnFavor setBackgroundImage:[UIImage imageNamed:@"btn_unsel_favorite.png"] forState:UIControlStateNormal];
-        [btnFavor setBackgroundImage:[UIImage imageNamed:@"btn_unsel_favorite.png"] forState:UIControlStateHighlighted];
-        [btnFavor setBackgroundImage:[UIImage imageNamed:@"btn_unsel_favorite.png"] forState:UIControlStateSelected];
-
-    }
-    else{
-        [btnFavor setBackgroundImage:[UIImage imageNamed:@"btn_sel_favorite.png"] forState:UIControlStateNormal];
-        [btnFavor setBackgroundImage:[UIImage imageNamed:@"btn_sel_favorite.png"] forState:UIControlStateHighlighted];
-        [btnFavor setBackgroundImage:[UIImage imageNamed:@"btn_sel_favorite.png"] forState:UIControlStateSelected];
-    }
-    
+        NSString *imageStr;
+        if ([obj.prodFavoriteProducts isEqualToString:@""]){
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
+            imageStr = @"arab_unsel_favorite.png";
+            else
+            imageStr = @"btn_unsel_favorite.png";
+        }
+        else{
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
+            imageStr = @"arab_sel_favorite.png";
+            else
+            imageStr = @"btn_sel_favorite.png";
+        }
+        [btnFavor setBackgroundImage:[UIImage imageNamed:imageStr] forState:UIControlStateNormal];
+        [btnFavor setBackgroundImage:[UIImage imageNamed:imageStr] forState:UIControlStateHighlighted];
+        [btnFavor setBackgroundImage:[UIImage imageNamed:imageStr] forState:UIControlStateSelected];
+        
+        
     UIButton *btnPurchase = (UIButton*)[cell viewWithTag:118];
-    if ([obj.prodPurchasedProducts isEqualToString:@""]){
-        [btnPurchase setBackgroundImage:[UIImage imageNamed:@"btn_unsel_purchase.png"] forState:UIControlStateNormal];
-        [btnPurchase setBackgroundImage:[UIImage imageNamed:@"btn_unsel_purchase.png"] forState:UIControlStateHighlighted];
-        [btnPurchase setBackgroundImage:[UIImage imageNamed:@"btn_unsel_purchase.png"] forState:UIControlStateSelected];
-    }
-    else{
-            [btnPurchase setBackgroundImage:[UIImage imageNamed:@"btn_sel_purchase.png"] forState:UIControlStateNormal];
-            [btnPurchase setBackgroundImage:[UIImage imageNamed:@"btn_sel_purchase.png"] forState:UIControlStateHighlighted];
-            [btnPurchase setBackgroundImage:[UIImage imageNamed:@"btn_sel_purchase.png"] forState:UIControlStateSelected];
-    }
+
+        NSDate *today = [[NSDate alloc]init];
+        if ([today compare:prodEndDate] != NSOrderedAscending){
+            btnPurchase.userInteractionEnabled = NO;
+            btnPurchase.alpha = 0.5;
+        }
+        if ([obj.prodPurchasedProducts isEqualToString:@""]){
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
+            imageStr = @"arab_unsel_purchase.png";
+            else
+            imageStr = @"btn_unsel_purchase.png";
+        }
+        else{
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"])
+            imageStr = @"arab_sel_purchase.png";
+            else
+            imageStr = @"btn_sel_purchase.png";
+        }
+        [btnPurchase setBackgroundImage:[UIImage imageNamed:imageStr] forState:UIControlStateNormal];
+        [btnPurchase setBackgroundImage:[UIImage imageNamed:imageStr] forState:UIControlStateHighlighted];
+        [btnPurchase setBackgroundImage:[UIImage imageNamed:imageStr] forState:UIControlStateSelected];
+
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.backgroundColor = [UIColor clearColor];
@@ -651,6 +850,7 @@
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
 	NSLog(@"ERROR with theConenction");
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
     
 }
 -(void)connectionDidFinishLoading:(NSURLConnection *)connection
@@ -897,15 +1097,25 @@
         soapResults = nil;
         if (errEncounter == TRUE)
         {
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
             UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"Warning"
                                                         message:@"The product data can't be fetched from server." delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
             
-            [mes show];
+                [mes show];
+            }
+            else{
+                UIAlertView* mes=[[UIAlertView alloc] initWithTitle:@"تحذير"
+                                                            message:@"فشل السيرفر في الوصول الي بيانات المنتج" delegate:self cancelButtonTitle:@"موافق" otherButtonTitles: nil];
+                
+                [mes show];
+            }
             [self.navigationController popViewControllerAnimated:YES];
             return;
         }
         [self saveProductsInfo];
         [self sortArrayProduct:arrayProduct];
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
         [table_Products reloadData];
 	}
     if( [elementName isEqualToString:@"ProductResult"])
@@ -1056,7 +1266,7 @@
     {
         for (int i = 0; i < arrayProduct.count; i++) {
             ProductObject *obj = [arrayProduct objectAtIndex:i];
-            NSString *querySQL = [NSString stringWithFormat: @"INSERT INTO Products (ID, OfferID, Quantity, MainCatID, MeasureID, SubCatID, OrgPrice, Price, Photo, DescAr, DescEn, StartDate, EndDate, BranchList, VisitsCount, TitleAr, TitleEn, IsActive, lastUpdateTime) VALUES (\"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\")", obj.prodID, obj.OfferID, obj.prodQuantity, obj.prodMainCatID, obj.prodMeasureID, obj.prodSubCatID, obj.prodOrgPrice, obj.prodCurPrice, obj.prodPhotoURL, obj.prodDescAr, obj.prodDescEn, obj.prodStartDate, obj.prodEndDate, obj.prodBranchList, obj.prodVisitsCount, obj.prodTitleAr, obj.prodTitleEn, obj.prodIsActive, obj.prodlastUpdateTime];
+            NSString *querySQL = [NSString stringWithFormat: @"INSERT INTO Products (ID, OfferID, CompanyID, Quantity, MainCatID, MeasureID, SubCatID, OrgPrice, Price, Photo, DescAr, DescEn, StartDate, EndDate, BranchList, VisitsCount, TitleAr, TitleEn, IsActive, lastUpdateTime) VALUES (\"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\", \"%@\")", obj.prodID, obj.OfferID, obj.prodCompanyID, obj.prodQuantity, obj.prodMainCatID, obj.prodMeasureID, obj.prodSubCatID, obj.prodOrgPrice, obj.prodCurPrice, obj.prodPhotoURL, obj.prodDescAr, obj.prodDescEn, obj.prodStartDate, obj.prodEndDate, obj.prodBranchList, obj.prodVisitsCount, obj.prodTitleAr, obj.prodTitleEn, obj.prodIsActive, obj.prodlastUpdateTime];
             
             const char *query_stmt1 = [querySQL UTF8String];
             
@@ -1072,5 +1282,46 @@
         }
         sqlite3_close(projectDB);
     }
+}
+- (IBAction)onBtnShareIcon:(id)sender {
+    NSMutableArray *arrayShareContent = [[NSMutableArray alloc]init];
+    [arrayShareContent addObject:[NSString stringWithFormat:@"Company Name : %@\n", lb_title.text]];
+    
+    [arrayShareContent addObject:[NSString stringWithFormat:@"Offer Name : %@\n", lb_OfferTitle.text]];
+
+    [arrayShareContent addObject:[NSString stringWithFormat:@"Offer Description : %@\n", lb_OfferDesc.text]];
+    
+    [arrayShareContent addObject:[NSString stringWithFormat:@"Start date : %@\n", lb_startDate.text]];
+    
+    [arrayShareContent addObject:[NSString stringWithFormat:@"End date : %@\n", lb_endDate.text]];
+    
+    for (int i = 0; i < arrayProduct.count; i++){
+        ProductObject *obj = [arrayProduct objectAtIndex:i];
+        if ([[Setting sharedInstance].myLanguage isEqualToString:@"En"]){
+            [arrayShareContent addObject:[NSString stringWithFormat:@"\nProduct Name : %@\n", obj.prodTitleEn]];
+        }
+        else if ([[Setting sharedInstance].myLanguage isEqualToString:@"Arab"]){
+            [arrayShareContent addObject:[NSString stringWithFormat:@"Product Name : %@\n", obj.prodTitleAr]];
+        }
+        
+        if (![obj.prodPhotoURL isEqualToString:@""]){
+            [arrayShareContent addObject:[NSString stringWithFormat:@"Product Image : %@\n", obj.prodPhotoURL]];
+
+        }
+        if (![obj.prodOrgPrice isEqualToString:@""]) {
+            [arrayShareContent addObject:[NSString stringWithFormat:@"Product Original Price : %@ KD\n", obj.prodOrgPrice]];
+        }
+        
+        if (![obj.prodCurPrice isEqualToString:@""]){
+            [arrayShareContent addObject:[NSString stringWithFormat:@"Product Current Price : %@ KD\n\n", obj.prodCurPrice]];
+        }
+        
+    }
+    self.activityViewController.excludedActivityTypes = @[UIActivityTypePostToWeibo, UIActivityTypeAssignToContact ];
+    self.activityViewController = [[UIActivityViewController alloc]
+                                   
+                                   initWithActivityItems:arrayShareContent applicationActivities:nil];
+    
+    [self presentViewController:self.activityViewController animated:YES completion:nil];
 }
 @end
